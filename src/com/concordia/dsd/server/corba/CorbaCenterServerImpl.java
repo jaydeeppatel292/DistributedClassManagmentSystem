@@ -40,9 +40,8 @@ class CorbaCenterServerImpl extends CenterPOA {
 
     @Override
     public String createSRecord(String firstName, String lastName, String courseRegistered, String status, String statusDate) {
-        List<String> courseList = Arrays.asList(courseRegistered.split(","));
         //TODO exception handling for invalid status value ..
-        return centerServerCenterImpl.createSRecord(firstName,lastName,courseList,Status.valueOf(status),statusDate);
+        return centerServerCenterImpl.createSRecord(firstName,lastName,courseRegistered,Status.valueOf(status),statusDate);
     }
     @Override
     public String getRecordCounts() {

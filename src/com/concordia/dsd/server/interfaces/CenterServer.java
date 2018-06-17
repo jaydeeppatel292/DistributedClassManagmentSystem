@@ -12,7 +12,7 @@ public interface CenterServer extends Remote {
 	String createTRecord(String firstName, String lastName, String address, String phone, String specialization,
                          Location location) throws RemoteException;
 
-	String createSRecord(String firstName, String lastName, List<String> courseRegistered, Status status,
+	String createSRecord(String firstName, String lastName, String courseRegistered, Status status,
 						 String statusDate) throws RemoteException;
 
 	String getRecordCounts() throws RemoteException;

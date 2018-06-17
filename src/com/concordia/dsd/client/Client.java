@@ -55,9 +55,8 @@ public class Client {
 				ManagerClient managerClient = new ManagerClient(managerId);
 				String trRecordId = managerClient.createTRecord("Sohrab", "Singh", "2285 Saint Mathieu", "5149617181",
 						"AI", Location.MTL);
-				List<String> courses = new ArrayList<>();
-				courses.add("Math");
-				courses.add("Physics");
+				String courses = new String("English, Maths");
+
 				String srRecordId = managerClient.createSRecord("Sarthak", "Arora", courses, Status.active,
 						"17 August");
 			} catch (Exception e) {

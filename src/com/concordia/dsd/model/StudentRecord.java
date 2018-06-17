@@ -8,14 +8,14 @@ import java.util.List;
 
 public class StudentRecord extends Record {
 
-	private List<String> courseRegistered;
+	private String courseRegistered;
 
 	private Status status;
 
 	private String statusDate;
 
 	public StudentRecord(String recordId, String firstName, String lastName, Status status,
-						 List<String> courseRegistered, String statusDate) {
+						 String courseRegistered, String statusDate) {
 		super(recordId, firstName, lastName);
 		this.status = status;
 		this.courseRegistered = courseRegistered;
@@ -55,7 +55,7 @@ public class StudentRecord extends Record {
 	/**
 	 * @return the courseRegistered
 	 */
-	public List<String> getCourseRegistered() {
+	public String getCourseRegistered() {
 		return courseRegistered;
 	}
 
@@ -63,7 +63,7 @@ public class StudentRecord extends Record {
 	 * @param courseRegistered
 	 *            the courseRegistered to set
 	 */
-	public void setCourseRegistered(List<String> courseRegistered) {
+	public void setCourseRegistered(String courseRegistered) {
 		this.courseRegistered = courseRegistered;
 	}
 

@@ -28,12 +28,12 @@ public class StudentManager implements StudentHandler{
 
     @Override
     public Status validateStatus(String statusType) throws InvalidFieldException {
-
-        return null;
+        Status statusVal = Status.valueOf(statusType.toLowerCase());
+        return statusVal;
     }
 
     @Override
-    public synchronized Record insertRecord(String firstName, String lastName, List<String> registerdCourseList, Status status, String statusDate) {
+    public synchronized Record insertRecord(String firstName, String lastName, String registerdCourseList, Status status, String statusDate) {
         StudentRecord studentRecord =null;
         try {
             if (Validator.getInstance().isValidLastName(lastName)) {
@@ -63,7 +63,7 @@ public class StudentManager implements StudentHandler{
                 } else if (field.equalsIgnoreCase("status")) {
                     studentRecord.setStatus(this.validateStatus(newValue));
                 } else if (field.equalsIgnoreCase("coursesregistered")) {
-                    studentRecord.setCourseRegistered((studentRecord.getCourseRegistered()));
+                    studentRecord.setCourseRegistered(newValue);
                 } else {
                     throw new InvalidFieldException("Entered Field can-not be changed or it does not exist ");
                 }

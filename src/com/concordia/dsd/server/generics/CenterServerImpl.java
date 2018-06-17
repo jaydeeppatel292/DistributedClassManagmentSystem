@@ -112,7 +112,7 @@ public class CenterServerImpl<T> {
         return recordId;
     }
 
-    public String createSRecord(String firstName, String lastName, List<String> courseRegistered, Status status,
+    public String createSRecord(String firstName, String lastName, String courseRegistered, Status status,
                                 String statusDate) {
         String recordId = null;
         Record record = getStudentManager().insertRecord(firstName, lastName, courseRegistered, status, statusDate);

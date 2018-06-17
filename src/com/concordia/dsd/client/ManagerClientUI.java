@@ -36,7 +36,7 @@ public class ManagerClientUI {
 					switch (userChoice) {
 					case "1":
 						centerClientManager.createSRecord(getUserInput("first name"), getUserInput("last name"),
-								getStudentCourses(), Status.valueOf(getUserInput("Status (active/inactive)")),
+								getUserInput("courses"), Status.valueOf(getUserInput("Status (active/inactive)")),
 								getUserInput("Date (dd/mm/yyyy)"));
 						break;
 					case "2":

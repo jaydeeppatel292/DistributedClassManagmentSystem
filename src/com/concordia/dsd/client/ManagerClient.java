@@ -31,7 +31,7 @@ public class ManagerClient {
 		return recordId;
 	}
 
-	public String createSRecord(String firstName, String lastName, List<String> courseRegistered, Status status,
+	public String createSRecord(String firstName, String lastName, String courseRegistered, Status status,
 								String statusDate) throws RemoteException {
 		String recordId = server.createSRecord(firstName, lastName, courseRegistered, status, statusDate);
 		clientLogger.log(Level.INFO,  String.format(CMSLogMessages.CREATED_STUDENT_RECORD_MSG , recordId, "MANAGER ID = " + managerId));

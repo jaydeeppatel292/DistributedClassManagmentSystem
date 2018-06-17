@@ -34,7 +34,7 @@ public class RMICenterServerImpl extends UnicastRemoteObject implements CenterSe
     }
 
     @Override
-    public String createSRecord(String firstName, String lastName, List<String> courseRegistered, Status status,
+    public String createSRecord(String firstName, String lastName, String courseRegistered, Status status,
                                 String statusDate) {
         return centerServerCenterImpl.createSRecord(firstName,lastName,courseRegistered,status,statusDate);
     }
