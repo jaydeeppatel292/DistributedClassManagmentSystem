@@ -31,6 +31,9 @@ class CorbaCenterServerImpl extends CenterPOA {
         orb.shutdown(false);
     }
 
+    public CenterServerImpl<CorbaCenterServerImpl> getCenterServerCenterImpl() {
+        return centerServerCenterImpl;
+    }
 
     @Override
     public String createTRecord(String firstName, String lastName, String address, String phone, String specialization, String location, String managerId) {

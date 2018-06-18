@@ -15,87 +15,88 @@ public class StartClient {
 
     static Center centerobj;
     static String[][] hostPortArray;
+
     public static void main(String[] args) {
 
         Scanner c = new Scanner(System.in);
         System.out.println("Welcome to the Distributed Class Management System:");
         boolean managerLogInFlag = true;
-        while (managerLogInFlag){
+        while (managerLogInFlag) {
             System.out.println("Enter the manager Id: ");
-        String managerId = c.nextLine().toUpperCase();
-        if (validateManager(managerId)) {
-            boolean selectionFlag = true;
-            while (selectionFlag) {
-                String userSelection = selectionMenu();
+            String managerId = c.nextLine().toUpperCase();
+            if (validateManager(managerId)) {
+                boolean selectionFlag = true;
+                while (selectionFlag) {
+                    String userSelection = selectionMenu();
 
-                switch (userSelection) {
+                    switch (userSelection) {
 
-                    case "1":
-                        String studentRecordid = centerobj.createSRecord(getFieldInput("First Name", ""), getFieldInput("Last Name", ""),
-                                getFieldInput("courses registered(separated by commas)", ""), getFieldInput("status active/inactive", "status"),
-                                getFieldInput("status date(dd/mm/yyyy)", "date"), managerId);
-                        System.out.println("Record successfully created with record ID" + studentRecordid);
-                        break;
+                        case "1":
+                            String studentRecordid = centerobj.createSRecord(getFieldInput("First Name", ""), getFieldInput("Last Name", ""),
+                                    getFieldInput("courses registered(separated by commas)", ""), getFieldInput("status active/inactive", "status"),
+                                    getFieldInput("status date(dd/mm/yyyy)", "date"), managerId);
+                            System.out.println("Record successfully created with record ID" + studentRecordid);
+                            break;
 
-                    case "2":
-                        String locs = "[";
-                        for (int i = 0; i < hostPortArray.length; i++) {
-                            locs = locs + " " + hostPortArray[i][0];
-                        }
-                        locs = locs + "]";
+                        case "2":
+                            String locs = "[";
+                            for (int i = 0; i < hostPortArray.length; i++) {
+                                locs = locs + " " + hostPortArray[i][0];
+                            }
+                            locs = locs + "]";
 
-                        String teacherRecordid = centerobj.createTRecord(getFieldInput("First Name", ""), getFieldInput("Last Name", ""),
-                                getFieldInput("address", ""), getFieldInput("phone", "phone"),
-                                getFieldInput("specialization", ""), getFieldInput("location" + locs, "location").toUpperCase(), managerId);
-                        System.out.println("Record successfully created with record ID" + teacherRecordid);
-                        break;
-                    case "3":
-                        System.out.println(centerobj.getRecordCounts(managerId));
-                        break;
+                            String teacherRecordid = centerobj.createTRecord(getFieldInput("First Name", ""), getFieldInput("Last Name", ""),
+                                    getFieldInput("address", ""), getFieldInput("phone", "phone"),
+                                    getFieldInput("specialization", ""), getFieldInput("location" + locs, "location").toUpperCase(), managerId);
+                            System.out.println("Record successfully created with record ID" + teacherRecordid);
+                            break;
+                        case "3":
+                            System.out.println(centerobj.getRecordCounts(managerId));
+                            break;
 
-                    case "4":
-                        String inputRecordId = getFieldInput("record id", "recordId");
-                        String fieldNames = " ";
-                        if (inputRecordId.substring(0, 2).equalsIgnoreCase("TR")) {
-                            fieldNames = "(address, location, phone)";
-                        } else if (inputRecordId.substring(0, 2).equalsIgnoreCase("SR")) {
-                            fieldNames = "(statusdate, status, coursesregistered)";
-                        }
-                        String fieldToBeChanged = getFieldInput("field" + fieldNames, "");
-                        String newFieldValue = getFieldInput("New Value", "");
-                        centerobj.editRecord(inputRecordId.toUpperCase(), fieldToBeChanged, newFieldValue, managerId);
-                        break;
+                        case "4":
+                            String inputRecordId = getFieldInput("record id", "recordId");
+                            String fieldNames = " ";
+                            if (inputRecordId.substring(0, 2).equalsIgnoreCase("TR")) {
+                                fieldNames = "(address, location, phone)";
+                            } else if (inputRecordId.substring(0, 2).equalsIgnoreCase("SR")) {
+                                fieldNames = "(statusdate, status, coursesregistered)";
+                            }
+                            String fieldToBeChanged = getFieldInput("field" + fieldNames, "");
+                            String newFieldValue = getFieldInput("New Value", "");
+                            centerobj.editRecord(inputRecordId.toUpperCase(), fieldToBeChanged, newFieldValue, managerId);
+                            break;
 
-                    case "5":
-                        String transferStatus = centerobj.transferRecord(managerId, getFieldInput("record id", ""), getFieldInput("destination server", ""));
-                        System.out.println(transferStatus);
-                        break;
+                        case "5":
+                            String transferStatus = centerobj.transferRecord(managerId, getFieldInput("record id", ""), getFieldInput("destination server", ""));
+                            System.out.println(transferStatus);
+                            break;
 
-                    case "6":
-                        selectionFlag = false;
-                        break;
-                    case "7":
-                        selectionFlag = false;
-                        managerLogInFlag = false;
-                        break;
+                        case "6":
+                            selectionFlag = false;
+                            break;
+                        case "7":
+                            selectionFlag = false;
+                            managerLogInFlag = false;
+                            break;
+                    }
+
                 }
-
             }
         }
-    }
 
     }
 
-    public static boolean validateManager(String managerId){
-        if(managerId.length()!=7){
+    public static boolean validateManager(String managerId) {
+        if (managerId.length() != 7) {
             System.out.println("Invalid Manager Id length"); //log needs to be put
-            return  false;
+            return false;
         }
 
         hostPortArray = ConfigManager.getInstance().getHostPortArray();
 
-        for(int i =0;i < hostPortArray.length; i++){
-            if( managerId.substring(0, 3).equalsIgnoreCase(hostPortArray[i][0])){
+        for (int i = 0; i < hostPortArray.length; i++) {
+            if (managerId.substring(0, 3).equalsIgnoreCase(hostPortArray[i][0])) {
                 createConnection(hostPortArray, managerId.substring(0, 3));
                 return true;
             }
@@ -116,8 +117,7 @@ public class StartClient {
             objRef = orb.resolve_initial_references("NameService");
             NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
             centerobj = (Center) CenterHelper.narrow(ncRef.resolve_str(serverLoc));
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Issue in creating connection");
             e.printStackTrace();
         }
@@ -138,10 +138,10 @@ public class StartClient {
         return sc.nextLine();
     }
 
-    public static String getFieldInput(String fieldName, String fieldType){
+    public static String getFieldInput(String fieldName, String fieldType) {
 
         String input;
-        while(true) {
+        while (true) {
             System.out.print("Please enter " + fieldName);
             Scanner sc = new Scanner(System.in);
             input = sc.nextLine();
@@ -149,38 +149,33 @@ public class StartClient {
                 if (!(input.equalsIgnoreCase("active") || input.equalsIgnoreCase("inactive"))) {
                     System.out.println("Status can be active or inactive");
                     continue;
-                }
-                else{
+                } else {
                     input = input.toLowerCase();
                 }
-            }
-            else if(fieldType.equalsIgnoreCase("date")){
-                if(!input.matches("\\d{2}-\\d{2}-\\d{4}")){
+            } else if (fieldType.equalsIgnoreCase("date")) {
+                if (!input.matches("\\d{2}-\\d{2}-\\d{4}")) {
                     System.out.println("Not a valid Date Format");
                     continue;
                 }
-            }
-            else if(fieldType.equalsIgnoreCase("location")){
+            } else if (fieldType.equalsIgnoreCase("location")) {
                 boolean checkFlag = false;
-                for(int i =0; i < hostPortArray.length; i++){
-                    if(input.equalsIgnoreCase(hostPortArray[i][0])){
-                         checkFlag=true;
+                for (int i = 0; i < hostPortArray.length; i++) {
+                    if (input.equalsIgnoreCase(hostPortArray[i][0])) {
+                        checkFlag = true;
                         break;
                     }
                 }
-                if(!checkFlag) {
+                if (!checkFlag) {
                     System.out.println("Invalid location");
                     continue;
                 }
-            }
-            else if(fieldType.equalsIgnoreCase("phone")){
-                if(!input.matches("^[0-9]*$")){
+            } else if (fieldType.equalsIgnoreCase("phone")) {
+                if (!input.matches("^[0-9]*$")) {
                     System.out.println("Invalid Phone number");
                     continue;
                 }
-            }
-            else if(fieldType.equalsIgnoreCase("recordid")){
-                if((input.length()!=7) || !(input.substring(2,7).matches("^[0-9]*$")) || !(input.substring(0,2).equalsIgnoreCase("TR") || input.substring(0,2).equalsIgnoreCase("SR"))){
+            } else if (fieldType.equalsIgnoreCase("recordid")) {
+                if ((input.length() != 7) || !(input.substring(2, 7).matches("^[0-9]*$")) || !(input.substring(0, 2).equalsIgnoreCase("TR") || input.substring(0, 2).equalsIgnoreCase("SR"))) {
                     System.out.println("Invalid Record Id.");
                     continue;
                 }

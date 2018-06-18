@@ -3,6 +3,7 @@ package com.concordia.dsd.server.corba;
 import CenterServerApp.Center;
 import CenterServerApp.CenterHelper;
 import com.concordia.dsd.global.cmsenum.Location;
+import com.concordia.dsd.server.ServerManager;
 import com.concordia.dsd.utils.ConfigManager;
 import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NameComponent;
@@ -50,6 +51,7 @@ public class StartServer {
             //TODO change it to json ..
             CorbaCenterServerImpl centerServer = new CorbaCenterServerImpl(Location.valueOf(centerName));
             centerServer.setORB(orb[serverNumber]);
+            ServerManager.getInstance().addServer(Location.valueOf(centerName),centerServer.getCenterServerCenterImpl());
 
             // get object reference from the servant
             org.omg.CORBA.Object ref = rootpoa.servant_to_reference(centerServer);

@@ -4,6 +4,7 @@ import com.concordia.dsd.global.cmsenum.Location;
 import com.concordia.dsd.global.constants.CMSLogMessages;
 import com.concordia.dsd.model.ClassMap;
 import com.concordia.dsd.server.RMI.Server;
+import com.concordia.dsd.server.ServerManager;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -31,7 +32,7 @@ public class UDPManager {
                 stringBuffer.append(recordCount);
             } else {
                 try {
-                    requests[counter] = new UDPRequest(Server.centralRepository.get(location).getCenterServerCenterImpl());
+                    requests[counter] = new UDPRequest(ServerManager.getInstance().getCenterServer(location));
                 } catch (SecurityException e) {
                     serverLogger.log(Level.SEVERE, e.getMessage());
                 } catch (IOException e) {
