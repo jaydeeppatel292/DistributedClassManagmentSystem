@@ -29,23 +29,23 @@ public class RMICenterServerImpl extends UnicastRemoteObject implements CenterSe
 
     @Override
     public String createTRecord(String firstName, String lastName, String address, String phone, String specialization,
-                                Location location) {
-        return centerServerCenterImpl.createTRecord(firstName,lastName,address,phone,specialization,location);
+                                Location location, String managerId) {
+        return centerServerCenterImpl.createTRecord(firstName,lastName,address,phone,specialization,location, managerId);
     }
 
     @Override
     public String createSRecord(String firstName, String lastName, String courseRegistered, Status status,
-                                String statusDate) {
-        return centerServerCenterImpl.createSRecord(firstName,lastName,courseRegistered,status,statusDate);
+                                String statusDate, String managerId) {
+        return centerServerCenterImpl.createSRecord(firstName,lastName,courseRegistered,status,statusDate, managerId);
     }
 
     @Override
-    public String getRecordCounts() {
-        return centerServerCenterImpl.getRecordCounts();
+    public String getRecordCounts(String managerId) {
+        return centerServerCenterImpl.getRecordCounts(managerId);
     }
 
     @Override
-    public void editRecord(String recordId, String fieldName, String newValue) {
-        centerServerCenterImpl.editRecord(recordId,fieldName,newValue);
+    public void editRecord(String recordId, String fieldName, String newValue, String managerId) {
+        centerServerCenterImpl.editRecord(recordId,fieldName,newValue, managerId);
     }
 }

@@ -34,7 +34,7 @@ public class Client {
 		}
 		
 		ManagerClient managerClient = new ManagerClient("MTL0012");
-		System.out.println("Initially :: Record Count: " + managerClient.getRecordCounts());
+		System.out.println("Initially :: Record Count: " + managerClient.getRecordCounts("MTL0012"));
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -54,11 +54,11 @@ public class Client {
 			try {
 				ManagerClient managerClient = new ManagerClient(managerId);
 				String trRecordId = managerClient.createTRecord("Sohrab", "Singh", "2285 Saint Mathieu", "5149617181",
-						"AI", Location.MTL);
+						"AI", Location.MTL, "MTL0012");
 				String courses = new String("English, Maths");
 
 				String srRecordId = managerClient.createSRecord("Sarthak", "Arora", courses, Status.active,
-						"17 August");
+						"17 August", "MTL0012");
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, e.getMessage());
 			}

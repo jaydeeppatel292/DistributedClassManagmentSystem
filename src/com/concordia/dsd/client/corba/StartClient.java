@@ -33,7 +33,7 @@ public class StartClient {
                     case "1":
                         String studentRecordid = centerobj.createSRecord(getFieldInput("First Name", ""), getFieldInput("Last Name", ""),
                                 getFieldInput("courses registered(separated by commas)", ""), getFieldInput("status active/inactive", "status"),
-                                getFieldInput("status date(dd/mm/yyyy)", "date"));
+                                getFieldInput("status date(dd/mm/yyyy)", "date"), managerId);
                         System.out.println("Record successfully created with record ID" + studentRecordid);
                         break;
 
@@ -46,11 +46,11 @@ public class StartClient {
 
                         String teacherRecordid = centerobj.createTRecord(getFieldInput("First Name", ""), getFieldInput("Last Name", ""),
                                 getFieldInput("address", ""), getFieldInput("phone", "phone"),
-                                getFieldInput("specialization", ""), getFieldInput("location" + locs, "location"));
+                                getFieldInput("specialization", ""), getFieldInput("location" + locs, "location").toUpperCase(), managerId);
                         System.out.println("Record successfully created with record ID" + teacherRecordid);
                         break;
                     case "3":
-                        System.out.println(centerobj.getRecordCounts());
+                        System.out.println(centerobj.getRecordCounts(managerId));
                         break;
 
                     case "4":
@@ -63,13 +63,18 @@ public class StartClient {
                         }
                         String fieldToBeChanged = getFieldInput("field" + fieldNames, "");
                         String newFieldValue = getFieldInput("New Value", "");
-                        centerobj.editRecord(inputRecordId.toUpperCase(), fieldToBeChanged, newFieldValue);
+                        centerobj.editRecord(inputRecordId.toUpperCase(), fieldToBeChanged, newFieldValue, managerId);
                         break;
 
                     case "5":
+                        String transferStatus = centerobj.transferRecord(managerId, getFieldInput("record id", ""), getFieldInput("destination server", ""));
+                        System.out.println(transferStatus);
+                        break;
+
+                    case "6":
                         selectionFlag = false;
                         break;
-                    case "6":
+                    case "7":
                         selectionFlag = false;
                         managerLogInFlag = false;
                         break;
@@ -124,8 +129,9 @@ public class StartClient {
         System.out.println("2. Add a Teacher");
         System.out.println("3. Get records count");
         System.out.println("4. Edit a record");
-        System.out.println("5. Log out");
-        System.out.println("6. Exit");
+        System.out.println("5. Transfer a record");
+        System.out.println("6. Log out");
+        System.out.println("7. Exit");
         System.out.println();
         System.out.println("Please make a selection");
         Scanner sc = new Scanner(System.in);

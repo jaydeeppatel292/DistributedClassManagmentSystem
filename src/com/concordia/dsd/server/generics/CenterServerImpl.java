@@ -103,9 +103,9 @@ public class CenterServerImpl<T> {
     }
 
     public String createTRecord(String firstName, String lastName, String address, String phone, String specialization,
-                                Location location) {
+                                Location location, String managerId) {
         String recordId = null;
-        Record record = getTeacherManager().insertRecord(firstName, lastName, address, phone, specialization, location);
+        Record record = getTeacherManager().insertRecord(firstName, lastName, address, phone, specialization, location, managerId);
         if (record != null) {
             recordId = record.getRecordId();
         }
@@ -113,27 +113,32 @@ public class CenterServerImpl<T> {
     }
 
     public String createSRecord(String firstName, String lastName, String courseRegistered, Status status,
-                                String statusDate) {
+                                String statusDate, String managerId) {
         String recordId = null;
-        Record record = getStudentManager().insertRecord(firstName, lastName, courseRegistered, status, statusDate);
+        Record record = getStudentManager().insertRecord(firstName, lastName, courseRegistered, status, statusDate, managerId);
         if (record != null) {
             recordId = record.getRecordId();
         }
         return recordId;
     }
 
-    public String getRecordCounts() {
-        return getUdpManager().getRecordCounts();
+    public String getRecordCounts(String managerId) {
+        return getUdpManager().getRecordCounts(managerId);
     }
 
-    public void editRecord(String recordId, String fieldName, String newValue) {
+    public void editRecord(String recordId, String fieldName, String newValue, String managerId) {
         Record record = getRecordMap().lookupRecord(recordId);
         if (record instanceof StudentRecord) {
-            getStudentManager().updateRecord(record,recordId,fieldName,newValue);
+            getStudentManager().updateRecord(record,recordId,fieldName,newValue, managerId);
         }else if(record instanceof TeacherRecord){
-            getTeacherManager().updateRecord(record,recordId,fieldName,newValue);
+            getTeacherManager().updateRecord(record,recordId,fieldName,newValue, managerId);
         }else {
             getServerLogger().log(Level.SEVERE, CMSLogMessages.RECORD_NOT_FOUND, recordId);
         }
+    }
+
+    public String transferRecord(String managerId, String recordId, String remoteCenterServerName) {
+        Record record = getRecordMap().lookupRecord(recordId);
+        return getUdpManager().transferRecord(managerId, recordId, remoteCenterServerName);
     }
 }

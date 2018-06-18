@@ -37,12 +37,12 @@ public class ManagerClientUI {
 					case "1":
 						centerClientManager.createSRecord(getUserInput("first name"), getUserInput("last name"),
 								getUserInput("courses"), Status.valueOf(getUserInput("Status (active/inactive)")),
-								getUserInput("Date (dd/mm/yyyy)"));
+								getUserInput("Date (dd/mm/yyyy)"), managerId);
 						break;
 					case "2":
 						centerClientManager.createTRecord(getUserInput("first name"), getUserInput("last name"),
 								getUserInput("address"), getUserInput("phone"), getUserInput("specialization"),
-								Location.valueOf(getUserInput("Location code (MTL/LVL/DDO)")));
+								Location.valueOf(getUserInput("Location code (MTL/LVL/DDO)")), managerId);
 						break;
 					case "3":
 						String editRecordId = getUserInput("Record Id");
@@ -50,10 +50,10 @@ public class ManagerClientUI {
 								+ (editRecordId.startsWith("TR") ? Arrays.asList(studentEditFields).toString()
 										: Arrays.asList(teacherEditFields).toString()));
 						String fieldValue = getUserInput("new value");
-						centerClientManager.editRecord(editRecordId, fieldName, fieldValue);
+						centerClientManager.editRecord(editRecordId, fieldName, fieldValue, managerId);
 						break;
 					case "4":
-						centerClientManager.getRecordCounts();
+						centerClientManager.getRecordCounts(managerId);
 						break;
 					case "5":
 						shouldBreak = true;

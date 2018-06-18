@@ -33,7 +33,7 @@ public class StudentManager implements StudentHandler{
     }
 
     @Override
-    public synchronized Record insertRecord(String firstName, String lastName, String registerdCourseList, Status status, String statusDate) {
+    public synchronized Record insertRecord(String firstName, String lastName, String registerdCourseList, Status status, String statusDate, String managerId) {
         StudentRecord studentRecord =null;
         try {
             if (Validator.getInstance().isValidLastName(lastName)) {
@@ -42,7 +42,7 @@ public class StudentManager implements StudentHandler{
                 studentRecord = new StudentRecord(recordId, firstName, lastName, status, registerdCourseList,
                         statusDate);
                 classMap.addRecord(Character.toString(lastName.charAt(0)), studentRecord);
-                serverLogger.log(Level.INFO, String.format(CMSLogMessages.CREATED_STUDENT_RECORD_MSG, recordId, " "));
+                serverLogger.log(Level.INFO, String.format(CMSLogMessages.CREATED_STUDENT_RECORD_MSG, recordId, managerId," "));
             } else {
                 serverLogger.log(Level.SEVERE, CMSLogMessages.INVALID_LAST_NAME_MSG, lastName);
             }
@@ -53,7 +53,7 @@ public class StudentManager implements StudentHandler{
     }
 
     @Override
-    public void updateRecord(Record record,String recordID, String fieldName, String newValue) {
+    public void updateRecord(Record record,String recordID, String fieldName, String newValue, String managerId) {
         StudentRecord studentRecord = (StudentRecord) record;
         if (studentRecord != null) {
             try {
@@ -68,7 +68,7 @@ public class StudentManager implements StudentHandler{
                     throw new InvalidFieldException("Entered Field can-not be changed or it does not exist ");
                 }
                 serverLogger.log(Level.INFO,
-                        String.format(CMSLogMessages.UPDATE_RECORD_MSG, fieldName, newValue, studentRecord.getRecordId(), " "));
+                        String.format(CMSLogMessages.UPDATE_RECORD_MSG, fieldName, newValue, studentRecord.getRecordId(), managerId," "));
             } catch (InvalidFieldException e) {
                 serverLogger.log(Level.SEVERE, e.getMessage());
             }

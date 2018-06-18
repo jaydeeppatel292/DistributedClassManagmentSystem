@@ -20,7 +20,7 @@ public class UDPManager {
         this.serverLogger = serverLogger;
     }
 
-    public String getRecordCounts() {
+    public String getRecordCounts(String managerId) {
         StringBuffer stringBuffer = new StringBuffer();
         String recordCount = null;
         UDPRequest[] requests = new UDPRequest[Location.values().length - 1];
@@ -54,5 +54,10 @@ public class UDPManager {
         serverLogger.log(Level.INFO, CMSLogMessages.RECORD_COUNT, stringBuffer.toString());
         System.out.println("Record Count : " + stringBuffer.toString());
         return stringBuffer.toString();
+    }
+
+    public String transferRecord(String managerId, String recordId, String remoteCenterServerName) {
+        String msg="";
+        return msg;
     }
 }

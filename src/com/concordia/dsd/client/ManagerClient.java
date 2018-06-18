@@ -25,27 +25,27 @@ public class ManagerClient {
 	}
 
 	public String createTRecord(String firstName, String lastName, String address, String phone, String specialization,
-			Location location) throws RemoteException {
-		String recordId = server.createTRecord(firstName, lastName, address, phone, specialization, location);
+			Location location, String managerId) throws RemoteException {
+		String recordId = server.createTRecord(firstName, lastName, address, phone, specialization, location, managerId);
 		clientLogger.log(Level.INFO, String.format(CMSLogMessages.CREATED_TEACHER_RECORD_MSG, recordId,"MANAGER ID = " + managerId));
 		return recordId;
 	}
 
 	public String createSRecord(String firstName, String lastName, String courseRegistered, Status status,
-								String statusDate) throws RemoteException {
-		String recordId = server.createSRecord(firstName, lastName, courseRegistered, status, statusDate);
+								String statusDate, String managerId) throws RemoteException {
+		String recordId = server.createSRecord(firstName, lastName, courseRegistered, status, statusDate, managerId);
 		clientLogger.log(Level.INFO,  String.format(CMSLogMessages.CREATED_STUDENT_RECORD_MSG , recordId, "MANAGER ID = " + managerId));
 		return recordId;
 	}
 
-	public String getRecordCounts() throws RemoteException {
-		String recordCounts = server.getRecordCounts();
+	public String getRecordCounts(String managerId) throws RemoteException {
+		String recordCounts = server.getRecordCounts(managerId);
 		clientLogger.log(Level.INFO, CMSLogMessages.RECORD_COUNT, recordCounts);
 		return recordCounts;
 	}
 
-	public void editRecord(String recordId, String fieldName, String newValue) throws RemoteException {
-		server.editRecord(recordId, fieldName, newValue);
+	public void editRecord(String recordId, String fieldName, String newValue, String managerId) throws RemoteException {
+		server.editRecord(recordId, fieldName, newValue, managerId);
 		clientLogger.log(Level.INFO, String.format(CMSLogMessages.UPDATE_RECORD_MSG, fieldName, newValue, recordId ,"MANAGER ID = " + managerId));
 	}
 

@@ -10,13 +10,13 @@ import java.util.Set;
 public interface CenterServer extends Remote {
 	
 	String createTRecord(String firstName, String lastName, String address, String phone, String specialization,
-                         Location location) throws RemoteException;
+                         Location location, String managerId) throws RemoteException;
 
 	String createSRecord(String firstName, String lastName, String courseRegistered, Status status,
-						 String statusDate) throws RemoteException;
+						 String statusDate, String managerId) throws RemoteException;
 
-	String getRecordCounts() throws RemoteException;
+	String getRecordCounts(String managerId) throws RemoteException;
 
-	void editRecord(String recordID, String fieldName, String newValue) throws RemoteException;
+	void editRecord(String recordID, String fieldName, String newValue, String managerId) throws RemoteException;
 
 }

@@ -4,10 +4,11 @@ module CenterServerApp
   {
 
     string createTRecord(in string firstName, in string lastName, in string address, in string phone, in string specialization,
-                                                         in string location);
-    string createSRecord(in string firstName, in string lastName, in string courseRegistered, in string status, in string statusDate);
-    string getRecordCounts();
-    void editRecord(in string recordId, in string fieldName, in string newValue);
+                                                         in string location, in string managerId);
+    string createSRecord(in string firstName, in string lastName, in string courseRegistered, in string status, in string statusDate, in string managerId);
+    string getRecordCounts(in string managerId);
+    void editRecord(in string recordId, in string fieldName, in string newValue, in string managerId);
+    string transferRecord(in string managerID, in string recordID, in string remoteCenterServerName);
     oneway void shutdown();
     };
 };
