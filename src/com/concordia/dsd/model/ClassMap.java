@@ -63,6 +63,7 @@ public class ClassMap {
 
             if(rec.getRecordId().equals(record.getRecordId())){
                 recordList.remove(rec);
+                break;
             }
         }
 

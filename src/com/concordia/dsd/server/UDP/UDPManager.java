@@ -66,11 +66,6 @@ public class UDPManager {
 
             UDPRequest serverObject = new UDPRequest(ServerManager.getInstance().getCenterServer(Location.valueOf(remoteCenterServerName.toUpperCase())));
             serverObject.start();
-            /*try {
-                serverObject.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }*/
             if(typeOfRec == 'S'){
                 StudentRecord studentRecord = (StudentRecord) record;
                 serverObject.getCenterServer().createSRecord(studentRecord.getFirstName(), studentRecord.getLastName(), studentRecord.getCourseRegistered(), studentRecord.getStatus(),
@@ -80,6 +75,11 @@ public class UDPManager {
                 TeacherRecord teacherRecord = (TeacherRecord) record;
                 serverObject.getCenterServer().createTRecord(teacherRecord.getFirstName(), teacherRecord.getLastName(), teacherRecord.getAddress(), teacherRecord.getPhone(),
                         teacherRecord.getSpecialization(), teacherRecord.getLocation(), managerId);
+            }
+            try {
+                serverObject.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
 
         } catch (IOException e) {
