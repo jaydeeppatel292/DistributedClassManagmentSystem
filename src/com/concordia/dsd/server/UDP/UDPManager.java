@@ -1,8 +1,12 @@
 package com.concordia.dsd.server.UDP;
 
 import com.concordia.dsd.global.cmsenum.Location;
+import com.concordia.dsd.global.constants.CMSConstants;
 import com.concordia.dsd.global.constants.CMSLogMessages;
 import com.concordia.dsd.model.ClassMap;
+import com.concordia.dsd.model.Record;
+import com.concordia.dsd.model.StudentRecord;
+import com.concordia.dsd.model.TeacherRecord;
 import com.concordia.dsd.server.RMI.Server;
 import com.concordia.dsd.server.ServerManager;
 
@@ -57,8 +61,32 @@ public class UDPManager {
         return stringBuffer.toString();
     }
 
-    public String transferRecord(String managerId, String recordId, String remoteCenterServerName) {
-        String msg="";
-        return msg;
+    public void transferRecord(String managerId, Record record, String remoteCenterServerName, char typeOfRec) {
+        try {
+
+            UDPRequest serverObject = new UDPRequest(ServerManager.getInstance().getCenterServer(Location.valueOf(remoteCenterServerName.toUpperCase())));
+            serverObject.start();
+            /*try {
+                serverObject.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }*/
+            if(typeOfRec == 'S'){
+                StudentRecord studentRecord = (StudentRecord) record;
+                serverObject.getCenterServer().createSRecord(studentRecord.getFirstName(), studentRecord.getLastName(), studentRecord.getCourseRegistered(), studentRecord.getStatus(),
+                studentRecord.getStatusDate(), managerId);
+            }
+            else if(typeOfRec == 'R'){
+                TeacherRecord teacherRecord = (TeacherRecord) record;
+                serverObject.getCenterServer().createTRecord(teacherRecord.getFirstName(), teacherRecord.getLastName(), teacherRecord.getAddress(), teacherRecord.getPhone(),
+                        teacherRecord.getSpecialization(), teacherRecord.getLocation(), managerId);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
+
+
 }

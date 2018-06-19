@@ -139,6 +139,22 @@ public class CenterServerImpl<T> {
 
     public String transferRecord(String managerId, String recordId, String remoteCenterServerName) {
         Record record = getRecordMap().lookupRecord(recordId);
-        return getUdpManager().transferRecord(managerId, recordId, remoteCenterServerName);
+        char typeOfRec;
+        String returnValue = "";
+        if (record instanceof StudentRecord) {
+            typeOfRec='S';
+            getUdpManager().transferRecord(managerId, record, remoteCenterServerName, typeOfRec);
+            returnValue=CMSLogMessages.TRANSFER_RECORD_SUCCESS;
+            recordMap.deleteRecord(record);
+        }else if(record instanceof TeacherRecord){
+            typeOfRec='T';
+            getUdpManager().transferRecord(managerId, record, remoteCenterServerName, typeOfRec);
+            returnValue=CMSLogMessages.TRANSFER_RECORD_SUCCESS;
+            recordMap.deleteRecord(record);
+        }else {
+            getServerLogger().log(Level.SEVERE, CMSLogMessages.RECORD_NOT_FOUND, recordId);
+            returnValue = CMSLogMessages.RECORD_NOT_FOUND;
+        }
+        return  returnValue;
     }
 }

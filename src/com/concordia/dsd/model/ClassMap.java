@@ -54,4 +54,20 @@ public class ClassMap {
         }
         return count;
     }
+
+    public void deleteRecord(Record record){
+
+        List<Record> recordList = getRecordList(record.getLastName().substring(0,1));
+
+        for(Record rec : recordList){
+
+            if(rec.getRecordId().equals(record.getRecordId())){
+                recordList.remove(rec);
+            }
+        }
+
+        putRecordList(record.getLastName().substring(0,1), recordList);
+
+    }
+
 }

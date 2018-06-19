@@ -68,7 +68,7 @@ public class StartClient {
                             break;
 
                         case "5":
-                            String transferStatus = centerobj.transferRecord(managerId, getFieldInput("record id", ""), getFieldInput("destination server", ""));
+                            String transferStatus = centerobj.transferRecord(managerId, getFieldInput("record id", "").toUpperCase(), getFieldInput("destination server", ""));
                             System.out.println(transferStatus);
                             break;
 

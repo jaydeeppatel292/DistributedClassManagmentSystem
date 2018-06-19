@@ -13,5 +13,7 @@ public class CMSLogMessages {
     public static final String UDP_SERVER_INIT  = "UDP %s Server Initiated";
 	public static final String EDIT_RECORD_FAILED_MSG = "Edit record operation failed";
 	public static final String CREATE_RECORD_FAILED_MSG = "Create record operation failed";
+    public static final String TRANSFER_RECORD_SUCCESS = "Record Transferred Successfully";
+
 
 }
