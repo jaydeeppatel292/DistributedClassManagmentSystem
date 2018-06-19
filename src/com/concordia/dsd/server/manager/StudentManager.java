@@ -42,7 +42,7 @@ public class StudentManager implements StudentHandler{
                 studentRecord = new StudentRecord(recordId, firstName, lastName, status, registerdCourseList,
                         statusDate);
                 classMap.addRecord(Character.toString(lastName.charAt(0)), studentRecord);
-                serverLogger.log(Level.INFO, String.format(CMSLogMessages.CREATED_STUDENT_RECORD_MSG, recordId, managerId," "));
+                serverLogger.log(Level.INFO, String.format(CMSLogMessages.CREATED_STUDENT_RECORD_MSG, recordId, managerId));
             } else {
                 serverLogger.log(Level.SEVERE, CMSLogMessages.INVALID_LAST_NAME_MSG, lastName);
             }
@@ -68,7 +68,7 @@ public class StudentManager implements StudentHandler{
                     throw new InvalidFieldException("Entered Field can-not be changed or it does not exist ");
                 }
                 serverLogger.log(Level.INFO,
-                        String.format(CMSLogMessages.UPDATE_RECORD_MSG, fieldName, newValue, studentRecord.getRecordId(), managerId," "));
+                        String.format(CMSLogMessages.UPDATE_RECORD_MSG, fieldName, newValue, studentRecord.getRecordId(), managerId));
             } catch (InvalidFieldException e) {
                 serverLogger.log(Level.SEVERE, e.getMessage());
             }
