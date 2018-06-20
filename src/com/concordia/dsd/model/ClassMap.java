@@ -7,20 +7,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class ClassMap {
-    private ConcurrentHashMap<String, List<Record>> recordMap;
+    private HashMap<String, List<Record>> recordMap;
 
     public ClassMap() {
-        recordMap = new ConcurrentHashMap<>();
+        recordMap = new HashMap<>();
     }
 
-    private void putRecordList(String key, List<Record> recordList){
-        recordMap.put(key, recordList);
+    private void putRecordList(String key, List<Record> recordList) {
+        synchronized (recordMap) {
+            recordMap.put(key, recordList);
+        }
     }
-    private List<Record> getRecordList(String key){
-        return recordMap.get(key);
+
+    private List<Record> getRecordList(String key) {
+        synchronized (recordMap) {
+            return recordMap.get(key);
+        }
     }
 
     public void addRecord(String recordKey, Record record) {
@@ -36,39 +40,40 @@ public class ClassMap {
 
     public Record lookupRecord(String recordId) {
         Record record = null;
-        for (Map.Entry<String, List<Record>> entry : recordMap.entrySet()) {
-            List<Record> recordList = entry.getValue();
-            if (recordList != null && recordList.size() > 0) {
-                for (Record recordLocal : recordList) {
-                    if (recordLocal.getRecordId().equals(recordId)) {
-                        record = recordLocal;
+        synchronized (recordMap) {
+            for (Map.Entry<String, List<Record>> entry : recordMap.entrySet()) {
+                List<Record> recordList = entry.getValue();
+                if (recordList != null && recordList.size() > 0) {
+                    for (Record recordLocal : recordList) {
+                        if (recordLocal.getRecordId().equals(recordId)) {
+                            record = recordLocal;
+                        }
                     }
                 }
             }
         }
         return record;
     }
+
     public Integer getRecordsCount() {
         int count = 0;
-        for (List<Record> list : recordMap.values()) {
-            count += list.size();
+        synchronized (recordMap) {
+            for (List<Record> list : recordMap.values()) {
+                count += list.size();
+            }
         }
         return count;
     }
 
-    public void deleteRecord(Record record){
-
-        List<Record> recordList = getRecordList(record.getLastName().substring(0,1).toUpperCase());
-
-        for(Record rec : recordList){
-
-            if(rec.getRecordId().equals(record.getRecordId())){
+    public void deleteRecord(Record record) {
+        List<Record> recordList = getRecordList(record.getLastName().substring(0, 1).toUpperCase());
+        for (Record rec : recordList) {
+            if (rec.getRecordId().equals(record.getRecordId())) {
                 recordList.remove(rec);
                 break;
             }
         }
-
-        putRecordList(record.getLastName().substring(0,1), recordList);
+        putRecordList(record.getLastName().substring(0, 1), recordList);
 
     }
 
