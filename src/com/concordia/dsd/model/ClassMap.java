@@ -57,7 +57,7 @@ public class ClassMap {
 
     public void deleteRecord(Record record){
 
-        List<Record> recordList = getRecordList(record.getLastName().substring(0,1));
+        List<Record> recordList = getRecordList(record.getLastName().substring(0,1).toUpperCase());
 
         for(Record rec : recordList){
 

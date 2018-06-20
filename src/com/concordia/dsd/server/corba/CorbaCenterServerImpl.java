@@ -37,13 +37,11 @@ class CorbaCenterServerImpl extends CenterPOA {
 
     @Override
     public String createTRecord(String firstName, String lastName, String address, String phone, String specialization, String location, String managerId) {
-        //TODO exception handling for invalid location value ..
         return centerServerCenterImpl.createTRecord(firstName,lastName,address,phone,specialization,Location.valueOf(location), managerId);
     }
 
     @Override
     public String createSRecord(String firstName, String lastName, String courseRegistered, String status, String statusDate, String managerId) {
-        //TODO exception handling for invalid status value ..
         return centerServerCenterImpl.createSRecord(firstName,lastName,courseRegistered,Status.valueOf(status),statusDate, managerId);
     }
     @Override
@@ -52,8 +50,8 @@ class CorbaCenterServerImpl extends CenterPOA {
     }
 
     @Override
-    public void editRecord(String recordId, String fieldName, String newValue, String managerId) {
-        centerServerCenterImpl.editRecord(recordId,fieldName,newValue, managerId);
+    public String editRecord(String recordId, String fieldName, String newValue, String managerId) {
+        return centerServerCenterImpl.editRecord(recordId,fieldName,newValue, managerId);
     }
 
     @Override

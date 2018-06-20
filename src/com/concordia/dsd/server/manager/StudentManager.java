@@ -53,7 +53,7 @@ public class StudentManager implements StudentHandler{
     }
 
     @Override
-    public void updateRecord(Record record,String recordID, String fieldName, String newValue, String managerId) {
+    public synchronized void updateRecord(Record record,String recordID, String fieldName, String newValue, String managerId) {
         StudentRecord studentRecord = (StudentRecord) record;
         if (studentRecord != null) {
             try {

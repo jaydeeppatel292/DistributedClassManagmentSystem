@@ -2,21 +2,29 @@ package com.concordia.dsd.client.corba;
 
 import CenterServerApp.Center;
 import CenterServerApp.CenterHelper;
+import com.concordia.dsd.global.constants.CMSLogMessages;
 import com.concordia.dsd.utils.ConfigManager;
+import com.concordia.dsd.utils.LoggingUtil;
 import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
 import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class StartClient {
 
     static Center centerobj;
     static String[][] hostPortArray;
+    static Logger clientLogger;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, InterruptedException {
 
         Scanner c = new Scanner(System.in);
         System.out.println("Welcome to the Distributed Class Management System:");
@@ -25,6 +33,7 @@ public class StartClient {
             System.out.println("Enter the manager Id: ");
             String managerId = c.nextLine().toUpperCase();
             if (validateManager(managerId)) {
+                clientLogger = LoggingUtil.getInstance().getLogger(managerId);
                 boolean selectionFlag = true;
                 while (selectionFlag) {
                     String userSelection = selectionMenu();
@@ -32,10 +41,11 @@ public class StartClient {
                     switch (userSelection) {
 
                         case "1":
-                            String studentRecordid = centerobj.createSRecord(getFieldInput("First Name", ""), getFieldInput("Last Name", ""),
+                            String studentRecordid = centerobj.createSRecord(getFieldInput("First Name", ""), getFieldInput("Last Name", "").toUpperCase(),
                                     getFieldInput("courses registered(separated by commas)", ""), getFieldInput("status active/inactive", "status"),
-                                    getFieldInput("status date(dd/mm/yyyy)", "date"), managerId);
-                            System.out.println("Record successfully created with record ID" + studentRecordid);
+                                    getFieldInput("status date(dd-mm-yyyy)", "date"), managerId);
+                            clientLogger.log(Level.INFO, String.format(CMSLogMessages.CREATED_STUDENT_RECORD_MSG, studentRecordid, managerId));
+                            System.out.println("Record successfully created with record ID: " + studentRecordid);
                             break;
 
                         case "2":
@@ -45,30 +55,48 @@ public class StartClient {
                             }
                             locs = locs + "]";
 
-                            String teacherRecordid = centerobj.createTRecord(getFieldInput("First Name", ""), getFieldInput("Last Name", ""),
+                            String teacherRecordid = centerobj.createTRecord(getFieldInput("First Name", ""), getFieldInput("Last Name", "").toUpperCase(),
                                     getFieldInput("address", ""), getFieldInput("phone", "phone"),
                                     getFieldInput("specialization", ""), getFieldInput("location" + locs, "location").toUpperCase(), managerId);
-                            System.out.println("Record successfully created with record ID" + teacherRecordid);
+                            clientLogger.log(Level.INFO, String.format(CMSLogMessages.CREATED_TEACHER_RECORD_MSG, teacherRecordid, managerId));
+                            System.out.println("Record successfully created with record ID: " + teacherRecordid);
                             break;
                         case "3":
-                            System.out.println(centerobj.getRecordCounts(managerId));
+                            String countOfRec = centerobj.getRecordCounts(managerId);
+                            System.out.println(countOfRec);
+                            clientLogger.log(Level.INFO, CMSLogMessages.RECORD_COUNT, countOfRec);
                             break;
 
                         case "4":
                             String inputRecordId = getFieldInput("record id", "recordId");
                             String fieldNames = " ";
+                            String fieldToBeChanged=" ";
                             if (inputRecordId.substring(0, 2).equalsIgnoreCase("TR")) {
                                 fieldNames = "(address, location, phone)";
+                                fieldToBeChanged = getFieldInput("field" + fieldNames, "UpdateTR");
                             } else if (inputRecordId.substring(0, 2).equalsIgnoreCase("SR")) {
                                 fieldNames = "(statusdate, status, coursesregistered)";
+                                fieldToBeChanged = getFieldInput("field" + fieldNames, "UpdateSR");
                             }
-                            String fieldToBeChanged = getFieldInput("field" + fieldNames, "");
+
                             String newFieldValue = getFieldInput("New Value", "");
-                            centerobj.editRecord(inputRecordId.toUpperCase(), fieldToBeChanged, newFieldValue, managerId);
+                            Thread.sleep(4000);
+                            String returnValue = centerobj.editRecord(inputRecordId.toUpperCase(), fieldToBeChanged, newFieldValue, managerId);
+                            if(returnValue.equals("TRUE")) {
+                                clientLogger.log(Level.INFO, String.format(CMSLogMessages.UPDATE_RECORD_MSG, fieldToBeChanged, newFieldValue, inputRecordId, managerId));
+                                System.out.println("Record successfully updated");
+                            }
+                            else {clientLogger.log(Level.SEVERE, String.format(returnValue, inputRecordId));
+                                System.out.println(String.format(returnValue, inputRecordId));
+                            }
                             break;
 
                         case "5":
-                            String transferStatus = centerobj.transferRecord(managerId, getFieldInput("record id", "").toUpperCase(), getFieldInput("destination server", ""));
+                            String recordId = getFieldInput("record id", "").toUpperCase();
+                            String destinationLoc = getFieldInput("destination server", "location");
+                            Thread.sleep(5000);
+                            String transferStatus = centerobj.transferRecord(managerId, recordId, destinationLoc);
+                            clientLogger.log(Level.INFO, transferStatus);
                             System.out.println(transferStatus);
                             break;
 
@@ -142,7 +170,7 @@ public class StartClient {
 
         String input;
         while (true) {
-            System.out.print("Please enter " + fieldName);
+            System.out.println("Please enter " + fieldName);
             Scanner sc = new Scanner(System.in);
             input = sc.nextLine();
             if (fieldType.equalsIgnoreCase("status")) {
@@ -170,13 +198,27 @@ public class StartClient {
                     continue;
                 }
             } else if (fieldType.equalsIgnoreCase("phone")) {
-                if (!input.matches("^[0-9]*$")) {
+                if (!input.matches("^[0-9]+$")) {
                     System.out.println("Invalid Phone number");
                     continue;
                 }
             } else if (fieldType.equalsIgnoreCase("recordid")) {
                 if ((input.length() != 7) || !(input.substring(2, 7).matches("^[0-9]*$")) || !(input.substring(0, 2).equalsIgnoreCase("TR") || input.substring(0, 2).equalsIgnoreCase("SR"))) {
                     System.out.println("Invalid Record Id.");
+                    continue;
+                }
+            }
+            else if(fieldType.equalsIgnoreCase("UpdateTR")){
+                List<String> fieldArr = Arrays.asList("address", "location", "phone");
+                if(!fieldArr.contains(input.toLowerCase())){
+                    System.out.println("Invalid field name");
+                    continue;
+                }
+            }
+            else if(fieldType.equalsIgnoreCase("UpdateSR")){
+                List<String> fieldArr = Arrays.asList("statusdate", "status", "coursesregistered");
+                if(!fieldArr.contains(input.toLowerCase())){
+                    System.out.println("Invalid field name");
                     continue;
                 }
             }

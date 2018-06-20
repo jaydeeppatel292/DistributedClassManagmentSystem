@@ -81,7 +81,7 @@ public class UDPManager {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
+            serverLogger.log(Level.INFO,  String.format(CMSLogMessages.TRANSFER_RECORD_SUCCESS, record.getRecordId(), managerId));
         } catch (IOException e) {
             e.printStackTrace();
         }

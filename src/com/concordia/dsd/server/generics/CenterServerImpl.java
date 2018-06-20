@@ -126,34 +126,38 @@ public class CenterServerImpl<T> {
         return getUdpManager().getRecordCounts(managerId);
     }
 
-    public void editRecord(String recordId, String fieldName, String newValue, String managerId) {
+    public String editRecord(String recordId, String fieldName, String newValue, String managerId) {
         Record record = getRecordMap().lookupRecord(recordId);
         if (record instanceof StudentRecord) {
             getStudentManager().updateRecord(record,recordId,fieldName,newValue, managerId);
+            return "TRUE";
         }else if(record instanceof TeacherRecord){
             getTeacherManager().updateRecord(record,recordId,fieldName,newValue, managerId);
+            return "TRUE";
         }else {
             getServerLogger().log(Level.SEVERE, CMSLogMessages.RECORD_NOT_FOUND, recordId);
+            return CMSLogMessages.RECORD_NOT_FOUND;
         }
+
     }
 
-    public String transferRecord(String managerId, String recordId, String remoteCenterServerName) {
+    public synchronized String transferRecord(String managerId, String recordId, String remoteCenterServerName) {
         Record record = getRecordMap().lookupRecord(recordId);
         char typeOfRec;
         String returnValue = "";
         if (record instanceof StudentRecord) {
             typeOfRec='S';
             getUdpManager().transferRecord(managerId, record, remoteCenterServerName, typeOfRec);
-            returnValue=CMSLogMessages.TRANSFER_RECORD_SUCCESS;
+            returnValue=String.format(CMSLogMessages.TRANSFER_RECORD_SUCCESS, recordId, managerId);
             recordMap.deleteRecord(record);
         }else if(record instanceof TeacherRecord){
             typeOfRec='T';
             getUdpManager().transferRecord(managerId, record, remoteCenterServerName, typeOfRec);
-            returnValue=CMSLogMessages.TRANSFER_RECORD_SUCCESS;
+            returnValue=String.format(CMSLogMessages.TRANSFER_RECORD_SUCCESS, recordId, managerId);
             recordMap.deleteRecord(record);
         }else {
             getServerLogger().log(Level.SEVERE, CMSLogMessages.RECORD_NOT_FOUND, recordId);
-            returnValue = CMSLogMessages.RECORD_NOT_FOUND;
+            returnValue =  String.format(CMSLogMessages.RECORDID_NOT_FOUND, recordId);
         }
         return  returnValue;
     }
