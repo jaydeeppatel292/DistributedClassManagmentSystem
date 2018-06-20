@@ -136,7 +136,7 @@ public class CenterServerImpl<T> {
             return "TRUE";
         }else {
             getServerLogger().log(Level.SEVERE, CMSLogMessages.RECORD_NOT_FOUND, recordId);
-            return CMSLogMessages.RECORD_NOT_FOUND;
+            return String.format(CMSLogMessages.RECORD_NOT_FOUND, recordId);
         }
 
     }
