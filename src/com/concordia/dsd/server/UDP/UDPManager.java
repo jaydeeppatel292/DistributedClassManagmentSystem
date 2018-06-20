@@ -56,7 +56,7 @@ public class UDPManager {
             stringBuffer.append(", ").append(request.getCenterServer().getLocation().toString());
             stringBuffer.append(" ").append(request.getRequestedRecordCount());
         }
-        serverLogger.log(Level.INFO, CMSLogMessages.RECORD_COUNT, stringBuffer.toString());
+        serverLogger.log(Level.INFO, CMSLogMessages.RECORD_COUNT + " requested by manager: " + managerId, stringBuffer.toString());
         System.out.println("Record Count : " + stringBuffer.toString());
         return stringBuffer.toString();
     }

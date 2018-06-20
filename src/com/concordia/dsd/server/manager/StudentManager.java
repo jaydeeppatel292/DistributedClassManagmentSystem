@@ -33,7 +33,7 @@ public class StudentManager implements StudentHandler{
     }
 
     @Override
-    public synchronized Record insertRecord(String firstName, String lastName, String registerdCourseList, Status status, String statusDate, String managerId) {
+    public Record insertRecord(String firstName, String lastName, String registerdCourseList, Status status, String statusDate, String managerId) {
         StudentRecord studentRecord =null;
         try {
             if (Validator.getInstance().isValidLastName(lastName)) {
@@ -53,7 +53,7 @@ public class StudentManager implements StudentHandler{
     }
 
     @Override
-    public synchronized void updateRecord(Record record,String recordID, String fieldName, String newValue, String managerId) {
+    public void updateRecord(Record record,String recordID, String fieldName, String newValue, String managerId) {
         StudentRecord studentRecord = (StudentRecord) record;
         if (studentRecord != null) {
             try {

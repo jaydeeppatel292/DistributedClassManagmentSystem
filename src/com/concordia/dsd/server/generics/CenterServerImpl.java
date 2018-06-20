@@ -141,7 +141,7 @@ public class CenterServerImpl<T> {
 
     }
 
-    public synchronized String transferRecord(String managerId, String recordId, String remoteCenterServerName) {
+    public String transferRecord(String managerId, String recordId, String remoteCenterServerName) {
         Record record = getRecordMap().lookupRecord(recordId);
         char typeOfRec;
         String returnValue = "";

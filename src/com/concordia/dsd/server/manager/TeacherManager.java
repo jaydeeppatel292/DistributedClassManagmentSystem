@@ -35,7 +35,7 @@ public class TeacherManager implements TeacherHandler {
     }
 
     @Override
-    public synchronized Record insertRecord(String firstName, String lastName, String address, String phone, String specialization, Location location, String managerId) {
+    public Record insertRecord(String firstName, String lastName, String address, String phone, String specialization, Location location, String managerId) {
         TeacherRecord teacherRecord = null;
         try {
             if (Validator.getInstance().isValidLastName(lastName)) {
