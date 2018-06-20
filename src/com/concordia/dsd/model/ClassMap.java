@@ -7,12 +7,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ClassMap {
-    private HashMap<String, List<Record>> recordMap;
+    private ConcurrentHashMap<String, List<Record>> recordMap;
 
     public ClassMap() {
-        recordMap = new HashMap<>();
+        recordMap = new ConcurrentHashMap<>();
     }
 
     private void putRecordList(String key, List<Record> recordList){

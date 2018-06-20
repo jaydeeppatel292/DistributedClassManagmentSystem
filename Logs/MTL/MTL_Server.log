@@ -1,84 +1,24 @@
-Jun 15, 2018 12:45:53 PM com.concordia.dsd.server.UDP.UDPServer initializeServerSocket
-SEVERE: Address already in use: Cannot bind
-Jun 15, 2018 12:45:53 PM com.concordia.dsd.server.UDP.UDPServer run
+Jun 20, 2018 12:27:38 AM com.concordia.dsd.server.manager.StudentManager insertRecord
+INFO: Created student record: Record ID = SR00002 by manager MTL0001
+Jun 20, 2018 12:28:11 AM com.concordia.dsd.server.manager.StudentManager updateRecord
+INFO: Updated field status of record with the value inactive : Record ID = SR00002 by manager MTL0001
+Jun 20, 2018 12:28:11 AM com.concordia.dsd.server.UDP.UDPManager transferRecord
+INFO: Record SR00002 Transferred Successfully by MTL0001
+Jun 20, 2018 12:30:21 AM com.concordia.dsd.server.UDP.UDPServer run
 INFO: UDP MTL Server Initiated
-Jun 15, 2018 11:26:27 PM com.concordia.dsd.server.UDP.UDPServer run
-INFO: UDP MTL Server Initiated
-Jun 15, 2018 11:33:49 PM com.concordia.dsd.server.UDP.UDPServer run
-INFO: UDP MTL Server Initiated
-Jun 15, 2018 11:33:54 PM com.concordia.dsd.server.UDP.UDPServer run
-INFO: UDP MTL Server Initiated
-Jun 15, 2018 11:34:04 PM com.concordia.dsd.server.UDP.UDPServer run
-INFO: UDP MTL Server Initiated
-Jun 15, 2018 11:34:37 PM com.concordia.dsd.server.UDP.UDPServer run
-INFO: UDP MTL Server Initiated
-Jun 15, 2018 11:35:11 PM com.concordia.dsd.server.UDP.UDPServer run
-INFO: UDP MTL Server Initiated
-Jun 18, 2018 11:01:05 AM com.concordia.dsd.server.UDP.UDPServer run
-INFO: UDP MTL Server Initiated
-Jun 18, 2018 11:30:23 AM com.concordia.dsd.server.UDP.UDPServer run
-INFO: UDP MTL Server Initiated
-Jun 18, 2018 11:48:26 AM com.concordia.dsd.server.UDP.UDPServer run
-INFO: UDP MTL Server Initiated
-Jun 18, 2018 11:48:47 AM com.concordia.dsd.server.manager.TeacherManager insertRecord
-INFO: Created teacher record: Record ID = TR00001 by manager MTL0012  
-Jun 18, 2018 11:48:47 AM com.concordia.dsd.server.manager.TeacherManager insertRecord
-INFO: Created teacher record: Record ID = TR00002 by manager MTL0012  
-Jun 18, 2018 11:48:47 AM com.concordia.dsd.server.manager.TeacherManager insertRecord
-INFO: Created teacher record: Record ID = TR00003 by manager MTL0012  
-Jun 18, 2018 11:48:47 AM com.concordia.dsd.server.manager.TeacherManager insertRecord
-INFO: Created teacher record: Record ID = TR00004 by manager MTL0012  
-Jun 18, 2018 11:48:47 AM com.concordia.dsd.server.manager.TeacherManager insertRecord
-INFO: Created teacher record: Record ID = TR00005 by manager MTL0012  
-Jun 18, 2018 11:48:47 AM com.concordia.dsd.server.UDP.UDPManager getRecordCounts
-INFO: Get Record Counts: MTL 5, LVL 2, DDO 2
-Jun 18, 2018 11:50:31 AM com.concordia.dsd.server.manager.TeacherManager insertRecord
-INFO: Created teacher record: Record ID = TR00006 by manager MTL0012  
-Jun 18, 2018 11:50:31 AM com.concordia.dsd.server.manager.TeacherManager insertRecord
-INFO: Created teacher record: Record ID = TR00007 by manager MTL0012  
-Jun 18, 2018 11:50:31 AM com.concordia.dsd.server.manager.TeacherManager insertRecord
-INFO: Created teacher record: Record ID = TR00008 by manager MTL0012  
-Jun 18, 2018 11:50:31 AM com.concordia.dsd.server.manager.TeacherManager insertRecord
-INFO: Created teacher record: Record ID = TR00009 by manager MTL0012  
-Jun 18, 2018 11:50:31 AM com.concordia.dsd.server.manager.TeacherManager insertRecord
-INFO: Created teacher record: Record ID = TR00010 by manager MTL0012  
-Jun 18, 2018 11:50:32 AM com.concordia.dsd.server.UDP.UDPManager getRecordCounts
-INFO: Get Record Counts: MTL 10, LVL 4, DDO 4
-Jun 18, 2018 11:51:33 AM com.concordia.dsd.server.manager.TeacherManager insertRecord
-INFO: Created teacher record: Record ID = TR00011 by manager MTL0012  
-Jun 18, 2018 11:51:33 AM com.concordia.dsd.server.manager.TeacherManager insertRecord
-INFO: Created teacher record: Record ID = TR00012 by manager MTL0012  
-Jun 18, 2018 11:51:33 AM com.concordia.dsd.server.manager.TeacherManager insertRecord
-INFO: Created teacher record: Record ID = TR00013 by manager MTL0012  
-Jun 18, 2018 11:51:33 AM com.concordia.dsd.server.manager.TeacherManager insertRecord
-INFO: Created teacher record: Record ID = TR00014 by manager MTL0012  
-Jun 18, 2018 11:51:33 AM com.concordia.dsd.server.manager.TeacherManager insertRecord
-INFO: Created teacher record: Record ID = TR00015 by manager MTL0012  
-Jun 18, 2018 11:51:33 AM com.concordia.dsd.server.UDP.UDPManager getRecordCounts
-INFO: Get Record Counts: MTL 15, LVL 6, DDO 6
-Jun 18, 2018 11:56:12 AM com.concordia.dsd.server.UDP.UDPServer run
-INFO: UDP MTL Server Initiated
-Jun 18, 2018 11:56:27 AM com.concordia.dsd.server.manager.TeacherManager insertRecord
-INFO: Created teacher record: Record ID = TR00001 by manager MTL0012
-Jun 18, 2018 11:56:27 AM com.concordia.dsd.server.manager.StudentManager insertRecord
-INFO: Created student record: Record ID = SR00001 by manager MTL0012
-Jun 18, 2018 11:56:27 AM com.concordia.dsd.server.manager.TeacherManager insertRecord
-INFO: Created teacher record: Record ID = TR00002 by manager MTL0012
-Jun 18, 2018 11:56:27 AM com.concordia.dsd.server.manager.StudentManager insertRecord
-INFO: Created student record: Record ID = SR00002 by manager MTL0012
-Jun 18, 2018 11:56:27 AM com.concordia.dsd.server.manager.TeacherManager insertRecord
-INFO: Created teacher record: Record ID = TR00003 by manager MTL0012
-Jun 18, 2018 11:56:27 AM com.concordia.dsd.server.manager.StudentManager insertRecord
-INFO: Created student record: Record ID = SR00003 by manager MTL0012
-Jun 18, 2018 11:56:27 AM com.concordia.dsd.server.manager.TeacherManager insertRecord
-INFO: Created teacher record: Record ID = TR00004 by manager MTL0012
-Jun 18, 2018 11:56:27 AM com.concordia.dsd.server.manager.StudentManager insertRecord
-INFO: Created student record: Record ID = SR00004 by manager MTL0012
-Jun 18, 2018 11:56:27 AM com.concordia.dsd.server.manager.TeacherManager insertRecord
-INFO: Created teacher record: Record ID = TR00005 by manager MTL0012
-Jun 18, 2018 11:56:27 AM com.concordia.dsd.server.manager.StudentManager insertRecord
-INFO: Created student record: Record ID = SR00005 by manager MTL0012
-Jun 18, 2018 11:56:27 AM com.concordia.dsd.server.UDP.UDPManager getRecordCounts
-INFO: Get Record Counts: MTL 10, LVL 4, DDO 4
-Jun 18, 2018 11:56:49 AM com.concordia.dsd.server.UDP.UDPManager getRecordCounts
-INFO: Get Record Counts: MTL 10, LVL 4, DDO 4
+Jun 20, 2018 12:31:01 AM com.concordia.dsd.server.manager.StudentManager insertRecord
+INFO: Created student record: Record ID = SR00001 by manager MTL0001
+Jun 20, 2018 12:31:26 AM com.concordia.dsd.server.manager.TeacherManager insertRecord
+INFO: Created teacher record: Record ID = TR00001 by manager MTL0001
+Jun 20, 2018 12:31:28 AM com.concordia.dsd.server.UDP.UDPManager getRecordCounts
+INFO: Get Record Counts: MTL 2, LVL 0, DDO 0
+Jun 20, 2018 12:31:35 AM com.concordia.dsd.server.generics.CenterServerImpl transferRecord
+SEVERE: Failed to update record: Record %s Not Found
+Jun 20, 2018 12:31:35 AM com.concordia.dsd.server.generics.CenterServerImpl editRecord
+SEVERE: Failed to update record: Record %s Not Found
+Jun 20, 2018 12:32:11 AM com.concordia.dsd.server.manager.StudentManager insertRecord
+INFO: Created student record: Record ID = SR00002 by manager MTL0001
+Jun 20, 2018 12:32:14 AM com.concordia.dsd.server.manager.StudentManager updateRecord
+INFO: Updated field status of record with the value inactive : Record ID = SR00002 by manager MTL0001
+Jun 20, 2018 12:32:14 AM com.concordia.dsd.server.UDP.UDPManager transferRecord
+INFO: Record SR00002 Transferred Successfully by MTL0001
