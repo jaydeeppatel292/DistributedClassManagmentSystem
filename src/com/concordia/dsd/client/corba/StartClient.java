@@ -80,7 +80,6 @@ public class StartClient {
                             }
 
                             String newFieldValue = getFieldInput("New Value", "");
-                            Thread.sleep(4000);
                             String returnValue = centerobj.editRecord(inputRecordId.toUpperCase(), fieldToBeChanged, newFieldValue, managerId);
                             if(returnValue.equals("TRUE")) {
                                 clientLogger.log(Level.INFO, String.format(CMSLogMessages.UPDATE_RECORD_MSG, fieldToBeChanged, newFieldValue, inputRecordId, managerId));
@@ -94,7 +93,6 @@ public class StartClient {
                         case "5":
                             String recordId = getFieldInput("record id", "").toUpperCase();
                             String destinationLoc = getFieldInput("destination server", "location");
-                            Thread.sleep(5000);
                             String transferStatus = centerobj.transferRecord(managerId, recordId, destinationLoc);
                             clientLogger.log(Level.INFO, transferStatus);
                             System.out.println(transferStatus);

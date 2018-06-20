@@ -22,3 +22,9 @@ Jun 20, 2018 12:32:14 AM com.concordia.dsd.server.manager.StudentManager updateR
 INFO: Updated field status of record with the value inactive : Record ID = SR00002 by manager MTL0001
 Jun 20, 2018 12:32:14 AM com.concordia.dsd.server.UDP.UDPManager transferRecord
 INFO: Record SR00002 Transferred Successfully by MTL0001
+Jun 20, 2018 1:01:37 AM com.concordia.dsd.server.UDP.UDPServer run
+INFO: UDP MTL Server Initiated
+Jun 20, 2018 1:02:22 AM com.concordia.dsd.server.manager.StudentManager insertRecord
+INFO: Created student record: Record ID = SR00001 by manager MTL0001
+Jun 20, 2018 1:02:54 AM com.concordia.dsd.server.UDP.UDPManager transferRecord
+INFO: Record SR00001 Transferred Successfully by MTL0001

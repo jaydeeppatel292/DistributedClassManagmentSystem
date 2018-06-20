@@ -104,3 +104,5 @@ Jun 20, 2018 12:31:28 AM com.concordia.dsd.server.UDP.UDPRequest run
 INFO: UDP Request initiated to retrieve from DDO Server on localhost/127.0.0.1:3456
 Jun 20, 2018 12:31:28 AM com.concordia.dsd.server.UDP.UDPRequest run
 INFO: UDP Request completed to retrieve from DDO Server on localhost/127.0.0.1:3456 with Record Count: 0
+Jun 20, 2018 1:01:37 AM com.concordia.dsd.server.UDP.UDPServer run
+INFO: UDP DDO Server Initiated
