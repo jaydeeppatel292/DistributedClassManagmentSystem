@@ -10,10 +10,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ClassMap {
-    private ConcurrentHashMap<String, List<Record>> recordMap;
+    private HashMap<String, List<Record>> recordMap;
 
     public ClassMap() {
-        recordMap = new ConcurrentHashMap<>();
+        recordMap = new HashMap<>();
     }
 
     private void putRecordList(String key, List<Record> recordList) {
