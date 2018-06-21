@@ -82,6 +82,7 @@ public class LoggingUtil {
 	public Logger getClientLogger(String managerId) throws SecurityException, IOException {
 		String location = managerId.substring(0, 3);
 		Logger logger = Logger.getLogger(location);
+		mkRequiredFilesAndDir(Location.valueOf(location));
 		Path path = Paths.get(Paths.get(".").toAbsolutePath().toString(), CMSConstants.LOGS_BASE_PATH, location,
 				managerId + "_Client.log").normalize();
 		FileHandler fHandler = new FileHandler(path.toString(), true);
