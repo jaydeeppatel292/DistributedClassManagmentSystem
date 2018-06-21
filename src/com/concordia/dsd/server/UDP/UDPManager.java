@@ -25,6 +25,11 @@ public class UDPManager {
         this.serverLogger = serverLogger;
     }
 
+    /**
+     * Implementation of Get Record Count From All server
+     * @param managerId
+     * @return
+     */
     public String getRecordCounts(String managerId) {
         StringBuffer stringBuffer = new StringBuffer();
         String recordCount = null;
@@ -61,6 +66,13 @@ public class UDPManager {
         return stringBuffer.toString();
     }
 
+    /**
+     * Implementation of Transfer Record from one server to another
+     * @param managerId
+     * @param record
+     * @param remoteCenterServerName
+     * @param typeOfRec
+     */
     public void transferRecord(String managerId, Record record, String remoteCenterServerName, char typeOfRec) {
         try {
 

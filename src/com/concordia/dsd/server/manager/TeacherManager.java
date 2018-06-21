@@ -25,6 +25,13 @@ public class TeacherManager implements TeacherHandler {
         this.classMap = classMap;
         teacherRecordCounter = new AtomicInteger();
     }
+
+    /**
+     * Validate Location
+     * @param newValue
+     * @return
+     * @throws InvalidFieldException
+     */
     @Override
     public Location validateLocation(String newValue) throws InvalidFieldException {
         try {
@@ -34,6 +41,17 @@ public class TeacherManager implements TeacherHandler {
         }
     }
 
+    /**
+     * Insert Record in ClassMap
+     * @param firstName
+     * @param lastName
+     * @param address
+     * @param phone
+     * @param specialization
+     * @param location
+     * @param managerId
+     * @return
+     */
     @Override
     public Record insertRecord(String firstName, String lastName, String address, String phone, String specialization, Location location, String managerId) {
         TeacherRecord teacherRecord = null;
@@ -55,6 +73,14 @@ public class TeacherManager implements TeacherHandler {
         return teacherRecord;
     }
 
+    /**
+     * Update Record in ClassMap
+     * @param record
+     * @param recordID
+     * @param fieldName
+     * @param newValue
+     * @param managerId
+     */
     @Override
     public void updateRecord(Record record, String recordID, String fieldName, String newValue, String managerId) {
         TeacherRecord teacherRecord = (TeacherRecord) record;

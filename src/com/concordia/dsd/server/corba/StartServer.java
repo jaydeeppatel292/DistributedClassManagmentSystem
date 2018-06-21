@@ -13,34 +13,37 @@ import org.omg.PortableServer.POA;
 import org.omg.PortableServer.POAHelper;
 
 public class StartServer {
-//    public static List<String> locationList = new ArrayList<>();
+    //    public static List<String> locationList = new ArrayList<>();
     public static String[][] hostPortArray;
     static ORB[] orb;
+
     public static void main(String args[]) {
+        hostPortArray = ConfigManager.getInstance().getHostPortArray();
+        String[] hostPortInfo = new String[4];
 
-            hostPortArray= ConfigManager.getInstance().getHostPortArray();
-            String[] hostPortInfo = new String[4];
-
-            orb = new ORB[hostPortArray.length];
-            for(int i = 0;i<hostPortArray.length;i++){
-                for(int j = 0; j < 4; j++){
-                    hostPortInfo[j] = hostPortArray[i][j+1];
-                }
-                orb[i] = ORB.init(hostPortInfo, null);
-                createServerBinding(hostPortArray[i][0], i);
+        orb = new ORB[hostPortArray.length];
+        for (int i = 0; i < hostPortArray.length; i++) {
+            for (int j = 0; j < 4; j++) {
+                hostPortInfo[j] = hostPortArray[i][j + 1];
             }
+            orb[i] = ORB.init(hostPortInfo, null);
+            createServerBinding(hostPortArray[i][0], i);
+        }
 
-        for (;;){
-            for(int i=0;i<hostPortArray.length;i++){
+        for (; ; ) {
+            for (int i = 0; i < hostPortArray.length; i++) {
                 orb[i].run();
             }
         }
-            // wait for invocations from clients
+        // wait for invocations from clients
     }
 
-    public static void createServerBinding(String centerName, int serverNumber){
-
-
+    /**
+     * Create server
+     * @param centerName
+     * @param serverNumber
+     */
+    public static void createServerBinding(String centerName, int serverNumber) {
         try {
             // create and initialize the ORB //// get reference to rootpoa &amp; activate the POAManager
 
@@ -48,10 +51,9 @@ public class StartServer {
             rootpoa.the_POAManager().activate();
 
             // create servant and register it with the ORB
-            //TODO change it to json ..
             CorbaCenterServerImpl centerServer = new CorbaCenterServerImpl(Location.valueOf(centerName));
             centerServer.setORB(orb[serverNumber]);
-            ServerManager.getInstance().addServer(Location.valueOf(centerName),centerServer.getCenterServerCenterImpl());
+            ServerManager.getInstance().addServer(Location.valueOf(centerName), centerServer.getCenterServerCenterImpl());
 
             // get object reference from the servant
             org.omg.CORBA.Object ref = rootpoa.servant_to_reference(centerServer);
@@ -62,16 +64,12 @@ public class StartServer {
 
             NameComponent path[] = ncRef.to_name(centerName);
             ncRef.rebind(path, href);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.err.println("ERROR: " + e);
             e.printStackTrace(System.out);
         }
         System.out.println("Center Server ready and waiting ...");
-
         // wait for invocations from clients
 
     }
-
-
 }

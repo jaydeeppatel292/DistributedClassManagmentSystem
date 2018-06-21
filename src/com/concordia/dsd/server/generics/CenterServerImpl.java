@@ -28,6 +28,14 @@ public class CenterServerImpl<T> {
     private StudentManager studentManager;
     private TeacherManager teacherManager;
     private UDPManager udpManager;
+
+    /**
+     * Initialize Constructor
+     * Also Start Udp Server
+     * @param location
+     * @throws SecurityException
+     * @throws IOException
+     */
     public CenterServerImpl(Location location) throws SecurityException, IOException {
         this.location = location;
         try {
@@ -43,10 +51,18 @@ public class CenterServerImpl<T> {
         teacherManager = new TeacherManager(recordMap, serverLogger);
         udpManager = new UDPManager(location,recordMap, serverLogger);
         udpServer = new UDPServer(this);
+
+        // Initialize UDP Server
         initCenterServerModel();
+
+        // Start UDP Server
         new Thread(udpServer).start();
 
     }
+
+    /**
+     * Initialize UDP Server
+     */
     private void initCenterServerModel() {
         setUdpPort(udpServer.getCenterServerPort());
         setIpAddress(udpServer.getInetAddress());
@@ -100,6 +116,17 @@ public class CenterServerImpl<T> {
         return serverLogger;
     }
 
+    /**
+     * Implementation of Create Teacher Record
+     * @param firstName
+     * @param lastName
+     * @param address
+     * @param phone
+     * @param specialization
+     * @param location
+     * @param managerId
+     * @return
+     */
     public String createTRecord(String firstName, String lastName, String address, String phone, String specialization,
                                 Location location, String managerId) {
         String recordId = null;
@@ -110,6 +137,16 @@ public class CenterServerImpl<T> {
         return recordId;
     }
 
+    /**
+     * Implementation of create Student Record
+     * @param firstName
+     * @param lastName
+     * @param courseRegistered
+     * @param status
+     * @param statusDate
+     * @param managerId
+     * @return
+     */
     public String createSRecord(String firstName, String lastName, String courseRegistered, Status status,
                                 String statusDate, String managerId) {
         String recordId = null;
@@ -120,10 +157,23 @@ public class CenterServerImpl<T> {
         return recordId;
     }
 
+    /**
+     * Get Record Counts from all servers
+     * @param managerId
+     * @return
+     */
     public String getRecordCounts(String managerId) {
         return getUdpManager().getRecordCounts(managerId);
     }
 
+    /**
+     * Edit Record
+     * @param recordId
+     * @param fieldName
+     * @param newValue
+     * @param managerId
+     * @return
+     */
     public String editRecord(String recordId, String fieldName, String newValue, String managerId) {
         Record record = getRecordMap().lookupRecord(recordId);
         if (record instanceof StudentRecord) {
@@ -139,6 +189,13 @@ public class CenterServerImpl<T> {
 
     }
 
+    /**
+     * Transfer Record from one server to other server
+     * @param managerId
+     * @param recordId
+     * @param remoteCenterServerName
+     * @return
+     */
     public String transferRecord(String managerId, String recordId, String remoteCenterServerName) {
         Record record = getRecordMap().lookupRecord(recordId);
         char typeOfRec;

@@ -18,6 +18,12 @@ public class UDPServer implements UDPServerInterface, Runnable {
 	private CenterServerImpl centerServer;
 	private Logger logger = null;
 
+	/**
+	 * Constructor UDPServer
+	 * @param centerServerImpl
+	 * @throws SecurityException
+	 * @throws IOException
+	 */
 	public UDPServer(CenterServerImpl centerServerImpl) throws SecurityException, IOException {
 		super();
 		centerServer = centerServerImpl;

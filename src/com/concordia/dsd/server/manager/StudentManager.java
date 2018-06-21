@@ -26,12 +26,28 @@ public class StudentManager implements StudentHandler{
         studentRecordCounter = new AtomicInteger();
     }
 
+    /**
+     * Validate Location
+     * @param statusType
+     * @return
+     * @throws InvalidFieldException
+     */
     @Override
     public Status validateStatus(String statusType) throws InvalidFieldException {
         Status statusVal = Status.valueOf(statusType.toLowerCase());
         return statusVal;
     }
 
+    /**
+     * Insert Record in classMap
+     * @param firstName
+     * @param lastName
+     * @param registerdCourseList
+     * @param status
+     * @param statusDate
+     * @param managerId
+     * @return
+     */
     @Override
     public Record insertRecord(String firstName, String lastName, String registerdCourseList, Status status, String statusDate, String managerId) {
         StudentRecord studentRecord =null;
@@ -52,6 +68,14 @@ public class StudentManager implements StudentHandler{
         return studentRecord;
     }
 
+    /**
+     * Update Record in classMap
+     * @param record
+     * @param recordID
+     * @param fieldName
+     * @param newValue
+     * @param managerId
+     */
     @Override
     public void updateRecord(Record record,String recordID, String fieldName, String newValue, String managerId) {
         StudentRecord studentRecord = (StudentRecord) record;
