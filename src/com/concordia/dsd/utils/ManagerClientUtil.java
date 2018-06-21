@@ -10,6 +10,12 @@ import java.rmi.registry.Registry;
 
 public class ManagerClientUtil {
 
+	/**
+	 * Get Center Server based on given manager id
+	 * @param managerId
+	 * @return
+	 * @throws Exception
+	 */
 	public static CenterServer getCenterServer(String managerId) throws Exception {
 		Registry registry = LocateRegistry.getRegistry(ServerConfig.REGISTRY_PORT);
 

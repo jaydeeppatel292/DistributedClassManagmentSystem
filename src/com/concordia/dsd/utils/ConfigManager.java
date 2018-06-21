@@ -8,6 +8,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Singleton ConfigManager
+ */
 public class ConfigManager {
 
     private static ConfigManager instance;
@@ -20,6 +23,10 @@ public class ConfigManager {
         return instance;
     }
 
+    /**
+     * Get Host Port Array
+     * @return
+     */
     public String[][] getHostPortArray() {
 
         org.json.simple.parser.JSONParser parser = new org.json.simple.parser.JSONParser();

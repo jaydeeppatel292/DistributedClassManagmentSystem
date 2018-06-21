@@ -12,6 +12,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+/**
+ * Singleton LoggingUtil
+ */
 public class LoggingUtil {
 
 	private static LoggingUtil instance;
@@ -28,6 +31,10 @@ public class LoggingUtil {
 		return instance;
 	}
 
+	/**
+	 * Automatically create required Files and dir if not available for logging
+	 * @param location
+	 */
 	public void mkRequiredFilesAndDir(Location location){
 		Path locLogPath = Paths.get(Paths.get(".").toAbsolutePath().toString(), CMSConstants.LOGS_BASE_PATH, location.toString());
 		Path filePath = Paths.get(Paths.get(".").toAbsolutePath().toString(), CMSConstants.LOGS_BASE_PATH, location.toString(),
@@ -45,6 +52,14 @@ public class LoggingUtil {
 			}
 		}
 	}
+
+	/**
+	 * Get Logger based on Location
+	 * @param location
+	 * @return
+	 * @throws SecurityException
+	 * @throws IOException
+	 */
 	public Logger getServerLogger(Location location) throws SecurityException, IOException {
 		mkRequiredFilesAndDir(location);
 		Logger logger = Logger.getLogger(location.toString());
@@ -57,6 +72,13 @@ public class LoggingUtil {
 		return logger;
 	}
 
+	/**
+	 * Get Client Logger based on Manager Id
+	 * @param managerId
+	 * @return
+	 * @throws SecurityException
+	 * @throws IOException
+	 */
 	public Logger getClientLogger(String managerId) throws SecurityException, IOException {
 		String location = managerId.substring(0, 3);
 		Logger logger = Logger.getLogger(location);
