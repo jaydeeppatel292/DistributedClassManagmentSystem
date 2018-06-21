@@ -1,7 +1,6 @@
 package com.concordia.dsd.server.UDP;
 
 import com.concordia.dsd.global.constants.CMSLogMessages;
-import com.concordia.dsd.server.RMI.RMICenterServerImpl;
 import com.concordia.dsd.server.generics.CenterServerImpl;
 import com.concordia.dsd.utils.LoggingUtil;
 
@@ -21,7 +20,7 @@ public class UDPRequest extends Thread {
 
 	public UDPRequest(CenterServerImpl centerServerImpl) throws SecurityException, IOException {
 		centerServer = centerServerImpl;
-		logger = LoggingUtil.getInstance().getLogger(centerServerImpl.getLocation());
+		logger = LoggingUtil.getInstance().getServerLogger(centerServerImpl.getLocation());
 	}
 
 	public int getRequestedRecordCount() {

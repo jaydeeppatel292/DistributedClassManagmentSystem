@@ -8,8 +8,6 @@ import com.concordia.dsd.utils.LoggingUtil;
 import com.concordia.dsd.utils.ManagerClientUtil;
 
 import java.rmi.RemoteException;
-import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,7 +19,7 @@ public class ManagerClient {
 	public ManagerClient(String managerId) throws Exception {
 		this.managerId = managerId;
 		server = ManagerClientUtil.getCenterServer(managerId);
-		clientLogger = LoggingUtil.getInstance().getLogger(managerId);
+		clientLogger = LoggingUtil.getInstance().getClientLogger(managerId);
 	}
 
 	public String createTRecord(String firstName, String lastName, String address, String phone, String specialization,

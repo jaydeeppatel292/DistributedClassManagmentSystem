@@ -21,7 +21,7 @@ public class UDPServer implements UDPServerInterface, Runnable {
 	public UDPServer(CenterServerImpl centerServerImpl) throws SecurityException, IOException {
 		super();
 		centerServer = centerServerImpl;
-		logger = LoggingUtil.getInstance().getLogger(centerServer.getLocation());
+		logger = LoggingUtil.getInstance().getServerLogger(centerServer.getLocation());
 		initializeServerSocket();
 	}
 

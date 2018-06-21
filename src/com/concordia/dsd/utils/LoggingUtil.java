@@ -45,7 +45,7 @@ public class LoggingUtil {
 			}
 		}
 	}
-	public Logger getLogger(Location location) throws SecurityException, IOException {
+	public Logger getServerLogger(Location location) throws SecurityException, IOException {
 		mkRequiredFilesAndDir(location);
 		Logger logger = Logger.getLogger(location.toString());
 		Path path = Paths.get(Paths.get(".").toAbsolutePath().toString(), CMSConstants.LOGS_BASE_PATH, location.toString(),
@@ -57,7 +57,7 @@ public class LoggingUtil {
 		return logger;
 	}
 
-	public Logger getLogger(String managerId) throws SecurityException, IOException {
+	public Logger getClientLogger(String managerId) throws SecurityException, IOException {
 		String location = managerId.substring(0, 3);
 		Logger logger = Logger.getLogger(location);
 		Path path = Paths.get(Paths.get(".").toAbsolutePath().toString(), CMSConstants.LOGS_BASE_PATH, location,

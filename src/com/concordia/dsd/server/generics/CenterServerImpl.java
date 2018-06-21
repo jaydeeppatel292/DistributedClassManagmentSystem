@@ -12,11 +12,9 @@ import com.concordia.dsd.server.UDP.UDPServer;
 import com.concordia.dsd.server.manager.StudentManager;
 import com.concordia.dsd.server.manager.TeacherManager;
 import com.concordia.dsd.utils.LoggingUtil;
-import org.omg.CORBA.ORB;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,7 +31,7 @@ public class CenterServerImpl<T> {
     public CenterServerImpl(Location location) throws SecurityException, IOException {
         this.location = location;
         try {
-            serverLogger = LoggingUtil.getInstance().getLogger(this.location);
+            serverLogger = LoggingUtil.getInstance().getServerLogger(this.location);
         } catch (SecurityException e) {
             e.printStackTrace();
         } catch (IOException e) {

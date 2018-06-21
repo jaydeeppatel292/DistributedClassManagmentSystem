@@ -1,21 +1,11 @@
 package com.concordia.dsd.client.corba;
 
-import CenterServerApp.Center;
-import CenterServerApp.CenterHelper;
 import com.concordia.dsd.global.constants.CMSLogMessages;
-import com.concordia.dsd.utils.ConfigManager;
 import com.concordia.dsd.utils.LoggingUtil;
 import com.concordia.dsd.utils.Validator;
-import org.omg.CORBA.ORB;
-import org.omg.CosNaming.NamingContextExt;
-import org.omg.CosNaming.NamingContextExtHelper;
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -36,7 +26,7 @@ public class StartClient {
             System.out.println("Enter the manager Id: ");
             String managerId = c.nextLine().toUpperCase();
             if (ClientManager.getInstace().validateManager(managerId)) {
-                clientLogger = LoggingUtil.getInstance().getLogger(managerId);
+                clientLogger = LoggingUtil.getInstance().getClientLogger(managerId);
                 boolean selectionFlag = true;
                 while (selectionFlag) {
                     String userSelection = selectionMenu();
