@@ -27,7 +27,6 @@ public class StartClient {
                 boolean selectionFlag = true;
                 while (selectionFlag) {
                     String userSelection = selectionMenu();
-
                     switch (userSelection) {
 
                         case "1":
@@ -103,7 +102,10 @@ public class StartClient {
 
     }
 
-
+    /**
+     * Menu Selection
+     * @return
+     */
     public static String selectionMenu() {
 
         System.out.println("1. Add a Student");
@@ -119,6 +121,12 @@ public class StartClient {
         return sc.nextLine();
     }
 
+    /**
+     * Get Input from user based on option
+     * @param fieldName
+     * @param fieldType
+     * @return
+     */
     public static String getFieldInput(String fieldName, String fieldType) {
 
         String input;

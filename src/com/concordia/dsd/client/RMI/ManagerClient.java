@@ -1,4 +1,4 @@
-package com.concordia.dsd.client;
+package com.concordia.dsd.client.RMI;
 
 import com.concordia.dsd.global.cmsenum.Location;
 import com.concordia.dsd.global.cmsenum.Status;
@@ -11,6 +11,9 @@ import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Client Manager For RMI
+ */
 public class ManagerClient {
 	String managerId;
 	CenterServer server;
@@ -21,6 +24,7 @@ public class ManagerClient {
 		server = ManagerClientUtil.getCenterServer(managerId);
 		clientLogger = LoggingUtil.getInstance().getClientLogger(managerId);
 	}
+
 
 	public String createTRecord(String firstName, String lastName, String address, String phone, String specialization,
 			Location location, String managerId) throws RemoteException {
