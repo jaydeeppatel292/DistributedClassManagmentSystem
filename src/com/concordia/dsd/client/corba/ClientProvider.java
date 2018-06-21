@@ -7,20 +7,20 @@ import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
 
-public class ClientManager {
+public class ClientProvider {
     String[][] hostPortArray;
     Center centerobj;
-    private static ClientManager clientManager;
+    private static ClientProvider clientProvider;
 
 
-    static ClientManager getInstace(){
-        if(clientManager == null){
-            clientManager = new ClientManager();
+    static ClientProvider getInstace(){
+        if(clientProvider == null){
+            clientProvider = new ClientProvider();
         }
-        return clientManager;
+        return clientProvider;
     }
 
-    private ClientManager() {
+    private ClientProvider() {
         hostPortArray = ConfigManager.getInstance().getHostPortArray();
     }
 

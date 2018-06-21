@@ -12,9 +12,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class StartClient {
-
-
-
     static Logger clientLogger;
 
     public static void main(String[] args) throws IOException, InterruptedException {
@@ -25,7 +22,7 @@ public class StartClient {
         while (managerLogInFlag) {
             System.out.println("Enter the manager Id: ");
             String managerId = c.nextLine().toUpperCase();
-            if (ClientManager.getInstace().validateManager(managerId)) {
+            if (ClientProvider.getInstace().validateManager(managerId)) {
                 clientLogger = LoggingUtil.getInstance().getClientLogger(managerId);
                 boolean selectionFlag = true;
                 while (selectionFlag) {
@@ -34,7 +31,7 @@ public class StartClient {
                     switch (userSelection) {
 
                         case "1":
-                            String studentRecordid = ClientManager.getInstace().getCenterobj().createSRecord(getFieldInput("First Name", ""), getFieldInput("Last Name", "").toUpperCase(),
+                            String studentRecordid = ClientProvider.getInstace().getCenterobj().createSRecord(getFieldInput("First Name", ""), getFieldInput("Last Name", "").toUpperCase(),
                                     getFieldInput("courses registered(separated by commas)", ""), getFieldInput("status active/inactive", "status"),
                                     getFieldInput("status date(dd-mm-yyyy)", "date"), managerId);
                             clientLogger.log(Level.INFO, String.format(CMSLogMessages.CREATED_STUDENT_RECORD_MSG, studentRecordid, managerId));
@@ -43,19 +40,19 @@ public class StartClient {
 
                         case "2":
                             String locs = "[";
-                            for (int i = 0; i < ClientManager.getInstace().getHostPortArray().length; i++) {
-                                locs = locs + " " + ClientManager.getInstace().getHostPortArray()[i][0];
+                            for (int i = 0; i < ClientProvider.getInstace().getHostPortArray().length; i++) {
+                                locs = locs + " " + ClientProvider.getInstace().getHostPortArray()[i][0];
                             }
                             locs = locs + "]";
 
-                            String teacherRecordid = ClientManager.getInstace().getCenterobj().createTRecord(getFieldInput("First Name", ""), getFieldInput("Last Name", "").toUpperCase(),
+                            String teacherRecordid = ClientProvider.getInstace().getCenterobj().createTRecord(getFieldInput("First Name", ""), getFieldInput("Last Name", "").toUpperCase(),
                                     getFieldInput("address", ""), getFieldInput("phone", "phone"),
                                     getFieldInput("specialization", ""), getFieldInput("location" + locs, "location").toUpperCase(), managerId);
                             clientLogger.log(Level.INFO, String.format(CMSLogMessages.CREATED_TEACHER_RECORD_MSG, teacherRecordid, managerId));
                             System.out.println("Record successfully created with record ID: " + teacherRecordid);
                             break;
                         case "3":
-                            String countOfRec = ClientManager.getInstace().getCenterobj().getRecordCounts(managerId);
+                            String countOfRec = ClientProvider.getInstace().getCenterobj().getRecordCounts(managerId);
                             System.out.println(countOfRec);
                             clientLogger.log(Level.INFO, CMSLogMessages.RECORD_COUNT, countOfRec);
                             break;
@@ -73,7 +70,7 @@ public class StartClient {
                             }
 
                             String newFieldValue = getFieldInput("New Value", "");
-                            String returnValue = ClientManager.getInstace().getCenterobj().editRecord(inputRecordId.toUpperCase(), fieldToBeChanged, newFieldValue, managerId);
+                            String returnValue = ClientProvider.getInstace().getCenterobj().editRecord(inputRecordId.toUpperCase(), fieldToBeChanged, newFieldValue, managerId);
                             if(returnValue.equals("TRUE")) {
                                 clientLogger.log(Level.INFO, String.format(CMSLogMessages.UPDATE_RECORD_MSG, fieldToBeChanged, newFieldValue, inputRecordId, managerId));
                                 System.out.println("Record successfully updated");
@@ -86,7 +83,7 @@ public class StartClient {
                         case "5":
                             String recordId = getFieldInput("record id", "").toUpperCase();
                             String destinationLoc = getFieldInput("destination server", "location");
-                            String transferStatus = ClientManager.getInstace().getCenterobj().transferRecord(managerId, recordId, destinationLoc);
+                            String transferStatus = ClientProvider.getInstace().getCenterobj().transferRecord(managerId, recordId, destinationLoc);
                             clientLogger.log(Level.INFO, transferStatus);
                             System.out.println(transferStatus);
                             break;
@@ -143,8 +140,8 @@ public class StartClient {
                 }
             } else if (fieldType.equalsIgnoreCase("location")) {
                 boolean checkFlag = false;
-                for (int i = 0; i < ClientManager.getInstace().getHostPortArray().length; i++) {
-                    if (input.equalsIgnoreCase(ClientManager.getInstace().getHostPortArray()[i][0])) {
+                for (int i = 0; i < ClientProvider.getInstace().getHostPortArray().length; i++) {
+                    if (input.equalsIgnoreCase(ClientProvider.getInstace().getHostPortArray()[i][0])) {
                         checkFlag = true;
                         break;
                     }
