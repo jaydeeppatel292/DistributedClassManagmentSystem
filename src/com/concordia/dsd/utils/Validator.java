@@ -4,6 +4,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * SingleTon Central Validator
+ */
 public class Validator {
     private static Validator instance;
     private Validator(){};
@@ -14,6 +17,11 @@ public class Validator {
         return instance;
     }
 
+    /**
+     * To check if given last name is valid or not
+     * @param lastName
+     * @return
+     */
     public boolean isValidLastName(String lastName) {
         boolean isValid = false;
         if (lastName != null && !lastName.isEmpty()) {
@@ -24,6 +32,13 @@ public class Validator {
         }
         return isValid;
     }
+
+    /**
+     * Is given date is valid based on given date format
+     * @param dateToValidate
+     * @param dateFromat
+     * @return
+     */
     public boolean isValidDate(String dateToValidate, String dateFromat){
 
         if(dateToValidate == null){

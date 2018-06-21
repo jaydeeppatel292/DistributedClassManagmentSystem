@@ -7,20 +7,23 @@ import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
 
-public class ClientManager {
+/**
+ * Singleton ClientProvider
+ */
+public class ClientProvider {
     String[][] hostPortArray;
     Center centerobj;
-    private static ClientManager clientManager;
+    private static ClientProvider clientProvider;
 
 
-    static ClientManager getInstace(){
-        if(clientManager == null){
-            clientManager = new ClientManager();
+    static ClientProvider getInstace(){
+        if(clientProvider == null){
+            clientProvider = new ClientProvider();
         }
-        return clientManager;
+        return clientProvider;
     }
 
-    private ClientManager() {
+    private ClientProvider() {
         hostPortArray = ConfigManager.getInstance().getHostPortArray();
     }
 
@@ -32,6 +35,11 @@ public class ClientManager {
         return centerobj;
     }
 
+    /**
+     * Validate Managerid by length and host
+     * @param managerId
+     * @return
+     */
     public boolean validateManager(String managerId) {
         if (managerId.length() != 7) {
             System.out.println("Invalid Manager Id length"); //log needs to be put
@@ -48,6 +56,11 @@ public class ClientManager {
         return false;
     }
 
+    /**
+     * Create Connection to given server
+     * @param hostPortArray
+     * @param serverLoc
+     */
     public  void createConnection(String[][] hostPortArray, String serverLoc) {
         String[] hostPortInfo = new String[4];
         for (int j = 0; j < 4; j++) {

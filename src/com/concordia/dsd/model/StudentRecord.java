@@ -96,13 +96,4 @@ public class StudentRecord extends Record {
 	public void setStatusDate(String statusDate) {
 		this.statusDate = statusDate;
 	}
-
-	private Status validateStatus(String newValue) throws InvalidFieldException {
-		try {
-			return Status.valueOf(newValue);
-		} catch (IllegalArgumentException exception) {
-			throw new InvalidFieldException("Entered status is invalid : choices(active,inactive)");
-		}
-	}
-
 }

@@ -112,26 +112,4 @@ public class TeacherRecord extends Record {
 	public void setLocation(Location location) {
 		this.location = location;
 	}
-
-	public void edit(String recordId, String fieldName, String newValue) {
-		String field = fieldName.toLowerCase();
-		if(field.equalsIgnoreCase("address")) {
-			this.setAddress(newValue);
-		}else if(field.equalsIgnoreCase("phone")) {
-			this.setPhone(newValue);
-		}else if(field.equalsIgnoreCase("location")) {
-			this.setLocation(this.validateLocation(newValue));
-		}else {
-			throw new InvalidFieldException("Entered Field can-not be changed or it does not exist ");
-		}
-	}
-
-	private Location validateLocation(String newValue) throws InvalidFieldException {
-		try {
-            return Location.valueOf(newValue);
-        } catch (IllegalArgumentException exception) {
-            throw new InvalidFieldException("Entered Location is invalid: choices(MTL,LVL,DDO)");
-        }
-	}
-	
 }

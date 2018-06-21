@@ -16,18 +16,35 @@ public class ClassMap {
         recordMap = new HashMap<>();
     }
 
+    /**
+     * Add RecordList
+     * @param key
+     * @param recordList
+     */
     private void putRecordList(String key, List<Record> recordList) {
+        // synchronized on databse
         synchronized (recordMap) {
             recordMap.put(key, recordList);
         }
     }
 
+    /**
+     * Get Record list
+     * @param key
+     * @return
+     */
     private List<Record> getRecordList(String key) {
+        // synchronized on databse
         synchronized (recordMap) {
             return recordMap.get(key);
         }
     }
 
+    /**
+     * Add new Record in recordlist
+     * @param recordKey
+     * @param record
+     */
     public void addRecord(String recordKey, Record record) {
         List<Record> recordList = getRecordList(recordKey.toUpperCase());
         if (recordList != null) {
@@ -39,6 +56,11 @@ public class ClassMap {
         putRecordList(recordKey.toUpperCase(), recordList);
     }
 
+    /**
+     * Lookup Record for recordId
+     * @param recordId
+     * @return
+     */
     public Record lookupRecord(String recordId) {
         Record record = null;
         synchronized (recordMap) {
@@ -56,6 +78,10 @@ public class ClassMap {
         return record;
     }
 
+    /**
+     * Get Records Count
+     * @return
+     */
     public Integer getRecordsCount() {
         int count = 0;
         synchronized (recordMap) {
@@ -66,6 +92,10 @@ public class ClassMap {
         return count;
     }
 
+    /**
+     * Delete Record form recordlist
+     * @param record
+     */
     public void deleteRecord(Record record) {
         List<Record> recordList = getRecordList(record.getLastName().substring(0, 1).toUpperCase());
         for (Record rec : recordList) {
@@ -75,7 +105,5 @@ public class ClassMap {
             }
         }
         putRecordList(record.getLastName().substring(0, 1), recordList);
-
     }
-
 }
