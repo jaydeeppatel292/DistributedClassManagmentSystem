@@ -1,6 +1,6 @@
 {
  "centers" :
- [{"names": "MTL", "port": "1050", "host":"localhost"},
-   {"names": "LVL", "port": "1050", "host":"localhost"},
-   {"names": "DDO", "port": "1050", "host":"localhost"} ]
+ [{"names": "MTL", "port": "1051", "host":"localhost"},
+   {"names": "LVL", "port": "1052", "host":"localhost"},
+   {"names": "DDO", "port": "1053", "host":"localhost"} ]
 }

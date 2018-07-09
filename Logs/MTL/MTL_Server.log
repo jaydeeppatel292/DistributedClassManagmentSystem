@@ -72,3 +72,45 @@ Jul 08, 2018 8:17:26 PM com.concordia.dsd.server.UDP.UDPRequest run
 INFO: UDP Request initiated to retrieve from MTL Server on localhost/127.0.0.1:1234
 Jul 08, 2018 8:17:26 PM com.concordia.dsd.server.UDP.UDPRequest run
 INFO: UDP Request completed to retrieve from MTL Server on localhost/127.0.0.1:1234 with Record Count: 1
+Jul 08, 2018 10:27:51 PM com.concordia.dsd.server.UDP.UDPServer run
+INFO: UDP MTL Server Initiated
+Jul 08, 2018 10:34:25 PM com.concordia.dsd.server.UDP.UDPServer initializeServerSocket
+SEVERE: Address already in use: Cannot bind
+Jul 08, 2018 10:34:25 PM com.concordia.dsd.server.UDP.UDPServer run
+INFO: UDP MTL Server Initiated
+Jul 08, 2018 10:35:24 PM com.concordia.dsd.server.UDP.UDPServer initializeServerSocket
+SEVERE: Address already in use: Cannot bind
+Jul 08, 2018 10:35:24 PM com.concordia.dsd.server.UDP.UDPServer run
+INFO: UDP MTL Server Initiated
+Jul 08, 2018 10:35:44 PM com.concordia.dsd.server.UDP.UDPServer initializeServerSocket
+SEVERE: Address already in use: Cannot bind
+Jul 08, 2018 10:35:44 PM com.concordia.dsd.server.UDP.UDPServer run
+INFO: UDP MTL Server Initiated
+Jul 08, 2018 10:36:10 PM com.concordia.dsd.server.UDP.UDPServer initializeServerSocket
+SEVERE: Address already in use: Cannot bind
+Jul 08, 2018 10:36:10 PM com.concordia.dsd.server.UDP.UDPServer run
+INFO: UDP MTL Server Initiated
+Jul 08, 2018 10:37:26 PM com.concordia.dsd.server.UDP.UDPServer initializeServerSocket
+SEVERE: Address already in use: Cannot bind
+Jul 08, 2018 10:37:26 PM com.concordia.dsd.server.UDP.UDPServer run
+INFO: UDP MTL Server Initiated
+Jul 08, 2018 10:38:18 PM com.concordia.dsd.server.UDP.UDPServer initializeServerSocket
+SEVERE: Address already in use: Cannot bind
+Jul 08, 2018 10:38:19 PM com.concordia.dsd.server.UDP.UDPServer run
+INFO: UDP MTL Server Initiated
+Jul 08, 2018 10:39:48 PM com.concordia.dsd.server.UDP.UDPServer initializeServerSocket
+SEVERE: Address already in use: Cannot bind
+Jul 08, 2018 10:39:48 PM com.concordia.dsd.server.UDP.UDPServer run
+INFO: UDP MTL Server Initiated
+Jul 08, 2018 10:40:59 PM com.concordia.dsd.server.UDP.UDPServer run
+INFO: UDP MTL Server Initiated
+Jul 08, 2018 10:41:23 PM com.concordia.dsd.server.UDP.UDPServer run
+INFO: UDP MTL Server Initiated
+Jul 08, 2018 10:42:32 PM com.concordia.dsd.server.UDP.UDPServer initializeServerSocket
+SEVERE: Address already in use: Cannot bind
+Jul 08, 2018 10:42:32 PM com.concordia.dsd.server.UDP.UDPServer run
+INFO: UDP MTL Server Initiated
+Jul 08, 2018 10:44:14 PM com.concordia.dsd.server.UDP.UDPServer initializeServerSocket
+SEVERE: Address already in use: Cannot bind
+Jul 08, 2018 10:44:14 PM com.concordia.dsd.server.UDP.UDPServer run
+INFO: UDP MTL Server Initiated

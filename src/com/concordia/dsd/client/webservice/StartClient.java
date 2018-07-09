@@ -28,7 +28,6 @@ public class StartClient {
 
     public static boolean createConnection(String managerId) throws MalformedURLException {
 
-
         hostPortArray = ConfigManager.getInstance().getServersInfo();
         if (managerId.length() != 7) {
             System.out.println("Invalid Manager Id length"); //log needs to be put
@@ -201,7 +200,6 @@ public class StartClient {
     }
 
     public static String selectionMenu() {
-
         System.out.println("1. Add a Student");
         System.out.println("2. Add a Teacher");
         System.out.println("3. Get records count");

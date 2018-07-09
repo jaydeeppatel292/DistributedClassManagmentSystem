@@ -9,5 +9,4 @@ public final class ServerConfig {
 	public static final int UDP_PORT_LVL = 2345;
 	public static final int UDP_PORT_DDO = 3456;
 	public static final String UDP_HOST_NAME = "localhost";
-	
 }

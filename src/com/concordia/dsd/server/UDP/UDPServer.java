@@ -50,7 +50,7 @@ public class UDPServer implements UDPServerInterface, Runnable {
                         request.getPort()));
 				} catch (IOException e) {
 					logger.log(Level.SEVERE, e.getMessage());
-				} finally {
+				}finally {
 					if (datagramSocket != null) {
 						datagramSocket.close();
 					}

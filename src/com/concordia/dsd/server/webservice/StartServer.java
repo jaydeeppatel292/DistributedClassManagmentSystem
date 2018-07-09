@@ -22,8 +22,12 @@ public class StartServer {
                 ServerManager.getInstance().addServer(Location.valueOf(hostPortArray[i][0]), wsCenterServer.getCenterServerCenterImpl());
             } catch (IOException e) {
                 e.printStackTrace();
+            }catch (Exception ex){
+                System.out.println("Server is already running or Something went wrong please try again!!");
             }
-            System.out.print(endpoint.isPublished());
+            if(endpoint.isPublished()){
+                System.out.println(hostPortArray[i][0]+" server started");
+            }
         }
     }
 }
