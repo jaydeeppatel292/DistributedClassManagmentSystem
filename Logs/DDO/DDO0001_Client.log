@@ -1,0 +1,36 @@
+Jul 08, 2018 8:05:59 PM com.concordia.dsd.client.webservice.StartClient main
+INFO: Created student record: Record ID = SR00001 by manager DDO0001
+Jul 08, 2018 8:06:24 PM com.concordia.dsd.client.webservice.StartClient main
+INFO: Created teacher record: Record ID = TR00001 by manager DDO0001
+Jul 08, 2018 8:09:41 PM com.concordia.dsd.client.webservice.StartClient main
+INFO: Created student record: Record ID = SR00001 by manager DDO0001
+Jul 08, 2018 8:09:43 PM com.concordia.dsd.client.webservice.StartClient main
+INFO: Get Record Counts: DDO 1, MTL 0, LVL 0
+Jul 08, 2018 8:09:57 PM com.concordia.dsd.client.webservice.StartClient main
+INFO: Created teacher record: Record ID = TR00001 by manager DDO0001
+Jul 08, 2018 8:09:59 PM com.concordia.dsd.client.webservice.StartClient main
+INFO: Get Record Counts: DDO 2, MTL 0, LVL 0
+Jul 08, 2018 8:10:20 PM com.concordia.dsd.client.webservice.StartClient main
+INFO: Record TR00001 Transferred Successfully by DDO0001
+Jul 08, 2018 8:10:23 PM com.concordia.dsd.client.webservice.StartClient main
+INFO: Get Record Counts: DDO 1, MTL 0, LVL 0
+Jul 08, 2018 8:11:03 PM com.concordia.dsd.client.webservice.StartClient main
+INFO: Get Record Counts: DDO 1, MTL 0, LVL 0
+Jul 08, 2018 8:11:20 PM com.concordia.dsd.client.webservice.StartClient main
+INFO: Record SR00001 Transferred Successfully by DDO0001
+Jul 08, 2018 8:11:23 PM com.concordia.dsd.client.webservice.StartClient main
+INFO: Get Record Counts: DDO 0, MTL 0, LVL 1
+Jul 08, 2018 8:15:35 PM com.concordia.dsd.client.webservice.StartClient main
+INFO: Created student record: Record ID = SR00001 by manager DDO0001
+Jul 08, 2018 8:15:48 PM com.concordia.dsd.client.webservice.StartClient main
+INFO: Created teacher record: Record ID = TR00001 by manager DDO0001
+Jul 08, 2018 8:16:08 PM com.concordia.dsd.client.webservice.StartClient main
+INFO: Failed to update record: Record DS Not Found
+Jul 08, 2018 8:16:13 PM com.concordia.dsd.client.webservice.StartClient main
+INFO: Get Record Counts: DDO 2, MTL 0, LVL 0
+Jul 08, 2018 8:17:23 PM com.concordia.dsd.client.webservice.StartClient main
+INFO: Record TR00001 Transferred Successfully by DDO0001
+Jul 08, 2018 8:17:26 PM com.concordia.dsd.client.webservice.StartClient main
+INFO: Get Record Counts: DDO 1, MTL 1, LVL 0
+Jul 08, 2018 8:17:56 PM com.concordia.dsd.client.webservice.StartClient main
+INFO: Updated field status of record with the value inactive : Record ID = SR00001 by manager DDO0001

@@ -22,10 +22,20 @@ public class StartClient {
     private static WSCenterServer wsCenterServer;
     private static String[][] hostPortArray;
 
+    /**
+     * Get all server information
+     * @return
+     */
     public static String[][] getHostPortArray() {
         return hostPortArray;
     }
 
+    /**
+     * Connect to server based on given manager id
+     * @param managerId
+     * @return
+     * @throws MalformedURLException
+     */
     public static boolean createConnection(String managerId) throws MalformedURLException {
 
         hostPortArray = ConfigManager.getInstance().getServersInfo();
@@ -49,6 +59,12 @@ public class StartClient {
         return false;
     }
 
+    /**
+     * Client UI
+     * @param args
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public static void main(String[] args) throws IOException, InterruptedException {
 
         Scanner c = new Scanner(System.in);
@@ -138,6 +154,12 @@ public class StartClient {
     }
 
 
+    /**
+     * Get Input from user
+     * @param fieldName
+     * @param fieldType
+     * @return
+     */
     public static String getFieldInput(String fieldName, String fieldType) {
 
         String input;
@@ -199,6 +221,10 @@ public class StartClient {
         return input;
     }
 
+    /**
+     * Display Menu
+     * @return
+     */
     public static String selectionMenu() {
         System.out.println("1. Add a Student");
         System.out.println("2. Add a Teacher");

@@ -8,10 +8,14 @@ import javax.xml.ws.Endpoint;
 import java.io.IOException;
 
 public class StartServer {
+
     public static void main(String args[]) {
         startAllServer();
     }
 
+    /**
+     * Start all Server
+     */
     public static void startAllServer() {
         String[][] hostPortArray = ConfigManager.getInstance().getServersInfo();
         for (int i = 0; i < hostPortArray.length; i++) {
