@@ -83,7 +83,7 @@ public class UDPManager {
                 serverObject.getCenterServer().createSRecord(studentRecord.getFirstName(), studentRecord.getLastName(), studentRecord.getCourseRegistered(), studentRecord.getStatus(),
                 studentRecord.getStatusDate(), managerId);
             }
-            else if(typeOfRec == 'R'){
+            else if(typeOfRec == 'T'){
                 TeacherRecord teacherRecord = (TeacherRecord) record;
                 serverObject.getCenterServer().createTRecord(teacherRecord.getFirstName(), teacherRecord.getLastName(), teacherRecord.getAddress(), teacherRecord.getPhone(),
                         teacherRecord.getSpecialization(), teacherRecord.getLocation(), managerId);

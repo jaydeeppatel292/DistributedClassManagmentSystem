@@ -1,44 +1,74 @@
-Jun 20, 2018 12:27:38 AM com.concordia.dsd.server.manager.StudentManager insertRecord
-INFO: Created student record: Record ID = SR00002 by manager MTL0001
-Jun 20, 2018 12:28:11 AM com.concordia.dsd.server.manager.StudentManager updateRecord
-INFO: Updated field status of record with the value inactive : Record ID = SR00002 by manager MTL0001
-Jun 20, 2018 12:28:11 AM com.concordia.dsd.server.UDP.UDPManager transferRecord
-INFO: Record SR00002 Transferred Successfully by MTL0001
-Jun 20, 2018 12:30:21 AM com.concordia.dsd.server.UDP.UDPServer run
+Jul 08, 2018 8:02:53 PM com.concordia.dsd.server.UDP.UDPServer run
 INFO: UDP MTL Server Initiated
-Jun 20, 2018 12:31:01 AM com.concordia.dsd.server.manager.StudentManager insertRecord
+Jul 08, 2018 8:03:07 PM com.concordia.dsd.server.UDP.UDPServer run
+INFO: UDP MTL Server Initiated
+Jul 08, 2018 8:03:18 PM com.concordia.dsd.server.UDP.UDPServer run
+INFO: UDP MTL Server Initiated
+Jul 08, 2018 8:04:03 PM com.concordia.dsd.server.manager.StudentManager insertRecord
 INFO: Created student record: Record ID = SR00001 by manager MTL0001
-Jun 20, 2018 12:31:26 AM com.concordia.dsd.server.manager.TeacherManager insertRecord
-INFO: Created teacher record: Record ID = TR00001 by manager MTL0001
-Jun 20, 2018 12:31:28 AM com.concordia.dsd.server.UDP.UDPManager getRecordCounts
-INFO: Get Record Counts: MTL 2, LVL 0, DDO 0
-Jun 20, 2018 12:31:35 AM com.concordia.dsd.server.generics.CenterServerImpl transferRecord
-SEVERE: Failed to update record: Record %s Not Found
-Jun 20, 2018 12:31:35 AM com.concordia.dsd.server.generics.CenterServerImpl editRecord
-SEVERE: Failed to update record: Record %s Not Found
-Jun 20, 2018 12:32:11 AM com.concordia.dsd.server.manager.StudentManager insertRecord
-INFO: Created student record: Record ID = SR00002 by manager MTL0001
-Jun 20, 2018 12:32:14 AM com.concordia.dsd.server.manager.StudentManager updateRecord
-INFO: Updated field status of record with the value inactive : Record ID = SR00002 by manager MTL0001
-Jun 20, 2018 12:32:14 AM com.concordia.dsd.server.UDP.UDPManager transferRecord
-INFO: Record SR00002 Transferred Successfully by MTL0001
-Jun 20, 2018 1:01:37 AM com.concordia.dsd.server.UDP.UDPServer run
+Jul 08, 2018 8:05:18 PM com.concordia.dsd.server.UDP.UDPServer run
 INFO: UDP MTL Server Initiated
-Jun 20, 2018 1:02:22 AM com.concordia.dsd.server.manager.StudentManager insertRecord
-INFO: Created student record: Record ID = SR00001 by manager MTL0001
-Jun 20, 2018 1:02:54 AM com.concordia.dsd.server.UDP.UDPManager transferRecord
-INFO: Record SR00001 Transferred Successfully by MTL0001
-Jun 20, 2018 9:22:15 PM com.concordia.dsd.server.UDP.UDPServer run
+Jul 08, 2018 8:09:12 PM com.concordia.dsd.server.UDP.UDPServer run
 INFO: UDP MTL Server Initiated
-Jun 20, 2018 9:24:36 PM com.concordia.dsd.server.UDP.UDPServer run
+Jul 08, 2018 8:09:42 PM com.concordia.dsd.server.UDP.UDPRequest run
+INFO: UDP Request initiated to retrieve from MTL Server on localhost/127.0.0.1:1234
+Jul 08, 2018 8:09:43 PM com.concordia.dsd.server.UDP.UDPRequest run
+INFO: UDP Request completed to retrieve from MTL Server on localhost/127.0.0.1:1234 with Record Count: 0
+Jul 08, 2018 8:09:59 PM com.concordia.dsd.server.UDP.UDPRequest run
+INFO: UDP Request initiated to retrieve from MTL Server on localhost/127.0.0.1:1234
+Jul 08, 2018 8:09:59 PM com.concordia.dsd.server.UDP.UDPRequest run
+INFO: UDP Request completed to retrieve from MTL Server on localhost/127.0.0.1:1234 with Record Count: 0
+Jul 08, 2018 8:10:20 PM com.concordia.dsd.server.UDP.UDPRequest run
+INFO: UDP Request initiated to retrieve from MTL Server on localhost/127.0.0.1:1234
+Jul 08, 2018 8:10:20 PM com.concordia.dsd.server.UDP.UDPRequest run
+INFO: UDP Request completed to retrieve from MTL Server on localhost/127.0.0.1:1234 with Record Count: 0
+Jul 08, 2018 8:10:23 PM com.concordia.dsd.server.UDP.UDPRequest run
+INFO: UDP Request initiated to retrieve from MTL Server on localhost/127.0.0.1:1234
+Jul 08, 2018 8:10:23 PM com.concordia.dsd.server.UDP.UDPRequest run
+INFO: UDP Request completed to retrieve from MTL Server on localhost/127.0.0.1:1234 with Record Count: 0
+Jul 08, 2018 8:11:03 PM com.concordia.dsd.server.UDP.UDPRequest run
+INFO: UDP Request initiated to retrieve from MTL Server on localhost/127.0.0.1:1234
+Jul 08, 2018 8:11:03 PM com.concordia.dsd.server.UDP.UDPRequest run
+INFO: UDP Request completed to retrieve from MTL Server on localhost/127.0.0.1:1234 with Record Count: 0
+Jul 08, 2018 8:11:23 PM com.concordia.dsd.server.UDP.UDPRequest run
+INFO: UDP Request initiated to retrieve from MTL Server on localhost/127.0.0.1:1234
+Jul 08, 2018 8:11:23 PM com.concordia.dsd.server.UDP.UDPRequest run
+INFO: UDP Request completed to retrieve from MTL Server on localhost/127.0.0.1:1234 with Record Count: 0
+Jul 08, 2018 8:11:56 PM com.concordia.dsd.server.manager.StudentManager insertRecord
+INFO: Created student record: Record ID = SR00001 by manager LVL0001
+Jul 08, 2018 8:11:56 PM com.concordia.dsd.server.UDP.UDPRequest run
+INFO: UDP Request initiated to retrieve from MTL Server on localhost/127.0.0.1:1234
+Jul 08, 2018 8:11:56 PM com.concordia.dsd.server.UDP.UDPRequest run
+INFO: UDP Request completed to retrieve from MTL Server on localhost/127.0.0.1:1234 with Record Count: 1
+Jul 08, 2018 8:11:59 PM com.concordia.dsd.server.UDP.UDPRequest run
+INFO: UDP Request initiated to retrieve from MTL Server on localhost/127.0.0.1:1234
+Jul 08, 2018 8:11:59 PM com.concordia.dsd.server.UDP.UDPRequest run
+INFO: UDP Request completed to retrieve from MTL Server on localhost/127.0.0.1:1234 with Record Count: 1
+Jul 08, 2018 8:12:20 PM com.concordia.dsd.server.UDP.UDPRequest run
+INFO: UDP Request initiated to retrieve from MTL Server on localhost/127.0.0.1:1234
+Jul 08, 2018 8:12:20 PM com.concordia.dsd.server.UDP.UDPRequest run
+INFO: UDP Request completed to retrieve from MTL Server on localhost/127.0.0.1:1234 with Record Count: 1
+Jul 08, 2018 8:12:56 PM com.concordia.dsd.server.UDP.UDPRequest run
+INFO: UDP Request initiated to retrieve from MTL Server on localhost/127.0.0.1:1234
+Jul 08, 2018 8:12:56 PM com.concordia.dsd.server.UDP.UDPRequest run
+INFO: UDP Request completed to retrieve from MTL Server on localhost/127.0.0.1:1234 with Record Count: 1
+Jul 08, 2018 8:12:59 PM com.concordia.dsd.server.UDP.UDPRequest run
+INFO: UDP Request initiated to retrieve from MTL Server on localhost/127.0.0.1:1234
+Jul 08, 2018 8:12:59 PM com.concordia.dsd.server.UDP.UDPRequest run
+INFO: UDP Request completed to retrieve from MTL Server on localhost/127.0.0.1:1234 with Record Count: 1
+Jul 08, 2018 8:15:07 PM com.concordia.dsd.server.UDP.UDPServer run
 INFO: UDP MTL Server Initiated
-Jun 20, 2018 9:25:24 PM com.concordia.dsd.server.manager.StudentManager insertRecord
-INFO: Created student record: Record ID = SR00001 by manager MTL0011
-Jun 20, 2018 9:49:46 PM com.concordia.dsd.server.UDP.UDPServer run
-INFO: UDP MTL Server Initiated
-Jun 20, 2018 10:00:05 PM com.concordia.dsd.server.manager.StudentManager insertRecord
-INFO: Created student record: Record ID = SR00001 by manager MTL0000
-Jun 20, 2018 10:02:23 PM com.concordia.dsd.server.manager.StudentManager insertRecord
-INFO: Created student record: Record ID = SR00002 by manager MTL0001
-Jun 20, 2018 10:02:44 PM com.concordia.dsd.server.UDP.UDPManager getRecordCounts
-INFO: Get Record Counts: MTL 2, LVL 0, DDO 1 requested by manager: MTL0001
+Jul 08, 2018 8:16:13 PM com.concordia.dsd.server.UDP.UDPRequest run
+INFO: UDP Request initiated to retrieve from MTL Server on localhost/127.0.0.1:1234
+Jul 08, 2018 8:16:13 PM com.concordia.dsd.server.UDP.UDPRequest run
+INFO: UDP Request completed to retrieve from MTL Server on localhost/127.0.0.1:1234 with Record Count: 0
+Jul 08, 2018 8:17:23 PM com.concordia.dsd.server.manager.TeacherManager insertRecord
+INFO: Created teacher record: Record ID = TR00001 by manager DDO0001
+Jul 08, 2018 8:17:23 PM com.concordia.dsd.server.UDP.UDPRequest run
+INFO: UDP Request initiated to retrieve from MTL Server on localhost/127.0.0.1:1234
+Jul 08, 2018 8:17:23 PM com.concordia.dsd.server.UDP.UDPRequest run
+INFO: UDP Request completed to retrieve from MTL Server on localhost/127.0.0.1:1234 with Record Count: 1
+Jul 08, 2018 8:17:26 PM com.concordia.dsd.server.UDP.UDPRequest run
+INFO: UDP Request initiated to retrieve from MTL Server on localhost/127.0.0.1:1234
+Jul 08, 2018 8:17:26 PM com.concordia.dsd.server.UDP.UDPRequest run
+INFO: UDP Request completed to retrieve from MTL Server on localhost/127.0.0.1:1234 with Record Count: 1
