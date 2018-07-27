@@ -20,23 +20,27 @@ public class FIFORequestQueueModel {
         this.managerId = managerId;
     }
 
-    public FIFORequestQueueModel(int requestType, Record record, String managerId, String centerServerName) {
-        if(requestType == 1 || requestType == 4)
+    public FIFORequestQueueModel(int requestType, Record record, String managerId) {
+        if(requestType == 1)
             this.studentRecord = (StudentRecord) record;
         else
             this.teacherRecord = (TeacherRecord) record;
 
         this.requestType = requestType;
         this.managerId = managerId;
-        this.centerServerName = centerServerName;
+
     }
 
 
-    public FIFORequestQueueModel(int requestType, String recordId, String fieldName, String newValue, String managerId) {
+    public FIFORequestQueueModel(int requestType, String recordId, String fieldName, String newValue, String managerId, String centerServerName) {
+        this.requestType = requestType;
         this.recordId = recordId;
         this.fieldName = fieldName;
         this.newValue = newValue;
         this.managerId = managerId;
+        if(this.requestType == 4){
+            this.centerServerName = centerServerName;
+        }
     }
 
     public String getCenterServerName() {

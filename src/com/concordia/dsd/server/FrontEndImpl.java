@@ -10,10 +10,12 @@ import com.concordia.dsd.model.TeacherRecord;
 import com.concordia.dsd.server.UDP.FrontEndUDPManager;
 import com.concordia.dsd.server.UDP.FrontEndUDPServer;
 import com.concordia.dsd.server.UDP.UDPServer;
+import com.concordia.dsd.server.generics.FIFORequestQueueModel;
 import com.concordia.dsd.utils.LoggingUtil;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,6 +29,7 @@ public class FrontEndImpl{
     private int masterPort;
     private int myPort;
     private String masterHostAddress;
+    private ConcurrentLinkedQueue<FIFORequestQueueModel> requestQueue;
 
 
     public String getMasterHostAddress() {
@@ -69,7 +72,7 @@ public class FrontEndImpl{
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        requestQueue = new ConcurrentLinkedQueue<>();
         udpManager = new FrontEndUDPManager(location, serverLogger);
         udpServer = new FrontEndUDPServer(this);
 
@@ -138,6 +141,10 @@ public class FrontEndImpl{
      */
     public String createTRecord(String firstName, String lastName, String address, String phone, String specialization,
                                 Location location, String managerId) {
+
+        TeacherRecord teacher = new TeacherRecord("", firstName, lastName, address, phone, specialization, location);
+        FIFORequestQueueModel obj = new FIFORequestQueueModel(2, teacher, managerId);
+        requestQueue.add(obj);
         return getUdpManager().createTRecord(firstName,lastName,address,phone,specialization,location,managerId);
     }
 
@@ -153,6 +160,9 @@ public class FrontEndImpl{
      */
     public String createSRecord(String firstName, String lastName, String courseRegistered, Status status,
                                 String statusDate, String managerId) {
+        StudentRecord student = new StudentRecord("", firstName, lastName, status, courseRegistered, statusDate);
+        FIFORequestQueueModel obj = new FIFORequestQueueModel(1, student, managerId);
+        requestQueue.add(obj);
         return getUdpManager().createSRecord(firstName,lastName,courseRegistered,status,statusDate,managerId);
     }
 
@@ -162,6 +172,9 @@ public class FrontEndImpl{
      * @return
      */
     public String getRecordCounts(String managerId) {
+
+        FIFORequestQueueModel obj = new FIFORequestQueueModel(2, managerId);
+        requestQueue.add(obj);
         return getUdpManager().getRecordCounts(managerId);
     }
 
@@ -174,6 +187,8 @@ public class FrontEndImpl{
      * @return
      */
     public String editRecord(String recordId, String fieldName, String newValue, String managerId) {
+        FIFORequestQueueModel obj = new FIFORequestQueueModel(3, recordId, fieldName, newValue, managerId, "");
+        requestQueue.add(obj);
         return getUdpManager().editRecord(recordId,fieldName,newValue,managerId);
     }
 
@@ -185,6 +200,8 @@ public class FrontEndImpl{
      * @return
      */
     public String transferRecord(String managerId, String recordId, String remoteCenterServerName) {
+        FIFORequestQueueModel obj = new FIFORequestQueueModel(4, recordId,"" ,"", managerId, remoteCenterServerName);
+        requestQueue.add(obj);
         return getUdpManager().transferRecord(managerId,recordId,remoteCenterServerName);
     }
 }

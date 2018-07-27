@@ -43,7 +43,7 @@ public class StartServer {
      * @param centerName
      * @param serverNumber
      */
-    public static void createServerBinding(String centerName, int serverNumber) {
+    public static void createServerBinding(String centerName, int serverNumber, int port) {
         try {
             // create and initialize the ORB //// get reference to rootpoa &amp; activate the POAManager
 
@@ -51,9 +51,9 @@ public class StartServer {
             rootpoa.the_POAManager().activate();
 
             // create servant and register it with the ORB
-            CorbaCenterServerImpl centerServer = new CorbaCenterServerImpl(Location.valueOf(centerName));
+            CorbaCenterServerImpl centerServer = new CorbaCenterServerImpl(Location.valueOf(centerName), port);
             centerServer.setORB(orb[serverNumber]);
-            ServerManager.getInstance().addServer(Location.valueOf(centerName), centerServer.getCenterServerCenterImpl());
+            ServerManager.getInstance().addServer(Location.valueOf(centerName),port ,centerServer.getCenterServerCenterImpl());
 
             // get object reference from the servant
             org.omg.CORBA.Object ref = rootpoa.servant_to_reference(centerServer);

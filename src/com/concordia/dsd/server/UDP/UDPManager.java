@@ -20,16 +20,21 @@ public class UDPManager {
     private Location serverLocation;
     private ClassMap recordMap;
     private Logger serverLogger;
+    private int port;
 
-    public UDPManager(Location serverLocation, ClassMap recordMap, Logger serverLogger) {
+    public UDPManager(Location serverLocation, ClassMap recordMap, Logger serverLogger, int port) {
         this.serverLocation = serverLocation;
         this.recordMap = recordMap;
         this.serverLogger = serverLogger;
+        this.port = port;
     }
 
     public String addRecord(List<Integer> processList, FIFORequestQueueModel requestObj){
 
         UDPRequest[] requests = new UDPRequest[processList.size()];
+        for(ServerManager.getInstance().getCenterServer(serverLocation).values()){
+
+        }
         return "";
     }
 
@@ -49,7 +54,7 @@ public class UDPManager {
                 stringBuffer.append(recordCount);
             } else {
                 try {
-                    requests[counter] = new UDPRequest(ServerManager.getInstance().getCenterServer(location));
+                    requests[counter] = new UDPRequest(ServerManager.getInstance().getCenterServer(location)); //master port required
                 } catch (SecurityException e) {
                     serverLogger.log(Level.SEVERE, e.getMessage());
                 } catch (IOException e) {

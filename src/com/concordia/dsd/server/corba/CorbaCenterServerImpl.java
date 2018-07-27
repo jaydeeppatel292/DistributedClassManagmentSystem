@@ -19,8 +19,8 @@ class CorbaCenterServerImpl extends CenterPOA {
      * @throws SecurityException
      * @throws IOException
      */
-    public CorbaCenterServerImpl(Location location) throws SecurityException, IOException {
-        centerServerCenterImpl = new CenterServerImpl<>(location);
+    public CorbaCenterServerImpl(Location location, int port) throws SecurityException, IOException {
+        centerServerCenterImpl = new CenterServerImpl<>(location, port);
     }
 
     /**

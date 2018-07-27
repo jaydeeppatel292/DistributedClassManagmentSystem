@@ -35,7 +35,7 @@ public class CenterServerImpl<T> {
 
     private int myPort;
     private boolean isMaster;
-    private ConcurrentLinkedQueue<FIFORequestQueueModel> requestQueue;
+
     private List<Integer> serverProcesses;
 
     /**
@@ -45,7 +45,7 @@ public class CenterServerImpl<T> {
      * @throws SecurityException
      * @throws IOException
      */
-    public CenterServerImpl(Location location) throws SecurityException, IOException {
+    public CenterServerImpl(Location location, int port) throws SecurityException, IOException {
         this.location = location;
         try {
             serverLogger = LoggingUtil.getInstance().getServerLogger(this.location);
@@ -55,11 +55,11 @@ public class CenterServerImpl<T> {
             e.printStackTrace();
         }
 
-        requestQueue = new ConcurrentLinkedQueue<>();
+
         recordMap = new ClassMap();
         studentManager = new StudentManager(recordMap, serverLogger);
         teacherManager = new TeacherManager(recordMap, serverLogger);
-        udpManager = new UDPManager(location,recordMap, serverLogger);
+        udpManager = new UDPManager(location,recordMap, serverLogger, port);
         udpServer = new UDPServer(this);
 
         // Initialize UDP Server
@@ -67,15 +67,6 @@ public class CenterServerImpl<T> {
 
         // Start UDP Server
         new Thread(udpServer).start();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                FIFORequestQueueModel retrievedObj = requestQueue.poll();
-                if(retrievedObj.getRequestType() == 1){
-
-                }
-            }
-        }).start();
     }
 
     /**
@@ -164,9 +155,14 @@ public class CenterServerImpl<T> {
     public String createTRecord(String firstName, String lastName, String address, String phone, String specialization,
                                 Location location, String managerId) {
         if(isMaster == true){
-            TeacherRecord teacher = new TeacherRecord("", firstName, lastName, address, phone, specialization, location);
-            FIFORequestQueueModel obj = new FIFORequestQueueModel(2, teacher, managerId, "");
-            requestQueue.add(obj);
+
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                }
+            }).start();
         }
         String recordId = null;
         Record record = getTeacherManager().insertRecord(firstName, lastName, address, phone, specialization, location, managerId);
@@ -189,9 +185,7 @@ public class CenterServerImpl<T> {
     public String createSRecord(String firstName, String lastName, String courseRegistered, Status status,
                                 String statusDate, String managerId) {
         if(isMaster == true){
-            StudentRecord student = new StudentRecord("", firstName, lastName, status, courseRegistered, statusDate);
-            FIFORequestQueueModel obj = new FIFORequestQueueModel(1, student, managerId, "");
-            requestQueue.add(obj);
+
         }
         String recordId = null;
         Record record = getStudentManager().insertRecord(firstName, lastName, courseRegistered, status, statusDate, managerId);
@@ -209,8 +203,7 @@ public class CenterServerImpl<T> {
     public String getRecordCounts(String managerId) {
 
         if(isMaster == true){
-            FIFORequestQueueModel obj = new FIFORequestQueueModel(2, managerId);
-            requestQueue.add(obj);
+
         }
         return getUdpManager().getRecordCounts(managerId);
     }
@@ -225,8 +218,7 @@ public class CenterServerImpl<T> {
      */
     public String editRecord(String recordId, String fieldName, String newValue, String managerId) {
         if(isMaster == true){
-            FIFORequestQueueModel obj = new FIFORequestQueueModel(3, recordId, fieldName, newValue, managerId);
-            requestQueue.add(obj);
+
         }
         Record record = getRecordMap().lookupRecord(recordId);
         if (record instanceof StudentRecord) {
@@ -255,8 +247,7 @@ public class CenterServerImpl<T> {
         String returnValue = "";
         if (record instanceof StudentRecord) {
             if(isMaster == true){
-                FIFORequestQueueModel obj = new FIFORequestQueueModel(4, record, managerId, remoteCenterServerName);
-                requestQueue.add(obj);
+
             }
             typeOfRec='S';
             getUdpManager().transferRecord(managerId, record, remoteCenterServerName, typeOfRec);
@@ -264,8 +255,7 @@ public class CenterServerImpl<T> {
             recordMap.deleteRecord(record);
         }else if(record instanceof TeacherRecord){
             if(isMaster == true){
-                FIFORequestQueueModel obj = new FIFORequestQueueModel(5, record, managerId, remoteCenterServerName);
-                requestQueue.add(obj);
+
             }
             typeOfRec='T';
             getUdpManager().transferRecord(managerId, record, remoteCenterServerName, typeOfRec);

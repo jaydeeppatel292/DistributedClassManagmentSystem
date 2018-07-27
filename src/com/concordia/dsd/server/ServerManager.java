@@ -41,4 +41,13 @@ public class ServerManager {
     public CenterServerImpl getCenterServer(Location location,int port) {
         return centerServerMap.get(location).get(port);
     }
+
+    /**
+     * Get CenterServer based on Location
+     * @param location
+     * @return
+     */
+    public HashMap<Integer, CenterServerImpl> getCenterServer(Location location) {
+        return centerServerMap.get(location);
+    }
 }
