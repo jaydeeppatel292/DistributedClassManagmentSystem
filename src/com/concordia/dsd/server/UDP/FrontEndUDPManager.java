@@ -33,11 +33,11 @@ public class FrontEndUDPManager {
      * @param managerId
      * @return
      */
-    public String createTRecord(String firstName, String lastName, String address, String phone, String specialization,
+    public String createTRecord(int masterPort,String firstName, String lastName, String address, String phone, String specialization,
                                 Location location, String managerId) {
 
         try {
-            UDPRequest udpRequest = new UDPRequest(ServerManager.getInstance().getCenterServer(serverLocation));
+            UDPRequest udpRequest = new UDPRequest(ServerManager.getInstance().getCenterServer(serverLocation,masterPort));
             udpRequest.start();
             udpRequest.join();
         } catch (SecurityException e) {
@@ -61,11 +61,11 @@ public class FrontEndUDPManager {
      * @param managerId
      * @return
      */
-    public String createSRecord(String firstName, String lastName, String courseRegistered, Status status,
+    public String createSRecord(int masterPort,String firstName, String lastName, String courseRegistered, Status status,
                                 String statusDate, String managerId) {
 
         try {
-            UDPRequest udpRequest = new UDPRequest(ServerManager.getInstance().getCenterServer(serverLocation));
+            UDPRequest udpRequest = new UDPRequest(ServerManager.getInstance().getCenterServer(serverLocation,masterPort));
             udpRequest.start();
             udpRequest.join();
         } catch (SecurityException e) {
@@ -84,9 +84,9 @@ public class FrontEndUDPManager {
      * @param managerId
      * @return
      */
-    public String getRecordCounts(String managerId) {
+    public String getRecordCounts(int masterPort,String managerId) {
         try {
-            UDPRequest udpRequest = new UDPRequest(ServerManager.getInstance().getCenterServer(serverLocation));
+            UDPRequest udpRequest = new UDPRequest(ServerManager.getInstance().getCenterServer(serverLocation,masterPort));
             udpRequest.start();
             udpRequest.join();
         } catch (SecurityException e) {
@@ -108,9 +108,9 @@ public class FrontEndUDPManager {
      * @param managerId
      * @return
      */
-    public String editRecord(String recordId, String fieldName, String newValue, String managerId) {
+    public String editRecord(int masterPort,String recordId, String fieldName, String newValue, String managerId) {
         try {
-            UDPRequest udpRequest = new UDPRequest(ServerManager.getInstance().getCenterServer(serverLocation));
+            UDPRequest udpRequest = new UDPRequest(ServerManager.getInstance().getCenterServer(serverLocation,masterPort));
             udpRequest.start();
             udpRequest.join();
         } catch (SecurityException e) {
@@ -131,9 +131,9 @@ public class FrontEndUDPManager {
      * @param remoteCenterServerName
      * @return
      */
-    public String transferRecord(String managerId, String recordId, String remoteCenterServerName) {
+    public String transferRecord(int masterPort,String managerId, String recordId, String remoteCenterServerName) {
         try {
-            UDPRequest udpRequest = new UDPRequest(ServerManager.getInstance().getCenterServer(serverLocation));
+            UDPRequest udpRequest = new UDPRequest(ServerManager.getInstance().getCenterServer(serverLocation,masterPort));
             udpRequest.start();
             udpRequest.join();
         } catch (SecurityException e) {

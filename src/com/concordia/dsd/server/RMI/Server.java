@@ -18,7 +18,7 @@ public class Server {
 		for	(Location location: Location.values()) {
 		    RMICenterServerImpl rmiCenterServer = new RMICenterServerImpl(location);
 			centralRepository.put(location, rmiCenterServer);
-            ServerManager.getInstance().addServer(location,rmiCenterServer.getCenterServerCenterImpl());
+            ServerManager.getInstance().addServer(location,1000,rmiCenterServer.getCenterServerCenterImpl());
 		}
 		Registry registry = LocateRegistry.createRegistry(ServerConfig.REGISTRY_PORT);
 		registry.bind(ServerConfig.MTL_SERVER, centralRepository.get(Location.MTL));
