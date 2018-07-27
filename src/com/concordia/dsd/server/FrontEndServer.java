@@ -19,8 +19,8 @@ public class FrontEndServer extends CenterPOA {
      * @throws SecurityException
      * @throws IOException
      */
-    public FrontEndServer(Location location) throws SecurityException, IOException {
-        frontEndImpl = new FrontEndImpl(location);
+    public FrontEndServer(Location location,String hostAddress,int port) throws SecurityException, IOException {
+        frontEndImpl = new FrontEndImpl(location,hostAddress,port);
     }
 
     /**

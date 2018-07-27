@@ -18,15 +18,18 @@ public class FrontEndUDPServer implements UDPServerInterface, Runnable {
 	private DatagramSocket socket = null;
 	private FrontEndImpl frontEndImpl;
 	private Logger logger = null;
-
+	private int udpPort;
+	private String udpHostAddress;
 	/**
 	 * Constructor UDPServer
 	 * @param centerServerImpl
 	 * @throws SecurityException
 	 * @throws IOException
 	 */
-	public FrontEndUDPServer(FrontEndImpl centerServerImpl) throws SecurityException, IOException {
+	public FrontEndUDPServer(FrontEndImpl centerServerImpl,String udpHostAddress,int port) throws SecurityException, IOException {
 		super();
+		this.udpHostAddress = udpHostAddress;
+		this.udpPort = port;
 		frontEndImpl = centerServerImpl;
 		logger = LoggingUtil.getInstance().getServerLogger(frontEndImpl.getLocation());
 		initializeServerSocket();
@@ -77,19 +80,13 @@ public class FrontEndUDPServer implements UDPServerInterface, Runnable {
 
 	@Override
 	public int getCenterServerPort() {
-		if (frontEndImpl.getLocation().equals(Location.MTL)) {
-			return ServerConfig.UDP_PORT_MTL;
-		} else if (frontEndImpl.getLocation().equals(Location.LVL)) {
-			return ServerConfig.UDP_PORT_LVL;
-		} else {
-			return ServerConfig.UDP_PORT_DDO;
-		}
+		return udpPort;
 	}
 
 	@Override
 	public InetAddress getInetAddress() {
 		try {
-			return InetAddress.getByName(ServerConfig.UDP_HOST_NAME);
+			return InetAddress.getByName(udpHostAddress);
 		} catch (UnknownHostException e) {
 			logger.log(Level.SEVERE, e.getMessage());
 			return null;

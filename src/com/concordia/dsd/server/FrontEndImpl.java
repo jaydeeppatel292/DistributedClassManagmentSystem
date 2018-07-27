@@ -20,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FrontEndImpl{
+    private final String udpHostAddress;
     private int udpPort;
     private InetAddress ipAddress;
     private FrontEndUDPServer udpServer;
@@ -63,8 +64,10 @@ public class FrontEndImpl{
      * @throws SecurityException
      * @throws IOException
      */
-    public FrontEndImpl(Location location) throws SecurityException, IOException {
+    public FrontEndImpl(Location location,String udpHostAddress, int port) throws SecurityException, IOException {
         this.location = location;
+        this.myPort = port;
+        this.udpHostAddress = udpHostAddress;
         try {
             serverLogger = LoggingUtil.getInstance().getServerLogger(this.location);
         } catch (SecurityException e) {
@@ -74,7 +77,7 @@ public class FrontEndImpl{
         }
         requestQueue = new ConcurrentLinkedQueue<>();
         udpManager = new FrontEndUDPManager(location, serverLogger);
-        udpServer = new FrontEndUDPServer(this);
+        udpServer = new FrontEndUDPServer(this,udpHostAddress,port);
 
         // Initialize UDP Server
         initCenterServerModel();

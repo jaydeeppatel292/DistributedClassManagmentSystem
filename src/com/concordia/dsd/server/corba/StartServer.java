@@ -31,7 +31,7 @@ public class StartServer {
                     hostPortInfo[j] = hostPortArray[i][j + 1];
                 }
                 orb = ORB.init(hostPortInfo, null);
-                createServerBinding(hostPortArray[i][0], Integer.parseInt(hostPortArray[i][2]), i);
+                createServerBinding(hostPortArray[i][0], hostPortArray[i][4],Integer.parseInt(hostPortArray[i][2]), i);
             }
             else{
                 startUDPServer(hostPortArray[i][0],hostPortArray[i][4], Integer.parseInt(hostPortArray[i][2]));
@@ -56,7 +56,7 @@ public class StartServer {
      * @param centerName
      * @param serverNumber
      */
-    public static void createServerBinding(String centerName,int port, int serverNumber) {
+    public static void createServerBinding(String centerName,String hostAddress,int port, int serverNumber) {
         try {
             // create and initialize the ORB //// get reference to rootpoa &amp; activate the POAManager
 
@@ -64,7 +64,7 @@ public class StartServer {
             rootpoa.the_POAManager().activate();
 
             // create servant and register it with the ORB
-            FrontEndServer centerServer = new FrontEndServer(Location.valueOf(centerName));
+            FrontEndServer centerServer = new FrontEndServer(Location.valueOf(centerName),hostAddress,port);
             centerServer.setORB(orb);
             ServerManager.getInstance().setFrontEndServer(centerServer);
 
