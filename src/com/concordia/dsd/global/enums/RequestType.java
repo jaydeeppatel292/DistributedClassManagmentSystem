@@ -5,5 +5,7 @@ public enum RequestType {
     CREATE_T_RECORD,
     GET_RECORD_COUNT,
     UPDATE_RECORD,
-    TRANSFER_RECORD
+    TRANSFER_RECORD,
+    ELECTION,
+    COORDINATOR
 }

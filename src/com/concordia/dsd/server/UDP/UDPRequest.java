@@ -4,9 +4,11 @@ import com.concordia.dsd.global.cmsenum.MessageType;
 import com.concordia.dsd.global.constants.CMSConstants;
 import com.concordia.dsd.global.constants.CMSLogMessages;
 import com.concordia.dsd.server.generics.CenterServerImpl;
+import com.concordia.dsd.server.generics.FIFORequestQueueModel;
 import com.concordia.dsd.utils.LoggingUtil;
+import com.concordia.dsd.utils.SerializingUtil;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -16,26 +18,29 @@ import java.util.logging.Logger;
 
 public class UDPRequest extends Thread {
     private CenterServerImpl centerServer;
-    private int requestedRecordCount;
+    private String responseFromUDP;
     private Logger logger = null;
+    private FIFORequestQueueModel reqObj;
     private MessageType messageType;
 
-    public UDPRequest(CenterServerImpl centerServerImpl) throws SecurityException, IOException {
+    public UDPRequest(CenterServerImpl centerServerImpl, FIFORequestQueueModel reqObj) throws SecurityException, IOException {
         centerServer = centerServerImpl;
         logger = LoggingUtil.getInstance().getServerLogger(centerServerImpl.getLocation());
+        this.reqObj = reqObj;
     }
 
-    public int getRequestedRecordCount() {
-        return requestedRecordCount;
+    public String getResponseFromUDP() {
+        return responseFromUDP;
     }
 
-    public void setRequestedRecordCount(int requestedRecordCount) {
-        this.requestedRecordCount = requestedRecordCount;
+    public void setResponseFromUDP(String responseFromUDP) {
+        this.responseFromUDP = responseFromUDP;
     }
 
     public CenterServerImpl getCenterServer() {
         return centerServer;
     }
+
 
     @Override
     public void run() {
@@ -47,20 +52,22 @@ public class UDPRequest extends Thread {
             logger.log(Level.INFO, String.format(CMSLogMessages.RECORD_COUNT_SERVER_INIT,
                     centerServer.getLocation().toString(), address, port));
             byte[] data;
-            data = messageType.toString().getBytes();
+            data = SerializingUtil.getInstance().getSerializedFIFOObject(reqObj);
             DatagramPacket packet = new DatagramPacket(data, data.length, address, port);
             socket.send(packet);
 
             data = new byte[1000];
             socket.receive(new DatagramPacket(data, data.length));
+            String response = new String(data);
             switch (messageType) {
                 case RECORD_COUNT:
-                    String recordCount = new String(data);
+
                     logger.log(Level.INFO, String.format(CMSLogMessages.RECORD_COUNT_SERVER_COMPLETE,
-                            centerServer.getLocation().toString(), address, port, recordCount.trim()));
-                    setRequestedRecordCount(Integer.parseInt(recordCount.trim()));
+                            centerServer.getLocation().toString(), address, port, response.trim()));
+                    setResponseFromUDP(response.trim());
                     break;
                 case CREATE_S_RECORD:
+                    response
                     break;
                 case CREATE_T_RECORD:
                     break;

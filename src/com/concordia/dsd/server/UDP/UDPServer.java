@@ -5,10 +5,13 @@ import com.concordia.dsd.global.cmsenum.MessageType;
 import com.concordia.dsd.global.constants.CMSConstants;
 import com.concordia.dsd.global.constants.CMSLogMessages;
 import com.concordia.dsd.global.constants.ServerConfig;
+import com.concordia.dsd.server.ServerManager;
 import com.concordia.dsd.server.corba.bully.LeaderOperationInterface;
 import com.concordia.dsd.server.generics.CenterServerImpl;
+import com.concordia.dsd.server.generics.FIFORequestQueueModel;
 import com.concordia.dsd.server.interfaces.UDPServerInterface;
 import com.concordia.dsd.utils.LoggingUtil;
+import com.concordia.dsd.utils.SerializingUtil;
 
 import java.io.IOException;
 import java.net.*;
@@ -51,12 +54,12 @@ public class UDPServer implements UDPServerInterface, LeaderOperationInterface, 
                     buffer = new byte[1000];
                     request = new DatagramPacket(buffer, buffer.length);
                     socket.receive(request);
-
-                    messageType = MessageType.valueOf(new String(request.getData()));
+                    FIFORequestQueueModel receivedObj = SerializingUtil.getInstance().getFIFOObjectFromSerialized(request.getData());
+                    //messageType = MessageType.valueOf(new String(request.getData()));
                     byte[] responseData;
                     datagramSocket = new DatagramSocket();
-                    switch (messageType) {
-                        case RECORD_COUNT:
+                    switch (receivedObj.getRequestType()) {
+                        case GET_RECORD_COUNT:
                             // Sending back record count by requested client UDPRequest
                             responseData = centerServer.getRecordMap().getRecordsCount().toString().getBytes();
                             datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
@@ -64,9 +67,12 @@ public class UDPServer implements UDPServerInterface, LeaderOperationInterface, 
                             break;
                         case TRANSFER_RECORD:
                             break;
-                        case EDIT_RECORD:
+                        case UPDATE_RECORD:
                             break;
                         case CREATE_S_RECORD:
+                            responseData = centerServer.createSRecord(receivedObj.getStudentRecord().getFirstName(), receivedObj.getStudentRecord().getLastName(), receivedObj.getStudentRecord().getCourseRegistered(), receivedObj.getStudentRecord().getStatus(), receivedObj.getStudentRecord().getStatusDate(), receivedObj.getManagerId()).getBytes();;
+                            datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
+                                    request.getPort()));
                             break;
                         case CREATE_T_RECORD:
                             break;

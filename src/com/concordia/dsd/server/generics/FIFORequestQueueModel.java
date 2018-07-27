@@ -5,7 +5,9 @@ import com.concordia.dsd.model.Record;
 import com.concordia.dsd.model.StudentRecord;
 import com.concordia.dsd.model.TeacherRecord;
 
-public class FIFORequestQueueModel {
+import java.io.Serializable;
+
+public class FIFORequestQueueModel implements Serializable{
 
     private RequestType requestType;
     private StudentRecord studentRecord;

@@ -3,6 +3,7 @@ package com.concordia.dsd.server.generics;
 import com.concordia.dsd.global.cmsenum.Location;
 import com.concordia.dsd.global.cmsenum.Status;
 import com.concordia.dsd.global.constants.CMSLogMessages;
+import com.concordia.dsd.global.enums.RequestType;
 import com.concordia.dsd.model.ClassMap;
 import com.concordia.dsd.model.Record;
 import com.concordia.dsd.model.StudentRecord;
@@ -145,6 +146,26 @@ public class CenterServerImpl<T> {
         return serverLogger;
     }
 
+    public String sendBackUpProcessRequestFromController(FIFORequestQueueModel requestObj){
+        if(requestObj.getRequestType().equals(RequestType.CREATE_S_RECORD)){
+            return getUdpManager().addStudentRecord(ServerManager.getInstance().getAllBackupServerPort(location), requestObj.getStudentRecord().getFirstName(), requestObj.getStudentRecord().getLastName(), requestObj.getStudentRecord().getCourseRegistered(), requestObj.getStudentRecord().getStatus(), requestObj.getStudentRecord().getStatusDate(), requestObj.getManagerId());
+        }
+        else if(requestObj.getRequestType().equals(RequestType.CREATE_T_RECORD)){
+            return getUdpManager().addTeacherRecord(ServerManager.getInstance().getAllBackupServerPort(location), requestObj.getTeacherRecord().getFirstName(), requestObj.getTeacherRecord().getLastName(), requestObj.getTeacherRecord().getAddress(), requestObj.getTeacherRecord().getPhone(), requestObj.getTeacherRecord().getSpecialization(),
+                    location, requestObj.getManagerId() );
+        }
+        else if(requestObj.getRequestType().equals(RequestType.UPDATE_RECORD)){
+            return getUdpManager().updateRecords(ServerManager.getInstance().getAllBackupServerPort(location), requestObj.getRecordId(), requestObj.getFieldName(), requestObj.getNewValue(), requestObj.getManagerId());
+        }
+        else if(requestObj.getRequestType().equals(RequestType.GET_RECORD_COUNT)){
+            return getUdpManager().getRecordCountFromProcess(ServerManager.getInstance().getAllBackupServerPort(location), requestObj.getManagerId());
+        }
+        else if(requestObj.getRequestType().equals(RequestType.TRANSFER_RECORD)){
+            return getUdpManager().transferRecordsFromProcess(ServerManager.getInstance().getAllBackupServerPort(location), requestObj.getManagerId(), requestObj.getRecordId(), requestObj.getCenterServerName());
+        }
+        return null;
+    }
+
     /**
      * Implementation of Create Teacher Record
      * @param firstName
@@ -158,16 +179,6 @@ public class CenterServerImpl<T> {
      */
     public String createTRecord(String firstName, String lastName, String address, String phone, String specialization,
                                 Location location, String managerId) {
-        if(isMaster == true){
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    getUdpManager().addStudentRecord(ServerManager.getInstance().getAllBackupServerPort(location), firstName, lastName, address, phone, specialization,
-                            location, managerId );
-                }
-            }).start();
-        }
         String recordId = null;
         Record record = getTeacherManager().insertRecord(firstName, lastName, address, phone, specialization, location, managerId);
         if (record != null) {
@@ -188,9 +199,6 @@ public class CenterServerImpl<T> {
      */
     public String createSRecord(String firstName, String lastName, String courseRegistered, Status status,
                                 String statusDate, String managerId) {
-        if(isMaster == true){
-
-        }
         String recordId = null;
         Record record = getStudentManager().insertRecord(firstName, lastName, courseRegistered, status, statusDate, managerId);
         if (record != null) {
@@ -205,10 +213,6 @@ public class CenterServerImpl<T> {
      * @return
      */
     public String getRecordCounts(String managerId) {
-
-        if(isMaster == true){
-
-        }
         return getUdpManager().getRecordCounts(managerId);
     }
 
@@ -221,9 +225,6 @@ public class CenterServerImpl<T> {
      * @return
      */
     public String editRecord(String recordId, String fieldName, String newValue, String managerId) {
-        if(isMaster == true){
-
-        }
         Record record = getRecordMap().lookupRecord(recordId);
         if (record instanceof StudentRecord) {
             getStudentManager().updateRecord(record,recordId,fieldName,newValue, managerId);
@@ -249,18 +250,20 @@ public class CenterServerImpl<T> {
         Record record = getRecordMap().lookupRecord(recordId);
         char typeOfRec;
         String returnValue = "";
+        if(isMaster == true){
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    getUdpManager().transferRecordsFromProcess(ServerManager.getInstance().getAllBackupServerPort(location), managerId, recordId, remoteCenterServerName);
+                }
+            }).start();
+        }
         if (record instanceof StudentRecord) {
-            if(isMaster == true){
-
-            }
             typeOfRec='S';
             getUdpManager().transferRecord(managerId, record, remoteCenterServerName, typeOfRec);
             returnValue=String.format(CMSLogMessages.TRANSFER_RECORD_SUCCESS, recordId, managerId);
             recordMap.deleteRecord(record);
         }else if(record instanceof TeacherRecord){
-            if(isMaster == true){
-
-            }
             typeOfRec='T';
             getUdpManager().transferRecord(managerId, record, remoteCenterServerName, typeOfRec);
             returnValue=String.format(CMSLogMessages.TRANSFER_RECORD_SUCCESS, recordId, managerId);
