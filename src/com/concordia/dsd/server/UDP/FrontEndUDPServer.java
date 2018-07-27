@@ -31,13 +31,13 @@ public class FrontEndUDPServer implements UDPServerInterface, Runnable {
 		this.udpHostAddress = udpHostAddress;
 		this.udpPort = port;
 		frontEndImpl = centerServerImpl;
-		logger = LoggingUtil.getInstance().getServerLogger(frontEndImpl.getLocation());
+		logger = LoggingUtil.getInstance().getServerLogger(Location.valueOf("FE"));
 		initializeServerSocket();
 	}
 
 	@Override
 	public void run() {
-		logger.log(Level.INFO, String.format(CMSLogMessages.UDP_SERVER_INIT, frontEndImpl.getLocation().toString()));
+		logger.log(Level.INFO, String.format(CMSLogMessages.UDP_SERVER_INIT, "FE"));
 		byte[] buffer;
 		DatagramPacket request; 
 		DatagramSocket datagramSocket = null;

@@ -123,4 +123,8 @@ public class FIFORequestQueueModel implements Serializable{
     public String getManagerId() {
         return managerId;
     }
+
+    public Location getRequestLocation() {
+        return requestLocation;
+    }
 }

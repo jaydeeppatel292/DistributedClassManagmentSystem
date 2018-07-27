@@ -24,7 +24,7 @@ public class WSCenterServerImpl implements WSCenterServer {
      * @throws IOException
      */
     public WSCenterServerImpl(Location location) throws SecurityException, IOException {
-        centerServerCenterImpl = new CenterServerImpl<>(location);
+        centerServerCenterImpl = new CenterServerImpl<>(location,"localhost",0);
     }
 
 

@@ -20,7 +20,7 @@ public class RMICenterServerImpl extends UnicastRemoteObject implements CenterSe
 
     protected RMICenterServerImpl(Location location) throws SecurityException, IOException {
         super();
-        centerServerCenterImpl = new com.concordia.dsd.server.generics.CenterServerImpl<>(location);
+        centerServerCenterImpl = new com.concordia.dsd.server.generics.CenterServerImpl<>(location,"localhost",0);
     }
 
     public CenterServerImpl<RMICenterServerImpl> getCenterServerCenterImpl() {

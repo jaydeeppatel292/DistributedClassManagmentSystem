@@ -35,9 +35,13 @@ public class StartServer {
             }
             else{
                 startUDPServer(hostPortArray[i][0],hostPortArray[i][4], Integer.parseInt(hostPortArray[i][2]));
+
+                if(ServerManager.getInstance().getMasterServerInfo(Location.valueOf(hostPortArray[i][0])) == null || ServerManager.getInstance().getMasterServerInfo(Location.valueOf(hostPortArray[i][0])).getPort()<Integer.parseInt(hostPortArray[i][2])){
+                    ServerManager.getInstance().setNewMasterServer(Location.valueOf(hostPortArray[i][0]),Integer.parseInt(hostPortArray[i][2]));
+                    ServerManager.getInstance().getFrontEndServer().getFrontEndImpl().setMasterServer(Location.valueOf(hostPortArray[i][0]),Integer.parseInt(hostPortArray[i][2]),hostPortArray[i][4]);
+                }
             }
         }
-
         orb.run();
         // wait for invocations from clients
     }
@@ -64,7 +68,7 @@ public class StartServer {
             rootpoa.the_POAManager().activate();
 
             // create servant and register it with the ORB
-            FrontEndServer centerServer = new FrontEndServer(Location.valueOf(centerName),hostAddress,port);
+            FrontEndServer centerServer = new FrontEndServer(hostAddress,port);
             centerServer.setORB(orb);
             ServerManager.getInstance().setFrontEndServer(centerServer);
 

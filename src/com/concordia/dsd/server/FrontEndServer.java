@@ -15,12 +15,11 @@ public class FrontEndServer extends CenterPOA {
 
     /**
      * Constructor: CorbaCenterServerImpl
-     * @param location
      * @throws SecurityException
      * @throws IOException
      */
-    public FrontEndServer(Location location,String hostAddress,int port) throws SecurityException, IOException {
-        frontEndImpl = new FrontEndImpl(location,hostAddress,port);
+    public FrontEndServer(String hostAddress,int port) throws SecurityException, IOException {
+        frontEndImpl = new FrontEndImpl(hostAddress,port);
     }
 
     /**

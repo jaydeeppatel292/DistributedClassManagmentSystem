@@ -23,7 +23,6 @@ public class FrontEndImpl{
     private InetAddress ipAddress;
     private FrontEndUDPServer udpServer;
     private Logger serverLogger;
-    private Location location;
     private FrontEndUDPManager udpManager;
     private int masterPort;
     private int myPort;
@@ -31,6 +30,12 @@ public class FrontEndImpl{
     private ConcurrentLinkedQueue<FIFORequestQueueModel> requestQueue;
     private HashMap<Location,MasterServerInfo> masterServerInfoHashMap = new HashMap<>();
 
+    public FIFORequestQueueModel getRequestFromQueue(){
+        return requestQueue.peek();
+    }
+    public FIFORequestQueueModel dequeueRequestFromQueue(){
+        return requestQueue.poll();
+    }
     public void setMasterServer(Location location,int port,String hostAddress){
         masterServerInfoHashMap.put(location,new MasterServerInfo(port,location,hostAddress));
     }
@@ -65,23 +70,21 @@ public class FrontEndImpl{
     /**
      * Initialize Constructor
      * Also Start Udp Server
-     * @param location
      * @throws SecurityException
      * @throws IOException
      */
-    public FrontEndImpl(Location location,String udpHostAddress, int port) throws SecurityException, IOException {
-        this.location = location;
+    public FrontEndImpl(String udpHostAddress, int port) throws SecurityException, IOException {
         this.myPort = port;
         this.udpHostAddress = udpHostAddress;
         requestQueue = new ConcurrentLinkedQueue<>();
         try {
-            serverLogger = LoggingUtil.getInstance().getServerLogger(this.location);
+            serverLogger = LoggingUtil.getInstance().getServerLogger(Location.valueOf("FE"));
         } catch (SecurityException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        udpManager = new FrontEndUDPManager(location, serverLogger);
+        udpManager = new FrontEndUDPManager(serverLogger);
         udpServer = new FrontEndUDPServer(this,udpHostAddress,port);
 
         // Initialize UDP Server
@@ -89,7 +92,7 @@ public class FrontEndImpl{
 
         // Start UDP Server
         new Thread(udpServer).start();
-
+        new BackupServerSyncManager(this).start();
     }
 
     /**
@@ -120,20 +123,17 @@ public class FrontEndImpl{
         this.ipAddress = ipAddress;
     }
 
-    public Location getLocation() {
-        return this.location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
     public FrontEndUDPServer getUdpServer() {
         return udpServer;
     }
 
     public Logger getServerLogger() {
         return serverLogger;
+    }
+
+
+    public String sendBackupSyncRequest(FIFORequestQueueModel fifoRequestQueueModel){
+        return getUdpManager().sendUDPRequest(getMasterServerForLocation(fifoRequestQueueModel.getRequestLocation()),fifoRequestQueueModel);
     }
 
     /**

@@ -172,7 +172,7 @@ public class UDPManager {
             e.printStackTrace();
         }
     }
-
+/*
     public void initElection(List<Integer> processIdList) {
         UDPRequest[] udpRequests = new UDPRequest[processIdList.size() - 1];
         for (int i = 0; i < processIdList.size(); i++) {
@@ -190,7 +190,7 @@ public class UDPManager {
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 
 
 }

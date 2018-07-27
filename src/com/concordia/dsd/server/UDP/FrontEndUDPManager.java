@@ -16,11 +16,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FrontEndUDPManager {
-    private Location serverLocation;
     private Logger serverLogger;
 
-    public FrontEndUDPManager(Location serverLocation, Logger serverLogger) {
-        this.serverLocation = serverLocation;
+    public FrontEndUDPManager(Logger serverLogger) {
         this.serverLogger = serverLogger;
     }
 
@@ -35,6 +33,7 @@ public class FrontEndUDPManager {
             UDPRequest udpRequest = new UDPRequest(masterServerInfo.getLocation(),masterServerInfo.getHostAddress(),masterServerInfo.getPort(),fifoRequestQueueModel);
             udpRequest.start();
             udpRequest.join();
+            return udpRequest.getResponseFromUDP();
         } catch (SecurityException e) {
             serverLogger.log(Level.SEVERE, e.getMessage());
         } catch (IOException e) {
