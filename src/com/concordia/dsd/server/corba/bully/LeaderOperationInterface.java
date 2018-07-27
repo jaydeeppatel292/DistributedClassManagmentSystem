@@ -4,4 +4,6 @@ public interface LeaderOperationInterface {
     void sendOkMessage();
 
     void sendCoordinatorMessage();
+
+    void initiateElection()
 }
