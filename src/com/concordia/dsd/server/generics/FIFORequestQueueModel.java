@@ -1,12 +1,13 @@
 package com.concordia.dsd.server.generics;
 
+import com.concordia.dsd.global.enums.RequestType;
 import com.concordia.dsd.model.Record;
 import com.concordia.dsd.model.StudentRecord;
 import com.concordia.dsd.model.TeacherRecord;
 
 public class FIFORequestQueueModel {
 
-    private int requestType;
+    private RequestType requestType;
     private StudentRecord studentRecord;
     private TeacherRecord teacherRecord;
     private String recordId;
@@ -15,13 +16,13 @@ public class FIFORequestQueueModel {
     private String managerId;
     private String centerServerName;
 
-    public FIFORequestQueueModel(int requestType, String managerId) {
+    public FIFORequestQueueModel(RequestType requestType, String managerId) {
         this.requestType = requestType;
         this.managerId = managerId;
     }
 
-    public FIFORequestQueueModel(int requestType, Record record, String managerId) {
-        if(requestType == 1)
+    public FIFORequestQueueModel(RequestType requestType, Record record, String managerId) {
+        if(requestType == RequestType.CREATE_S_RECORD)
             this.studentRecord = (StudentRecord) record;
         else
             this.teacherRecord = (TeacherRecord) record;
@@ -32,13 +33,13 @@ public class FIFORequestQueueModel {
     }
 
 
-    public FIFORequestQueueModel(int requestType, String recordId, String fieldName, String newValue, String managerId, String centerServerName) {
+    public FIFORequestQueueModel(RequestType requestType, String recordId, String fieldName, String newValue, String managerId, String centerServerName) {
         this.requestType = requestType;
         this.recordId = recordId;
         this.fieldName = fieldName;
         this.newValue = newValue;
         this.managerId = managerId;
-        if(this.requestType == 4){
+        if(this.requestType == RequestType.TRANSFER_RECORD){
             this.centerServerName = centerServerName;
         }
     }
@@ -75,7 +76,7 @@ public class FIFORequestQueueModel {
         return newValue;
     }
 
-    public void setRequestType(int requestType) {
+    public void setRequestType(RequestType requestType) {
         this.requestType = requestType;
     }
 
@@ -91,7 +92,7 @@ public class FIFORequestQueueModel {
         this.managerId = managerId;
     }
 
-    public int getRequestType() {
+    public RequestType getRequestType() {
         return requestType;
     }
 
