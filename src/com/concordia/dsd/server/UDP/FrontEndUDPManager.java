@@ -25,110 +25,14 @@ public class FrontEndUDPManager {
     }
 
     /**
-     * Implementation of Create Teacher Record
+     * Implementation to send udp request
      * @return
      */
-    public String createTRecord(FrontEndImpl.MasterServerInfo masterServerInfo, FIFORequestQueueModel fifoRequestQueueModel) {
+    public String sendUDPRequest(FrontEndImpl.MasterServerInfo masterServerInfo, FIFORequestQueueModel fifoRequestQueueModel) {
 
         try {
 
             UDPRequest udpRequest = new UDPRequest(masterServerInfo.getLocation(),masterServerInfo.getHostAddress(),masterServerInfo.getPort(),fifoRequestQueueModel);
-            udpRequest.start();
-            udpRequest.join();
-        } catch (SecurityException e) {
-            serverLogger.log(Level.SEVERE, e.getMessage());
-        } catch (IOException e) {
-            serverLogger.log(Level.SEVERE, e.getMessage());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    /**
-     * Implementation of create Student Record
-     * @param firstName
-     * @param lastName
-     * @param courseRegistered
-     * @param status
-     * @param statusDate
-     * @param managerId
-     * @return
-     */
-    public String createSRecord(int masterPort,String firstName, String lastName, String courseRegistered, Status status,
-                                String statusDate, String managerId) {
-
-        try {
-            UDPRequest udpRequest = new UDPRequest(ServerManager.getInstance().getCenterServer(serverLocation,masterPort));
-            udpRequest.start();
-            udpRequest.join();
-        } catch (SecurityException e) {
-            serverLogger.log(Level.SEVERE, e.getMessage());
-        } catch (IOException e) {
-            serverLogger.log(Level.SEVERE, e.getMessage());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    /**
-     * Get Record Counts from all servers
-     * @param managerId
-     * @return
-     */
-    public String getRecordCounts(int masterPort,String managerId) {
-        try {
-            UDPRequest udpRequest = new UDPRequest(ServerManager.getInstance().getCenterServer(serverLocation,masterPort));
-            udpRequest.start();
-            udpRequest.join();
-        } catch (SecurityException e) {
-            serverLogger.log(Level.SEVERE, e.getMessage());
-        } catch (IOException e) {
-            serverLogger.log(Level.SEVERE, e.getMessage());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    /**
-     * Edit Record
-     * @param recordId
-     * @param fieldName
-     * @param newValue
-     * @param managerId
-     * @return
-     */
-    public String editRecord(int masterPort,String recordId, String fieldName, String newValue, String managerId) {
-        try {
-            UDPRequest udpRequest = new UDPRequest(ServerManager.getInstance().getCenterServer(serverLocation,masterPort));
-            udpRequest.start();
-            udpRequest.join();
-        } catch (SecurityException e) {
-            serverLogger.log(Level.SEVERE, e.getMessage());
-        } catch (IOException e) {
-            serverLogger.log(Level.SEVERE, e.getMessage());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    /**
-     * Transfer Record from one server to other server
-     * @param managerId
-     * @param recordId
-     * @param remoteCenterServerName
-     * @return
-     */
-    public String transferRecord(int masterPort,String managerId, String recordId, String remoteCenterServerName) {
-        try {
-            UDPRequest udpRequest = new UDPRequest(ServerManager.getInstance().getCenterServer(serverLocation,masterPort));
             udpRequest.start();
             udpRequest.join();
         } catch (SecurityException e) {
