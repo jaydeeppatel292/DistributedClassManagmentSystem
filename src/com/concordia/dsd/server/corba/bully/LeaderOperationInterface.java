@@ -5,5 +5,5 @@ public interface LeaderOperationInterface {
 
     void sendCoordinatorMessage();
 
-    void initiateElection()
+    void initiateElection();
 }

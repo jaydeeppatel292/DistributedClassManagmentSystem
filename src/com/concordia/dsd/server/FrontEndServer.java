@@ -9,7 +9,7 @@ import org.omg.CORBA.ORB;
 import java.io.IOException;
 
 
-class FrontEndServer extends CenterPOA {
+public class FrontEndServer extends CenterPOA {
     private ORB orb;
     private FrontEndImpl frontEndImpl;
 

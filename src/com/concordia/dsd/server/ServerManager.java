@@ -12,6 +12,8 @@ import java.util.*;
 public class ServerManager {
     private static ServerManager ourInstance = new ServerManager();
     private HashMap<Location, List<CenterServerInfo>> centerServerMap = new HashMap<>();
+    private FrontEndServer frontEndServer;
+
 
     public static ServerManager getInstance() {
         return ourInstance;
@@ -21,8 +23,15 @@ public class ServerManager {
 
     }
 
+    public FrontEndServer getFrontEndServer() {
+        return frontEndServer;
+    }
 
-    public void setNewMasterServer(Location location,int masterPort){
+    public void setFrontEndServer(FrontEndServer frontEndServer) {
+        this.frontEndServer = frontEndServer;
+    }
+
+    public void setNewMasterServer(Location location, int masterPort){
         for(CenterServerInfo centerServerInfo : centerServerMap.get(location)){
             if(centerServerInfo.getPort() == masterPort){
                 centerServerInfo.setMaster(true);
