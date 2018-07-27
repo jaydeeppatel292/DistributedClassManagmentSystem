@@ -7,6 +7,7 @@ import com.concordia.dsd.model.ClassMap;
 import com.concordia.dsd.model.Record;
 import com.concordia.dsd.model.StudentRecord;
 import com.concordia.dsd.model.TeacherRecord;
+import com.concordia.dsd.server.ServerManager;
 import com.concordia.dsd.server.UDP.UDPManager;
 import com.concordia.dsd.server.UDP.UDPServer;
 import com.concordia.dsd.server.manager.StudentManager;
@@ -156,11 +157,11 @@ public class CenterServerImpl<T> {
                                 Location location, String managerId) {
         if(isMaster == true){
 
-
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-
+                    getUdpManager().addStudentRecord(ServerManager.getInstance().getAllBackupServerPort(location), firstName, lastName, address, phone, specialization,
+                            location, managerId );
                 }
             }).start();
         }

@@ -65,6 +65,16 @@ public class ServerManager {
         return backupServerList;
     }
 
+    public List<Integer> getAllBackupServerPort(Location location){
+        List<Integer> backupServerList = new ArrayList<>();
+        for(CenterServerInfo centerServerInfo : centerServerMap.get(location)){
+            if(!centerServerInfo.isMaster()){
+                backupServerList.add(centerServerInfo.getPort());
+            }
+        }
+        return backupServerList;
+    }
+
     /**
      * Add Created Server
      *

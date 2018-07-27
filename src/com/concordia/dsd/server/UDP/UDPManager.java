@@ -1,15 +1,12 @@
 package com.concordia.dsd.server.UDP;
 
 import com.concordia.dsd.global.cmsenum.Location;
-import com.concordia.dsd.global.constants.CMSConstants;
 import com.concordia.dsd.global.constants.CMSLogMessages;
 import com.concordia.dsd.model.ClassMap;
 import com.concordia.dsd.model.Record;
 import com.concordia.dsd.model.StudentRecord;
 import com.concordia.dsd.model.TeacherRecord;
-import com.concordia.dsd.server.RMI.Server;
 import com.concordia.dsd.server.ServerManager;
-import com.concordia.dsd.server.generics.FIFORequestQueueModel;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,20 +17,23 @@ public class UDPManager {
     private Location serverLocation;
     private ClassMap recordMap;
     private Logger serverLogger;
-    private int port;
+    private int myPort;
 
-    public UDPManager(Location serverLocation, ClassMap recordMap, Logger serverLogger, int port) {
+    public UDPManager(Location serverLocation, ClassMap recordMap, Logger serverLogger, int myPort) {
         this.serverLocation = serverLocation;
         this.recordMap = recordMap;
         this.serverLogger = serverLogger;
-        this.port = port;
+        this.myPort = myPort;
     }
 
-    public String addRecord(List<Integer> processList, FIFORequestQueueModel requestObj){
+    public String addStudentRecord(List<Integer> processList, String firstName, String lastName, String address, String phone, String specialization,
+                                   Location location, String managerId){
 
         UDPRequest[] requests = new UDPRequest[processList.size()];
-        for(ServerManager.getInstance().getCenterServer(serverLocation).values()){
-
+        for(int port : ServerManager.getInstance().getAllBackupServerPort(serverLocation)){
+            if(port != myPort){
+                requests[counter] = new UDPRequest(ServerManager.getInstance().getCenterServer(location, port));
+            }
         }
         return "";
     }
