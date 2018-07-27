@@ -21,7 +21,8 @@ public class UDPServer implements UDPServerInterface, LeaderOperationInterface, 
     private CenterServerImpl centerServer;
     private Logger logger = null;
     private MessageType messageType;
-
+    private int udpPort;
+    private String udpHostAddress;
     /**
      * Constructor UDPServer
      *
@@ -29,8 +30,10 @@ public class UDPServer implements UDPServerInterface, LeaderOperationInterface, 
      * @throws SecurityException
      * @throws IOException
      */
-    public UDPServer(CenterServerImpl centerServerImpl) throws SecurityException, IOException {
+    public UDPServer(CenterServerImpl centerServerImpl,String udpHostAddress,int port) throws SecurityException, IOException {
         super();
+        this.udpHostAddress = udpHostAddress;
+        this.udpPort = port;
         centerServer = centerServerImpl;
         logger = LoggingUtil.getInstance().getServerLogger(centerServer.getLocation());
         initializeServerSocket();
@@ -106,19 +109,13 @@ public class UDPServer implements UDPServerInterface, LeaderOperationInterface, 
 
     @Override
     public int getCenterServerPort() {
-        if (centerServer.getLocation().equals(Location.MTL)) {
-            return ServerConfig.UDP_PORT_MTL;
-        } else if (centerServer.getLocation().equals(Location.LVL)) {
-            return ServerConfig.UDP_PORT_LVL;
-        } else {
-            return ServerConfig.UDP_PORT_DDO;
-        }
+        return udpPort;
     }
 
     @Override
     public InetAddress getInetAddress() {
         try {
-            return InetAddress.getByName(ServerConfig.UDP_HOST_NAME);
+            return InetAddress.getByName(udpHostAddress);
         } catch (UnknownHostException e) {
             logger.log(Level.SEVERE, e.getMessage());
             return null;

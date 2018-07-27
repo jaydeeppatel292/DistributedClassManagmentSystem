@@ -35,6 +35,7 @@ public class CenterServerImpl<T> {
     private UDPManager udpManager;
 
     private int myPort;
+    private String udpHostAddress;
     private boolean isMaster;
 
     private List<Integer> serverProcesses;
@@ -46,8 +47,10 @@ public class CenterServerImpl<T> {
      * @throws SecurityException
      * @throws IOException
      */
-    public CenterServerImpl(Location location, int port) throws SecurityException, IOException {
+    public CenterServerImpl(Location location,String udpHostAddress, int port) throws SecurityException, IOException {
         this.location = location;
+        this.myPort = port;
+        this.udpHostAddress = udpHostAddress;
         try {
             serverLogger = LoggingUtil.getInstance().getServerLogger(this.location);
         } catch (SecurityException e) {
@@ -61,7 +64,7 @@ public class CenterServerImpl<T> {
         studentManager = new StudentManager(recordMap, serverLogger);
         teacherManager = new TeacherManager(recordMap, serverLogger);
         udpManager = new UDPManager(location,recordMap, serverLogger, port);
-        udpServer = new UDPServer(this);
+        udpServer = new UDPServer(this,udpHostAddress,port);
 
         // Initialize UDP Server
         initCenterServerModel();

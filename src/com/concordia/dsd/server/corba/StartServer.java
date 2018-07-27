@@ -34,7 +34,7 @@ public class StartServer {
                 createServerBinding(hostPortArray[i][0], Integer.parseInt(hostPortArray[i][2]), i);
             }
             else{
-                startUDPServer(hostPortArray[i][0], Integer.parseInt(hostPortArray[i][2]));
+                startUDPServer(hostPortArray[i][0],hostPortArray[i][4], Integer.parseInt(hostPortArray[i][2]));
             }
         }
 
@@ -42,9 +42,9 @@ public class StartServer {
         // wait for invocations from clients
     }
 
-    private static void startUDPServer(String centerName,int port) {
+    private static void startUDPServer(String centerName,String udpHostAddress,int port) {
         try {
-            CenterServerImpl centerServer = new CenterServerImpl(Location.valueOf(centerName),port);
+            CenterServerImpl centerServer = new CenterServerImpl(Location.valueOf(centerName),udpHostAddress,port);
             ServerManager.getInstance().addServer(Location.valueOf(centerName),port,centerServer);
         } catch (IOException e) {
             e.printStackTrace();
