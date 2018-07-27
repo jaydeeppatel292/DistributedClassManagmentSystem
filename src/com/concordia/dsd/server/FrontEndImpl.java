@@ -138,7 +138,7 @@ public class FrontEndImpl{
      */
     public String createTRecord(String firstName, String lastName, String address, String phone, String specialization,
                                 Location location, String managerId) {
-        return getUdpManager().createTRecord(firstName,lastName,address,phone,specialization,location,managerId);
+        return getUdpManager().createTRecord(masterPort,firstName,lastName,address,phone,specialization,location,managerId);
     }
 
     /**
@@ -153,7 +153,7 @@ public class FrontEndImpl{
      */
     public String createSRecord(String firstName, String lastName, String courseRegistered, Status status,
                                 String statusDate, String managerId) {
-        return getUdpManager().createSRecord(firstName,lastName,courseRegistered,status,statusDate,managerId);
+        return getUdpManager().createSRecord(masterPort,firstName,lastName,courseRegistered,status,statusDate,managerId);
     }
 
     /**
@@ -162,7 +162,7 @@ public class FrontEndImpl{
      * @return
      */
     public String getRecordCounts(String managerId) {
-        return getUdpManager().getRecordCounts(managerId);
+        return getUdpManager().getRecordCounts(masterPort,managerId);
     }
 
     /**
@@ -174,7 +174,7 @@ public class FrontEndImpl{
      * @return
      */
     public String editRecord(String recordId, String fieldName, String newValue, String managerId) {
-        return getUdpManager().editRecord(recordId,fieldName,newValue,managerId);
+        return getUdpManager().editRecord(masterPort,recordId,fieldName,newValue,managerId);
     }
 
     /**
@@ -185,6 +185,6 @@ public class FrontEndImpl{
      * @return
      */
     public String transferRecord(String managerId, String recordId, String remoteCenterServerName) {
-        return getUdpManager().transferRecord(managerId,recordId,remoteCenterServerName);
+        return getUdpManager().transferRecord(masterPort,managerId,recordId,remoteCenterServerName);
     }
 }
