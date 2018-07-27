@@ -9,8 +9,10 @@ import com.concordia.dsd.model.StudentRecord;
 import com.concordia.dsd.model.TeacherRecord;
 import com.concordia.dsd.server.RMI.Server;
 import com.concordia.dsd.server.ServerManager;
+import com.concordia.dsd.server.generics.FIFORequestQueueModel;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,6 +25,12 @@ public class UDPManager {
         this.serverLocation = serverLocation;
         this.recordMap = recordMap;
         this.serverLogger = serverLogger;
+    }
+
+    public String addRecord(List<Integer> processList, FIFORequestQueueModel requestObj){
+
+        UDPRequest[] requests = new UDPRequest[processList.size()];
+        return "";
     }
 
     /**
