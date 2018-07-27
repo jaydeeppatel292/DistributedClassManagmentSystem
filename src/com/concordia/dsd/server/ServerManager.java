@@ -103,6 +103,16 @@ public class ServerManager {
         return null;
     }
 
+    public CenterServerInfo getMasterServerInfo(Location location) {
+        for(CenterServerInfo centerServerInfo : centerServerMap.get(location)){
+            if(centerServerInfo.isMaster()){
+                return centerServerInfo;
+            }
+        }
+        return null;
+    }
+
+
     public Integer getMasterServerPort(Location location) {
         for(CenterServerInfo centerServerInfo : centerServerMap.get(location)){
             if(centerServerInfo.isMaster()){

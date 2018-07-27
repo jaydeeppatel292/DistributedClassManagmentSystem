@@ -29,7 +29,9 @@ public class UDPRequest extends Thread {
         logger = LoggingUtil.getInstance().getServerLogger(serverLocation);
         this.reqObj = reqObj;
     }
-
+    public Location getServerLocation() {
+        return serverLocation;
+    }
     public String getResponseFromUDP() {
         return responseFromUDP;
     }
@@ -55,19 +57,17 @@ public class UDPRequest extends Thread {
             data = new byte[1000];
             socket.receive(new DatagramPacket(data, data.length));
             String response = new String(data);
-            switch (messageType) {
-                case RECORD_COUNT:
-
+            switch (reqObj.getRequestType()) {
+                case GET_RECORD_COUNT:
                     logger.log(Level.INFO, String.format(CMSLogMessages.RECORD_COUNT_SERVER_COMPLETE,
                             serverLocation.toString(), address, serverUDPPort, response.trim()));
                     setResponseFromUDP(response.trim());
                     break;
                 case CREATE_S_RECORD:
-                    response;
                     break;
                 case CREATE_T_RECORD:
                     break;
-                case EDIT_RECORD:
+                case UPDATE_RECORD:
                     break;
                 case TRANSFER_RECORD:
                     break;

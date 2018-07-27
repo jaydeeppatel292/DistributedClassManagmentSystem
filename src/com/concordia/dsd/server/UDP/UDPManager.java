@@ -3,6 +3,7 @@ package com.concordia.dsd.server.UDP;
 import com.concordia.dsd.global.cmsenum.Location;
 import com.concordia.dsd.global.cmsenum.Status;
 import com.concordia.dsd.global.constants.CMSLogMessages;
+import com.concordia.dsd.global.enums.RequestType;
 import com.concordia.dsd.model.ClassMap;
 import com.concordia.dsd.model.Record;
 import com.concordia.dsd.model.StudentRecord;
@@ -88,15 +89,14 @@ public class UDPManager {
     }
 
 
-
-    public String transferRecordsFromProcess(List<ServerManager.CenterServerInfo> processList, FIFORequestQueueModel fifoRequestQueueModel){
+    /*public String transferRecordsFromProcess(List<ServerManager.CenterServerInfo> processList, FIFORequestQueueModel fifoRequestQueueModel){
 
         UDPRequest[] requests = createUDPReqObj(processList,fifoRequestQueueModel);
         for(UDPRequest req : requests){
             req.getCenterServer().transferRecord(managerId, recordId, remoteCenterServerName);
         }
         return "SUCCESS";
-    }
+    }*/
 
     /**
      * Implementation of Get Record Count From All server
@@ -115,8 +115,9 @@ public class UDPManager {
                 stringBuffer.append(recordCount);
             } else {
                 try {
-                    int port = ServerManager.getInstance().getMasterServerPort(location);
-                    requests[counter] = new UDPRequest(ServerManager.getInstance().getCenterServer(location, port));
+                    ServerManager.CenterServerInfo centerInfo = ServerManager.getInstance().getMasterServerInfo(location);
+                    FIFORequestQueueModel reqObj = new FIFORequestQueueModel(RequestType.GET_RECORD_COUNT, managerId, location);
+                    requests[counter] = new UDPRequest(location, centerInfo.getHostAddress(), centerInfo.getPort(), reqObj);
                 } catch (SecurityException e) {
                     serverLogger.log(Level.SEVERE, e.getMessage());
                 } catch (IOException e) {
@@ -133,7 +134,7 @@ public class UDPManager {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            stringBuffer.append(", ").append(request.getCenterServer().getLocation().toString());
+            stringBuffer.append(", ").append(request.getServerLocation());
             stringBuffer.append(" ").append(request.getResponseFromUDP());
         }
         serverLogger.log(Level.INFO, CMSLogMessages.RECORD_COUNT + " requested by manager: " + managerId, stringBuffer.toString());
@@ -151,25 +152,23 @@ public class UDPManager {
      */
     public void transferRecord(String managerId, Record record, String remoteCenterServerName, char typeOfRec) {
         try {
-            int port = ServerManager.getInstance().getMasterServerPort(Location.valueOf(remoteCenterServerName));
-            UDPRequest serverObject = new UDPRequest(ServerManager.getInstance().getCenterServer(Location.valueOf(remoteCenterServerName.toUpperCase()), port));
-            serverObject.start();
+            ServerManager.CenterServerInfo centerInfo = ServerManager.getInstance().getMasterServerInfo(Location.valueOf(remoteCenterServerName));
+            UDPRequest serverObject = null;
             if (typeOfRec == 'S') {
-                StudentRecord studentRecord = (StudentRecord) record;
-                serverObject.getCenterServer().createSRecord(studentRecord.getFirstName(), studentRecord.getLastName(), studentRecord.getCourseRegistered(), studentRecord.getStatus(),
-                        studentRecord.getStatusDate(), managerId);
+                FIFORequestQueueModel reqModel = new FIFORequestQueueModel(RequestType.CREATE_S_RECORD, record, managerId,Location.valueOf(remoteCenterServerName));
+                serverObject = new UDPRequest(Location.valueOf(remoteCenterServerName), centerInfo.getHostAddress(), centerInfo.getPort(), reqModel);
+                serverObject.start();
             } else if (typeOfRec == 'T') {
-                TeacherRecord teacherRecord = (TeacherRecord) record;
-                serverObject.getCenterServer().createTRecord(teacherRecord.getFirstName(), teacherRecord.getLastName(), teacherRecord.getAddress(), teacherRecord.getPhone(),
-                        teacherRecord.getSpecialization(), teacherRecord.getLocation(), managerId);
+                FIFORequestQueueModel reqModel = new FIFORequestQueueModel(RequestType.CREATE_T_RECORD, record, managerId,Location.valueOf(remoteCenterServerName));
+                serverObject = new UDPRequest(Location.valueOf(remoteCenterServerName), centerInfo.getHostAddress(), centerInfo.getPort(), reqModel);
+                serverObject.start();
             }
-            try {
-                serverObject.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            serverObject.join();
             serverLogger.log(Level.INFO, String.format(CMSLogMessages.TRANSFER_RECORD_SUCCESS, record.getRecordId(), managerId));
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+        catch (InterruptedException e) {
             e.printStackTrace();
         }
     }

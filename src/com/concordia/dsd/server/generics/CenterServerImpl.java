@@ -237,14 +237,6 @@ public class CenterServerImpl<T> {
         Record record = getRecordMap().lookupRecord(recordId);
         char typeOfRec;
         String returnValue = "";
-        if(isMaster == true){
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    getUdpManager().transferRecordsFromProcess(ServerManager.getInstance().getAllBackupServerList(location), managerId, recordId, remoteCenterServerName);
-                }
-            }).start();
-        }
         if (record instanceof StudentRecord) {
             typeOfRec='S';
             getUdpManager().transferRecord(managerId, record, remoteCenterServerName, typeOfRec);

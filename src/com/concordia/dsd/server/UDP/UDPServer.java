@@ -72,6 +72,9 @@ public class UDPServer implements UDPServerInterface, LeaderOperationInterface, 
                                         request.getPort()));
                                 break;
                             case TRANSFER_RECORD:
+                                responseData = centerServer.transferRecord(receivedObj.getManagerId(), receivedObj.getRecordId(), receivedObj.getCenterServerName()).getBytes();
+                                datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
+                                        request.getPort()));
                                 break;
                             case UPDATE_RECORD:
                                 break;
