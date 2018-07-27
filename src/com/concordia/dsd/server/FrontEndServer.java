@@ -11,7 +11,7 @@ import java.io.IOException;
 
 class FrontEndServer extends CenterPOA {
     private ORB orb;
-    private CenterServerImpl<FrontEndServer> centerServerCenterImpl;
+    private FrontEndImpl frontEndImpl;
 
     /**
      * Constructor: CorbaCenterServerImpl
@@ -20,7 +20,7 @@ class FrontEndServer extends CenterPOA {
      * @throws IOException
      */
     public FrontEndServer(Location location) throws SecurityException, IOException {
-        centerServerCenterImpl = new CenterServerImpl<>(location);
+        frontEndImpl = new FrontEndImpl(location);
     }
 
     /**
@@ -42,8 +42,8 @@ class FrontEndServer extends CenterPOA {
      * Get CenterServerImpl
      * @return
      */
-    public CenterServerImpl<FrontEndServer> getCenterServerCenterImpl() {
-        return centerServerCenterImpl;
+    public FrontEndImpl getFrontEndImpl() {
+        return frontEndImpl;
     }
 
     /**@ovverride
@@ -59,7 +59,7 @@ class FrontEndServer extends CenterPOA {
      */
     @Override
     public String createTRecord(String firstName, String lastName, String address, String phone, String specialization, String location, String managerId) {
-        return centerServerCenterImpl.createTRecord(firstName,lastName,address,phone,specialization,Location.valueOf(location), managerId);
+        return frontEndImpl.createTRecord(firstName,lastName,address,phone,specialization,Location.valueOf(location), managerId);
     }
 
     /**@ovverride
@@ -74,7 +74,7 @@ class FrontEndServer extends CenterPOA {
      */
     @Override
     public String createSRecord(String firstName, String lastName, String courseRegistered, String status, String statusDate, String managerId) {
-        return centerServerCenterImpl.createSRecord(firstName,lastName,courseRegistered,Status.valueOf(status),statusDate, managerId);
+        return frontEndImpl.createSRecord(firstName,lastName,courseRegistered,Status.valueOf(status),statusDate, managerId);
     }
 
     /**
@@ -84,7 +84,7 @@ class FrontEndServer extends CenterPOA {
      */
     @Override
     public String getRecordCounts(String managerId) {
-        return centerServerCenterImpl.getRecordCounts(managerId);
+        return frontEndImpl.getRecordCounts(managerId);
     }
 
     /**
@@ -97,7 +97,7 @@ class FrontEndServer extends CenterPOA {
      */
     @Override
     public String editRecord(String recordId, String fieldName, String newValue, String managerId) {
-        return centerServerCenterImpl.editRecord(recordId,fieldName,newValue, managerId);
+        return frontEndImpl.editRecord(recordId,fieldName,newValue, managerId);
     }
 
     /**
@@ -109,6 +109,6 @@ class FrontEndServer extends CenterPOA {
      */
     @Override
     public String transferRecord(String managerId, String recordId, String remoteCenterServerName){
-        return centerServerCenterImpl.transferRecord(managerId, recordId, remoteCenterServerName);
+        return frontEndImpl.transferRecord(managerId, recordId, remoteCenterServerName);
     }
 }

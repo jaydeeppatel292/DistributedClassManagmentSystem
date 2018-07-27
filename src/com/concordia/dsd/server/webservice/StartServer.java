@@ -23,7 +23,7 @@ public class StartServer {
             try {
                 WSCenterServerImpl wsCenterServer = new WSCenterServerImpl(Location.valueOf(hostPortArray[i][0]));
                 endpoint = Endpoint.publish("http://" + hostPortArray[i][2] + ":" + hostPortArray[i][1] + "/" + hostPortArray[i][0],wsCenterServer);
-                ServerManager.getInstance().addServer(Location.valueOf(hostPortArray[i][0]),Integer.parseInt(hostPortArray[i][1]) ,wsCenterServer.getCenterServerCenterImpl());
+                ServerManager.getInstance().addServer(Location.valueOf(hostPortArray[i][0]),Integer.parseInt(hostPortArray[i][1]), wsCenterServer.getCenterServerCenterImpl());
             } catch (IOException e) {
                 e.printStackTrace();
             }catch (Exception ex){

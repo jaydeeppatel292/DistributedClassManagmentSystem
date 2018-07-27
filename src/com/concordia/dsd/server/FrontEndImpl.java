@@ -141,11 +141,10 @@ public class FrontEndImpl{
      */
     public String createTRecord(String firstName, String lastName, String address, String phone, String specialization,
                                 Location location, String managerId) {
-
         TeacherRecord teacher = new TeacherRecord("", firstName, lastName, address, phone, specialization, location);
         FIFORequestQueueModel obj = new FIFORequestQueueModel(2, teacher, managerId);
         requestQueue.add(obj);
-        return getUdpManager().createTRecord(firstName,lastName,address,phone,specialization,location,managerId);
+        return getUdpManager().createTRecord(masterPort,firstName,lastName,address,phone,specialization,location,managerId);
     }
 
     /**
@@ -163,7 +162,7 @@ public class FrontEndImpl{
         StudentRecord student = new StudentRecord("", firstName, lastName, status, courseRegistered, statusDate);
         FIFORequestQueueModel obj = new FIFORequestQueueModel(1, student, managerId);
         requestQueue.add(obj);
-        return getUdpManager().createSRecord(firstName,lastName,courseRegistered,status,statusDate,managerId);
+        return getUdpManager().createSRecord(masterPort,firstName,lastName,courseRegistered,status,statusDate,managerId);
     }
 
     /**
@@ -172,10 +171,9 @@ public class FrontEndImpl{
      * @return
      */
     public String getRecordCounts(String managerId) {
-
         FIFORequestQueueModel obj = new FIFORequestQueueModel(2, managerId);
         requestQueue.add(obj);
-        return getUdpManager().getRecordCounts(managerId);
+        return getUdpManager().getRecordCounts(masterPort,managerId);
     }
 
     /**
@@ -189,7 +187,7 @@ public class FrontEndImpl{
     public String editRecord(String recordId, String fieldName, String newValue, String managerId) {
         FIFORequestQueueModel obj = new FIFORequestQueueModel(3, recordId, fieldName, newValue, managerId, "");
         requestQueue.add(obj);
-        return getUdpManager().editRecord(recordId,fieldName,newValue,managerId);
+        return getUdpManager().editRecord(masterPort,recordId,fieldName,newValue,managerId);
     }
 
     /**
@@ -202,6 +200,6 @@ public class FrontEndImpl{
     public String transferRecord(String managerId, String recordId, String remoteCenterServerName) {
         FIFORequestQueueModel obj = new FIFORequestQueueModel(4, recordId,"" ,"", managerId, remoteCenterServerName);
         requestQueue.add(obj);
-        return getUdpManager().transferRecord(managerId,recordId,remoteCenterServerName);
+        return getUdpManager().transferRecord(masterPort,managerId,recordId,remoteCenterServerName);
     }
 }
