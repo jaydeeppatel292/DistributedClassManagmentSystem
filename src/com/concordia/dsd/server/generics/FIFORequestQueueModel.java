@@ -1,5 +1,6 @@
 package com.concordia.dsd.server.generics;
 
+import com.concordia.dsd.global.cmsenum.Location;
 import com.concordia.dsd.global.enums.RequestType;
 import com.concordia.dsd.model.Record;
 import com.concordia.dsd.model.StudentRecord;
@@ -17,13 +18,25 @@ public class FIFORequestQueueModel implements Serializable{
     private String newValue;
     private String managerId;
     private String centerServerName;
+    private Location requestLocation;
+    private boolean isSyncRequest=false;
 
-    public FIFORequestQueueModel(RequestType requestType, String managerId) {
-        this.requestType = requestType;
-        this.managerId = managerId;
+    public void setSyncRequest(boolean syncRequest) {
+        isSyncRequest = syncRequest;
     }
 
-    public FIFORequestQueueModel(RequestType requestType, Record record, String managerId) {
+    public boolean isSyncRequest() {
+        return isSyncRequest;
+    }
+
+    public FIFORequestQueueModel(RequestType requestType, String managerId, Location requestLocation) {
+        this.requestType = requestType;
+        this.managerId = managerId;
+        this.requestLocation = requestLocation;
+    }
+
+    public FIFORequestQueueModel(RequestType requestType, Record record, String managerId, Location requestLocation) {
+        this.requestLocation = requestLocation;
         if(requestType == RequestType.CREATE_S_RECORD)
             this.studentRecord = (StudentRecord) record;
         else
@@ -35,12 +48,13 @@ public class FIFORequestQueueModel implements Serializable{
     }
 
 
-    public FIFORequestQueueModel(RequestType requestType, String recordId, String fieldName, String newValue, String managerId, String centerServerName) {
+    public FIFORequestQueueModel(RequestType requestType, String recordId, String fieldName, String newValue, String managerId, String centerServerName, Location requestLocation) {
         this.requestType = requestType;
         this.recordId = recordId;
         this.fieldName = fieldName;
         this.newValue = newValue;
         this.managerId = managerId;
+        this.requestLocation = requestLocation;
         if(this.requestType == RequestType.TRANSFER_RECORD){
             this.centerServerName = centerServerName;
         }

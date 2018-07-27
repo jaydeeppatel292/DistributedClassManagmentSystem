@@ -4,7 +4,6 @@ package com.concordia.dsd.server.RMI;
 import com.concordia.dsd.global.cmsenum.Location;
 import com.concordia.dsd.global.constants.ServerConfig;
 import com.concordia.dsd.server.ServerManager;
-import com.concordia.dsd.server.generics.CenterServerImpl;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -18,7 +17,7 @@ public class Server {
 		for	(Location location: Location.values()) {
 		    RMICenterServerImpl rmiCenterServer = new RMICenterServerImpl(location);
 			centralRepository.put(location, rmiCenterServer);
-            ServerManager.getInstance().addServer(location,1000,rmiCenterServer.getCenterServerCenterImpl());
+            ServerManager.getInstance().addServer(location,1000,rmiCenterServer.getCenterServerCenterImpl(), hostAddress);
 		}
 		Registry registry = LocateRegistry.createRegistry(ServerConfig.REGISTRY_PORT);
 		registry.bind(ServerConfig.MTL_SERVER, centralRepository.get(Location.MTL));

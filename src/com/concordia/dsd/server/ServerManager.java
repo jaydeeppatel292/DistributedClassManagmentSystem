@@ -77,15 +77,15 @@ public class ServerManager {
 
     /**
      * Add Created Server
-     *
-     * @param location
+     *  @param location
      * @param centerServer
+     * @param hostAddress
      */
-    public void addServer(Location location, int port, CenterServerImpl centerServer) {
+    public void addServer(Location location, int port, CenterServerImpl centerServer, String hostAddress) {
         if (centerServerMap.get(location) == null) {
             centerServerMap.put(location, new ArrayList<>());
         }
-        centerServerMap.get(location).add(new CenterServerInfo(port, centerServer, location));
+        centerServerMap.get(location).add(new CenterServerInfo(port, centerServer, location, hostAddress));
     }
 
     /**
@@ -113,12 +113,13 @@ public class ServerManager {
     }
 
 
-    class CenterServerInfo {
+    public class CenterServerInfo {
         private int port;
         private CenterServerImpl centerServerImpl;
         private boolean isMaster;
         private Location location;
-
+        private boolean isActive;
+        private String hostAddress;
         public Location getLocation() {
             return location;
         }
@@ -131,11 +132,13 @@ public class ServerManager {
             isMaster = master;
         }
 
-        public CenterServerInfo(int port, CenterServerImpl centerServerImpl, Location location) {
+        public CenterServerInfo(int port, CenterServerImpl centerServerImpl, Location location, String hostAddress) {
             this.port = port;
             this.centerServerImpl = centerServerImpl;
             this.location = location;
+            this.hostAddress = hostAddress;
             this.isMaster = false;
+            this.isActive = true;
         }
 
         public int getPort() {
@@ -144,6 +147,14 @@ public class ServerManager {
 
         public CenterServerImpl getCenterServerImpl() {
             return centerServerImpl;
+        }
+
+        public boolean isActive() {
+            return isActive;
+        }
+
+        public String getHostAddress() {
+            return hostAddress;
         }
     }
 }

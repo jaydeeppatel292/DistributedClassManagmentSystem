@@ -12,6 +12,7 @@ import com.concordia.dsd.utils.LoggingUtil;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Logger;
 
@@ -27,7 +28,14 @@ public class FrontEndImpl{
     private int myPort;
     private String masterHostAddress;
     private ConcurrentLinkedQueue<FIFORequestQueueModel> requestQueue;
+    private HashMap<Location,MasterServerInfo> masterServerInfoHashMap = new HashMap<>();
 
+    public void setMasterServer(Location location,int port,String hostAddress){
+        masterServerInfoHashMap.put(location,new MasterServerInfo(port,location,hostAddress));
+    }
+    public MasterServerInfo getMasterServerForLocation(Location location){
+        return masterServerInfoHashMap.get(location);
+    }
 
     public String getMasterHostAddress() {
         return masterHostAddress;
@@ -140,10 +148,12 @@ public class FrontEndImpl{
      */
     public String createTRecord(String firstName, String lastName, String address, String phone, String specialization,
                                 Location location, String managerId) {
+        String requestedLocation = managerId.substring(0, 3);
+
         TeacherRecord teacher = new TeacherRecord("", firstName, lastName, address, phone, specialization, location);
-        FIFORequestQueueModel obj = new FIFORequestQueueModel(RequestType.CREATE_T_RECORD, teacher, managerId);
+        FIFORequestQueueModel obj = new FIFORequestQueueModel(RequestType.CREATE_T_RECORD, teacher, managerId, Location.valueOf(requestedLocation));
         requestQueue.add(obj);
-        return getUdpManager().createTRecord(masterPort,firstName,lastName,address,phone,specialization,location,managerId);
+        return getUdpManager().createTRecord(getMasterServerForLocation(Location.valueOf(requestedLocation)),obj);
     }
 
     /**
@@ -158,8 +168,9 @@ public class FrontEndImpl{
      */
     public String createSRecord(String firstName, String lastName, String courseRegistered, Status status,
                                 String statusDate, String managerId) {
+        String requestedLocation = managerId.substring(0, 3);
         StudentRecord student = new StudentRecord("", firstName, lastName, status, courseRegistered, statusDate);
-        FIFORequestQueueModel obj = new FIFORequestQueueModel(RequestType.CREATE_S_RECORD, student, managerId);
+        FIFORequestQueueModel obj = new FIFORequestQueueModel(RequestType.CREATE_S_RECORD, student, managerId,  Location.valueOf(requestedLocation));
         requestQueue.add(obj);
         return getUdpManager().createSRecord(masterPort,firstName,lastName,courseRegistered,status,statusDate,managerId);
     }
@@ -170,7 +181,8 @@ public class FrontEndImpl{
      * @return
      */
     public String getRecordCounts(String managerId) {
-        FIFORequestQueueModel obj = new FIFORequestQueueModel(RequestType.GET_RECORD_COUNT, managerId);
+        String requestedLocation = managerId.substring(0, 3);
+        FIFORequestQueueModel obj = new FIFORequestQueueModel(RequestType.GET_RECORD_COUNT, managerId,  Location.valueOf(requestedLocation));
         requestQueue.add(obj);
         return getUdpManager().getRecordCounts(masterPort,managerId);
     }
@@ -184,7 +196,8 @@ public class FrontEndImpl{
      * @return
      */
     public String editRecord(String recordId, String fieldName, String newValue, String managerId) {
-        FIFORequestQueueModel obj = new FIFORequestQueueModel(RequestType.UPDATE_RECORD, recordId, fieldName, newValue, managerId, "");
+        String requestedLocation = managerId.substring(0, 3);
+        FIFORequestQueueModel obj = new FIFORequestQueueModel(RequestType.UPDATE_RECORD, recordId, fieldName, newValue, managerId, "",  Location.valueOf(requestedLocation));
         requestQueue.add(obj);
         return getUdpManager().editRecord(masterPort,recordId,fieldName,newValue,managerId);
     }
@@ -197,8 +210,34 @@ public class FrontEndImpl{
      * @return
      */
     public String transferRecord(String managerId, String recordId, String remoteCenterServerName) {
-        FIFORequestQueueModel obj = new FIFORequestQueueModel(RequestType.TRANSFER_RECORD, recordId,"" ,"", managerId, remoteCenterServerName);
+        String requestedLocation = managerId.substring(0, 3);
+        FIFORequestQueueModel obj = new FIFORequestQueueModel(RequestType.TRANSFER_RECORD, recordId,"" ,"", managerId, remoteCenterServerName,  Location.valueOf(requestedLocation));
         requestQueue.add(obj);
         return getUdpManager().transferRecord(masterPort,managerId,recordId,remoteCenterServerName);
+    }
+
+    public class MasterServerInfo {
+        private int port;
+        private Location location;
+        private String hostAddress;
+        public Location getLocation() {
+            return location;
+        }
+        public MasterServerInfo(int port, Location location, String hostAddress) {
+            this.port = port;
+            this.location = location;
+            this.hostAddress = hostAddress;
+        }
+        public int getPort() {
+            return port;
+        }
+
+        public String getHostAddress() {
+            return hostAddress;
+        }
+
+        public void setHostAddress(String hostAddress) {
+            this.hostAddress = hostAddress;
+        }
     }
 }

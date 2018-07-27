@@ -45,7 +45,7 @@ public class StartServer {
     private static void startUDPServer(String centerName,String udpHostAddress,int port) {
         try {
             CenterServerImpl centerServer = new CenterServerImpl(Location.valueOf(centerName),udpHostAddress,port);
-            ServerManager.getInstance().addServer(Location.valueOf(centerName),port,centerServer);
+            ServerManager.getInstance().addServer(Location.valueOf(centerName),port,centerServer, udpHostAddress);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -8,6 +8,7 @@ import com.concordia.dsd.model.Record;
 import com.concordia.dsd.model.StudentRecord;
 import com.concordia.dsd.model.TeacherRecord;
 import com.concordia.dsd.server.ServerManager;
+import com.concordia.dsd.server.generics.CenterServerImpl;
 import com.concordia.dsd.server.generics.FIFORequestQueueModel;
 
 import java.io.IOException;
@@ -29,14 +30,14 @@ public class UDPManager {
         this.myPort = myPort;
     }
 
-    public UDPRequest[] createUDPReqObj(List<Integer> processList){
+    public UDPRequest[] createUDPReqObj(List<ServerManager.CenterServerInfo> processList,FIFORequestQueueModel fifoRequestQueueModel){
         UDPRequest[] requests;
         int counter = 0;
         requests = new UDPRequest[processList.size()];
-        for(int port : ServerManager.getInstance().getAllBackupServerPort(serverLocation)){
-            if(port != myPort){
+        for(ServerManager.CenterServerInfo centerServerInfo: processList){
+            if(centerServerInfo.getPort() != myPort){
                 try {
-                    requests[counter] = new UDPRequest(ServerManager.getInstance().getCenterServer(serverLocation, port));
+                    requests[counter] = new UDPRequest(centerServerInfo.getLocation(),centerServerInfo.getHostAddress(),centerServerInfo.getPort(),fifoRequestQueueModel);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -47,81 +48,50 @@ public class UDPManager {
         return requests;
     }
 
-    public String sendBackUpProcessRequests(FIFORequestQueueModel requestQueueModel){
-        return ServerManager.getInstance().getCenterServer(serverLocation ,ServerManager.getInstance().getMasterServerPort(serverLocation)).sendBackUpProcessRequestFromController(requestQueueModel);
-    }
-
-    /**
-     * Add teacher record in backup processes
-     * @param processList
-     * @param firstName
-     * @param lastName
-     * @param address
-     * @param phone
-     * @param specialization
-     * @param location
-     * @param managerId
-     * @return
-     */
-    public String addTeacherRecord(List<Integer> processList, String firstName, String lastName, String address, String phone, String specialization,
-                                   Location location, String managerId){
-
-        UDPRequest[] requests = createUDPReqObj(processList);
-        for(UDPRequest req : requests){
-            req.getCenterServer().createTRecord(firstName, lastName, address, phone, specialization, location, managerId);
-        }
-        return "SUCCESS";
-    }
-
     /**
      * Add student record in backup processes
      * @param processList
-     * @param firstName
-     * @param lastName
-     * @param courseRegistered
-     * @param status
-     * @param statusDate
-     * @param managerId
      * @return
      */
-    public String addStudentRecord(List<Integer> processList, String firstName, String lastName, String courseRegistered, Status status,
-                                   String statusDate, String managerId){
+    public String sendBackUpProcessRequestFromController(List<ServerManager.CenterServerInfo> processList, FIFORequestQueueModel fifoRequestQueueModel){
 
-        UDPRequest[] requests = createUDPReqObj(processList);
+        UDPRequest[] requests = createUDPReqObj(processList,fifoRequestQueueModel);
         for(UDPRequest req : requests){
             try {
                 req.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            req.getCenterServer().createSRecord(firstName, lastName, courseRegistered, status, statusDate, managerId);
         }
 
         return "SUCCESS";
     }
 
-    public String getRecordCountFromProcess(List<Integer> processList, String managerId){
+    public String sendBackUpProcessRequests(FIFORequestQueueModel requestQueueModel){
+        return ServerManager.getInstance().getCenterServer(serverLocation ,ServerManager.getInstance().getMasterServerPort(serverLocation)).sendBackUpProcessRequestFromController(requestQueueModel);
+    }
 
-        UDPRequest[] requests = createUDPReqObj(processList);
+    /**
+     * Add teacher record in backup processes
+     */
+    public String addTeacherRecord(List<ServerManager.CenterServerInfo> processList, FIFORequestQueueModel requestObj){
+
+        UDPRequest[] requests = createUDPReqObj(processList,requestObj);
         for(UDPRequest req : requests){
-            req.getCenterServer().getRecordCounts(managerId);
+            try {
+                req.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         return "SUCCESS";
     }
 
 
-    public String updateRecords(List<Integer> processList, String recordId, String fieldName, String newValue, String managerId){
 
-        UDPRequest[] requests = createUDPReqObj(processList);
-        for(UDPRequest req : requests){
-            req.getCenterServer().editRecord(recordId, fieldName, newValue, managerId);
-        }
-        return "SUCCESS";
-    }
+    public String transferRecordsFromProcess(List<ServerManager.CenterServerInfo> processList, FIFORequestQueueModel fifoRequestQueueModel){
 
-    public String transferRecordsFromProcess(List<Integer> processList, String managerId, String recordId, String remoteCenterServerName){
-
-        UDPRequest[] requests = createUDPReqObj(processList);
+        UDPRequest[] requests = createUDPReqObj(processList,fifoRequestQueueModel);
         for(UDPRequest req : requests){
             req.getCenterServer().transferRecord(managerId, recordId, remoteCenterServerName);
         }

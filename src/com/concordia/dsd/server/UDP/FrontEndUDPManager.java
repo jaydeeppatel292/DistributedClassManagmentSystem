@@ -7,7 +7,9 @@ import com.concordia.dsd.model.ClassMap;
 import com.concordia.dsd.model.Record;
 import com.concordia.dsd.model.StudentRecord;
 import com.concordia.dsd.model.TeacherRecord;
+import com.concordia.dsd.server.FrontEndImpl;
 import com.concordia.dsd.server.ServerManager;
+import com.concordia.dsd.server.generics.FIFORequestQueueModel;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -24,20 +26,13 @@ public class FrontEndUDPManager {
 
     /**
      * Implementation of Create Teacher Record
-     * @param firstName
-     * @param lastName
-     * @param address
-     * @param phone
-     * @param specialization
-     * @param location
-     * @param managerId
      * @return
      */
-    public String createTRecord(int masterPort,String firstName, String lastName, String address, String phone, String specialization,
-                                Location location, String managerId) {
+    public String createTRecord(FrontEndImpl.MasterServerInfo masterServerInfo, FIFORequestQueueModel fifoRequestQueueModel) {
 
         try {
-            UDPRequest udpRequest = new UDPRequest(ServerManager.getInstance().getCenterServer(serverLocation,masterPort));
+
+            UDPRequest udpRequest = new UDPRequest(masterServerInfo.getLocation(),masterServerInfo.getHostAddress(),masterServerInfo.getPort(),fifoRequestQueueModel);
             udpRequest.start();
             udpRequest.join();
         } catch (SecurityException e) {

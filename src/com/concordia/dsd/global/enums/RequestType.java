@@ -7,5 +7,6 @@ public enum RequestType {
     UPDATE_RECORD,
     TRANSFER_RECORD,
     ELECTION,
-    COORDINATOR
+    COORDINATOR,
+    SYNC_BACKUP_SERVER
 }

@@ -1,5 +1,6 @@
 package com.concordia.dsd.server.UDP;
 
+import com.concordia.dsd.global.cmsenum.Location;
 import com.concordia.dsd.global.cmsenum.MessageType;
 import com.concordia.dsd.global.constants.CMSConstants;
 import com.concordia.dsd.global.constants.CMSLogMessages;
@@ -9,23 +10,23 @@ import com.concordia.dsd.utils.LoggingUtil;
 import com.concordia.dsd.utils.SerializingUtil;
 
 import java.io.*;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
+import java.net.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class UDPRequest extends Thread {
-    private CenterServerImpl centerServer;
     private String responseFromUDP;
     private Logger logger = null;
     private FIFORequestQueueModel reqObj;
     private MessageType messageType;
-
-    public UDPRequest(CenterServerImpl centerServerImpl, FIFORequestQueueModel reqObj) throws SecurityException, IOException {
-        centerServer = centerServerImpl;
-        logger = LoggingUtil.getInstance().getServerLogger(centerServerImpl.getLocation());
+    private String serverUDPHostAddress;
+    private int serverUDPPort;
+    private Location serverLocation;
+    public UDPRequest(Location serverLocation,String serverUDPHostAddress,int serverUDPPort, FIFORequestQueueModel reqObj) throws SecurityException, IOException {
+        this.serverLocation = serverLocation;
+        this.serverUDPHostAddress = serverUDPHostAddress;
+        this.serverUDPPort = serverUDPPort;
+        logger = LoggingUtil.getInstance().getServerLogger(serverLocation);
         this.reqObj = reqObj;
     }
 
@@ -37,23 +38,18 @@ public class UDPRequest extends Thread {
         this.responseFromUDP = responseFromUDP;
     }
 
-    public CenterServerImpl getCenterServer() {
-        return centerServer;
-    }
-
 
     @Override
     public void run() {
-        InetAddress address = centerServer.getIpAddress();
-        int port = centerServer.getUdpPort();
+        InetAddress address = getInetAddress(serverUDPHostAddress);
         DatagramSocket socket = null;
         try {
             socket = new DatagramSocket();
             logger.log(Level.INFO, String.format(CMSLogMessages.RECORD_COUNT_SERVER_INIT,
-                    centerServer.getLocation().toString(), address, port));
+                    serverLocation.toString(), address, serverUDPPort));
             byte[] data;
             data = SerializingUtil.getInstance().getSerializedFIFOObject(reqObj);
-            DatagramPacket packet = new DatagramPacket(data, data.length, address, port);
+            DatagramPacket packet = new DatagramPacket(data, data.length, address, serverUDPPort);
             socket.send(packet);
 
             data = new byte[1000];
@@ -63,11 +59,11 @@ public class UDPRequest extends Thread {
                 case RECORD_COUNT:
 
                     logger.log(Level.INFO, String.format(CMSLogMessages.RECORD_COUNT_SERVER_COMPLETE,
-                            centerServer.getLocation().toString(), address, port, response.trim()));
+                            serverLocation.toString(), address, serverUDPPort, response.trim()));
                     setResponseFromUDP(response.trim());
                     break;
                 case CREATE_S_RECORD:
-                    response
+                    response;
                     break;
                 case CREATE_T_RECORD:
                     break;
@@ -99,4 +95,14 @@ public class UDPRequest extends Thread {
     public void setMessageType(MessageType messageType) {
         this.messageType = messageType;
     }
+
+    public InetAddress getInetAddress(String udpHostAddress) {
+        try {
+            return InetAddress.getByName(udpHostAddress);
+        } catch (UnknownHostException e) {
+            logger.log(Level.SEVERE, e.getMessage());
+            return null;
+        }
+    }
+
 }

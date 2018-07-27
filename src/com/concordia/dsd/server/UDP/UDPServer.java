@@ -26,6 +26,7 @@ public class UDPServer implements UDPServerInterface, LeaderOperationInterface, 
     private MessageType messageType;
     private int udpPort;
     private String udpHostAddress;
+
     /**
      * Constructor UDPServer
      *
@@ -33,7 +34,7 @@ public class UDPServer implements UDPServerInterface, LeaderOperationInterface, 
      * @throws SecurityException
      * @throws IOException
      */
-    public UDPServer(CenterServerImpl centerServerImpl,String udpHostAddress,int port) throws SecurityException, IOException {
+    public UDPServer(CenterServerImpl centerServerImpl, String udpHostAddress, int port) throws SecurityException, IOException {
         super();
         this.udpHostAddress = udpHostAddress;
         this.udpPort = port;
@@ -58,36 +59,46 @@ public class UDPServer implements UDPServerInterface, LeaderOperationInterface, 
                     //messageType = MessageType.valueOf(new String(request.getData()));
                     byte[] responseData;
                     datagramSocket = new DatagramSocket();
-                    switch (receivedObj.getRequestType()) {
-                        case GET_RECORD_COUNT:
-                            // Sending back record count by requested client UDPRequest
-                            responseData = centerServer.getRecordMap().getRecordsCount().toString().getBytes();
-                            datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
-                                    request.getPort()));
-                            break;
-                        case TRANSFER_RECORD:
-                            break;
-                        case UPDATE_RECORD:
-                            break;
-                        case CREATE_S_RECORD:
-                            responseData = centerServer.createSRecord(receivedObj.getStudentRecord().getFirstName(), receivedObj.getStudentRecord().getLastName(), receivedObj.getStudentRecord().getCourseRegistered(), receivedObj.getStudentRecord().getStatus(), receivedObj.getStudentRecord().getStatusDate(), receivedObj.getManagerId()).getBytes();;
-                            datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
-                                    request.getPort()));
-                            break;
-                        case CREATE_T_RECORD:
-                            break;
-                        case ELECTION:
-                            if (request.getPort() < centerServer.getUdpPort()) {
-                                responseData = CMSConstants.OK_MESSAGE.getBytes();
+                    if (receivedObj.isSyncRequest()) {
+                        responseData = centerServer.sendBackUpProcessRequestFromController(receivedObj).getBytes();
+                        datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
+                                request.getPort()));
+                    } else {
+                        switch (receivedObj.getRequestType()) {
+                            case GET_RECORD_COUNT:
+                                // Sending back record count by requested client UDPRequest
+                                responseData = centerServer.getRecordMap().getRecordsCount().toString().getBytes();
                                 datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
                                         request.getPort()));
-                                // init election as the current server could be leader
-                                //TODO init election params configure
+                                break;
+                            case TRANSFER_RECORD:
+                                break;
+                            case UPDATE_RECORD:
+                                break;
+                            case CREATE_S_RECORD:
+                                responseData = centerServer.createSRecord(receivedObj.getStudentRecord().getFirstName(), receivedObj.getStudentRecord().getLastName(), receivedObj.getStudentRecord().getCourseRegistered(), receivedObj.getStudentRecord().getStatus(), receivedObj.getStudentRecord().getStatusDate(), receivedObj.getManagerId()).getBytes();
+                                ;
+                                datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
+                                        request.getPort()));
+                                break;
+                            case CREATE_T_RECORD:
+                                responseData = centerServer.createTRecord(receivedObj.getTeacherRecord().getFirstName(), receivedObj.getTeacherRecord().getLastName(), receivedObj.getTeacherRecord().getAddress(), receivedObj.getTeacherRecord().getPhone(), receivedObj.getTeacherRecord().getSpecialization(), receivedObj.getTeacherRecord().getLocation(), receivedObj.getManagerId()).getBytes();
+                                datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
+                                        request.getPort()));
+                                break;
+                            case ELECTION:
+                                if (request.getPort() < centerServer.getUdpPort()) {
+                                    responseData = CMSConstants.OK_MESSAGE.getBytes();
+                                    datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
+                                            request.getPort()));
+                                    // init election as the current server could be leader
+                                    //TODO init election params configure
 //                                centerServer.getUdpManager().initElection();
-                            }
-                            break;
-                        case COORDINATOR:
-                            break;
+                                }
+                                break;
+                            case COORDINATOR:
+                                break;
+                        }
                     }
                 } catch (IOException e) {
                     logger.log(Level.SEVERE, e.getMessage());

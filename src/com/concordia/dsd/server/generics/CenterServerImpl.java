@@ -18,6 +18,8 @@ import com.concordia.dsd.utils.LoggingUtil;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -40,6 +42,7 @@ public class CenterServerImpl<T> {
     private boolean isMaster;
 
     private List<Integer> serverProcesses;
+
 
     /**
      * Initialize Constructor
@@ -147,23 +150,7 @@ public class CenterServerImpl<T> {
     }
 
     public String sendBackUpProcessRequestFromController(FIFORequestQueueModel requestObj){
-        if(requestObj.getRequestType().equals(RequestType.CREATE_S_RECORD)){
-            return getUdpManager().addStudentRecord(ServerManager.getInstance().getAllBackupServerPort(location), requestObj.getStudentRecord().getFirstName(), requestObj.getStudentRecord().getLastName(), requestObj.getStudentRecord().getCourseRegistered(), requestObj.getStudentRecord().getStatus(), requestObj.getStudentRecord().getStatusDate(), requestObj.getManagerId());
-        }
-        else if(requestObj.getRequestType().equals(RequestType.CREATE_T_RECORD)){
-            return getUdpManager().addTeacherRecord(ServerManager.getInstance().getAllBackupServerPort(location), requestObj.getTeacherRecord().getFirstName(), requestObj.getTeacherRecord().getLastName(), requestObj.getTeacherRecord().getAddress(), requestObj.getTeacherRecord().getPhone(), requestObj.getTeacherRecord().getSpecialization(),
-                    location, requestObj.getManagerId() );
-        }
-        else if(requestObj.getRequestType().equals(RequestType.UPDATE_RECORD)){
-            return getUdpManager().updateRecords(ServerManager.getInstance().getAllBackupServerPort(location), requestObj.getRecordId(), requestObj.getFieldName(), requestObj.getNewValue(), requestObj.getManagerId());
-        }
-        else if(requestObj.getRequestType().equals(RequestType.GET_RECORD_COUNT)){
-            return getUdpManager().getRecordCountFromProcess(ServerManager.getInstance().getAllBackupServerPort(location), requestObj.getManagerId());
-        }
-        else if(requestObj.getRequestType().equals(RequestType.TRANSFER_RECORD)){
-            return getUdpManager().transferRecordsFromProcess(ServerManager.getInstance().getAllBackupServerPort(location), requestObj.getManagerId(), requestObj.getRecordId(), requestObj.getCenterServerName());
-        }
-        return null;
+        return getUdpManager().sendBackUpProcessRequestFromController(ServerManager.getInstance().getAllBackupServerList(location),requestObj);
     }
 
     /**
@@ -254,7 +241,7 @@ public class CenterServerImpl<T> {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    getUdpManager().transferRecordsFromProcess(ServerManager.getInstance().getAllBackupServerPort(location), managerId, recordId, remoteCenterServerName);
+                    getUdpManager().transferRecordsFromProcess(ServerManager.getInstance().getAllBackupServerList(location), managerId, recordId, remoteCenterServerName);
                 }
             }).start();
         }
