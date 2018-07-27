@@ -2,6 +2,7 @@ package com.concordia.dsd.server.UDP;
 
 import com.concordia.dsd.global.cmsenum.Location;
 import com.concordia.dsd.global.cmsenum.MessageType;
+import com.concordia.dsd.global.constants.CMSConstants;
 import com.concordia.dsd.global.constants.CMSLogMessages;
 import com.concordia.dsd.global.constants.ServerConfig;
 import com.concordia.dsd.server.corba.bully.LeaderOperationInterface;
@@ -67,6 +68,14 @@ public class UDPServer implements UDPServerInterface, LeaderOperationInterface, 
                         case CREATE_T_RECORD:
                             break;
                         case ELECTION:
+                            if (request.getPort() < centerServer.getUdpPort()) {
+                                responseData = CMSConstants.OK_MESSAGE.getBytes();
+                                datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
+                                        request.getPort()));
+                                // init election as the current server could be leader
+                                //TODO init election params configure
+//                                centerServer.getUdpManager().initElection();
+                            }
                             break;
                         case COORDINATOR:
                             break;
@@ -123,6 +132,11 @@ public class UDPServer implements UDPServerInterface, LeaderOperationInterface, 
 
     @Override
     public void sendCoordinatorMessage() {
+
+    }
+
+    @Override
+    public void initiateElection() {
 
     }
 }
