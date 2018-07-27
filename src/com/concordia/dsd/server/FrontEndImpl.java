@@ -24,6 +24,34 @@ public class FrontEndImpl{
     private Logger serverLogger;
     private Location location;
     private FrontEndUDPManager udpManager;
+    private int masterPort;
+    private int myPort;
+    private String masterHostAddress;
+
+
+    public String getMasterHostAddress() {
+        return masterHostAddress;
+    }
+
+    public void setMasterHostAddress(String masterHostAddress) {
+        this.masterHostAddress = masterHostAddress;
+    }
+
+    public int getMasterPort() {
+        return masterPort;
+    }
+
+    public void setMasterPort(int masterPort) {
+        this.masterPort = masterPort;
+    }
+
+    public int getMyPort() {
+        return myPort;
+    }
+
+    public void setMyPort(int myPort) {
+        this.myPort = myPort;
+    }
 
     /**
      * Initialize Constructor

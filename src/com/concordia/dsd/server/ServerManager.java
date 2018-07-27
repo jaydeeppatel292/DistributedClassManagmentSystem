@@ -12,7 +12,7 @@ import java.util.HashMap;
  */
 public class ServerManager {
     private static ServerManager ourInstance = new ServerManager();
-    private HashMap<Location, CenterServerImpl> centerServerMap = new HashMap<>();
+    private HashMap<Location, HashMap<Integer,CenterServerImpl>> centerServerMap = new HashMap<>();
 
     public static ServerManager getInstance() {
         return ourInstance;
@@ -26,8 +26,11 @@ public class ServerManager {
      * @param location
      * @param centerServer
      */
-    public void addServer(Location location, CenterServerImpl centerServer) {
-        centerServerMap.put(location, centerServer);
+    public void addServer(Location location,int port, CenterServerImpl centerServer) {
+        if(centerServerMap.get(location)==null){
+            centerServerMap.put(location,new HashMap<>());
+        }
+        centerServerMap.get(location).put(port,centerServer);
     }
 
     /**
@@ -35,7 +38,7 @@ public class ServerManager {
      * @param location
      * @return
      */
-    public CenterServerImpl getCenterServer(Location location) {
-        return centerServerMap.get(location);
+    public CenterServerImpl getCenterServer(Location location,int port) {
+        return centerServerMap.get(location).get(port);
     }
 }
