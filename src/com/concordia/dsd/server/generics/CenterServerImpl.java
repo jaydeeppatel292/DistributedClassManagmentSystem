@@ -41,6 +41,9 @@ public class CenterServerImpl<T> {
     private String udpHostAddress;
     private boolean isMaster;
 
+    private List<Integer> serverProcesses;
+
+
     /**
      * Initialize Constructor
      * Also Start Udp Server
@@ -249,5 +252,9 @@ public class CenterServerImpl<T> {
             returnValue =  String.format(CMSLogMessages.RECORDID_NOT_FOUND, recordId);
         }
         return  returnValue;
+    }
+    public Record getRecordByRecordId(String recordId) {
+        return getRecordMap().lookupRecord(recordId);
+
     }
 }

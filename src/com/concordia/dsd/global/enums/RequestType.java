@@ -10,6 +10,6 @@ public enum RequestType implements Serializable {
     TRANSFER_RECORD,
     ELECTION,
     COORDINATOR,
-    SYNC_BACKUP_SERVER,
-    PING_SERVER
+    GET_RECORD, SYNC_BACKUP_SERVER,
+    REMOVE_RECORD
 }
