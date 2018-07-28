@@ -19,5 +19,6 @@ public class CMSLogMessages {
     public static final String ELECTION_FAILURE_MESSAGE = "OK Message received by %s port";
     public static final String COORDINATOR_FOUND = "Coordinator Server found in %s port. Broadcast notify initiated";
     public static final String COORDINATOR_NOTIFY_MESSAGE = "Hi %s Server port, I'm the Coordinator at %s port";
-
+    public static final String MASTER_FAILURE_MESSAGE = "Master Server running on port %s on location %s is down.Calling Bully Algorithm to select the new leader";
+    public static final String REPLICA_FAILURE_MESSAGE = "Replica Server of location %s with port %s is down. Removing replica from the %s server list.";
 }

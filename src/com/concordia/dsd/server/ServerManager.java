@@ -134,6 +134,24 @@ public class ServerManager {
     }
 
 
+    public List<CenterServerInfo> getAllServerList(Location location) {
+        List<CenterServerInfo> serverList = new ArrayList<>();
+        for (CenterServerInfo centerServerInfo : centerServerMap.get(location)) {
+            serverList.add(centerServerInfo);
+        }
+        return serverList;
+    }
+
+    public void removeReplicaServer(Location location, int port) {
+        Iterator<CenterServerInfo> centerServerInfoIterator = centerServerMap.get(location).iterator();
+        while (centerServerInfoIterator.hasNext()) {
+            if (centerServerInfoIterator.next().getPort() == port) {
+                centerServerInfoIterator.remove();
+            }
+        }
+    }
+
+
     public class CenterServerInfo {
         private int port;
         private CenterServerImpl centerServerImpl;
