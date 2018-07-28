@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,7 +17,7 @@ import java.util.logging.SimpleFormatter;
  * Singleton LoggingUtil
  */
 public class LoggingUtil {
-
+	private HashMap<Location,Logger> locationLoggerHashMap = new HashMap<>();
 	private static LoggingUtil instance;
 	private LoggingUtil() {
 		Path logPath = Paths.get(Paths.get(".").toAbsolutePath().toString(), CMSConstants.LOGS_BASE_PATH);
@@ -53,6 +54,14 @@ public class LoggingUtil {
 		}
 	}
 
+	public Logger getServerLogger(Location location) throws IOException {
+		if(locationLoggerHashMap.get(location)==null){
+			Logger logger = createServerLogger(location);
+			locationLoggerHashMap.put(location,logger);
+		}
+		return locationLoggerHashMap.get(location);
+	}
+
 	/**
 	 * Get Logger based on Location
 	 * @param location
@@ -60,7 +69,7 @@ public class LoggingUtil {
 	 * @throws SecurityException
 	 * @throws IOException
 	 */
-	public Logger getServerLogger(Location location) throws SecurityException, IOException {
+	public Logger createServerLogger(Location location) throws SecurityException, IOException {
 		mkRequiredFilesAndDir(location);
 		Logger logger = Logger.getLogger(location.toString());
 		Path path = Paths.get(Paths.get(".").toAbsolutePath().toString(), CMSConstants.LOGS_BASE_PATH, location.toString(),

@@ -41,11 +41,11 @@ public class UDPManager {
             if (centerServerInfo.getPort() != myPort) {
                 try {
                     requests[counter] = new UDPRequest(centerServerInfo.getLocation(), centerServerInfo.getHostAddress(), centerServerInfo.getPort(), fifoRequestQueueModel);
+                    requests[counter].start();
+                    counter++;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                requests[counter].start();
-                counter++;
             }
         }
         return requests;
