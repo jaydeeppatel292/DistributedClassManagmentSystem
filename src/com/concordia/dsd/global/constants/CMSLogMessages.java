@@ -23,6 +23,7 @@ public class CMSLogMessages {
     public static final String REPLICA_FAILURE_MESSAGE = "Replica Server of location %s with port %s is down. Removing replica from the %s server list.";
     public static final String MASTER_SERVER_INIT = "Master Server with %s port for Location %s initiated";
     public static final String LEADER_ELECTION_STARTED = "Leader election has started. Wait before sending more requests";
-    public static final String LEADER_ELECTION_COMPLETED = "Leader elected has completed. Proceed with further requests";
+    public static final String LEADER_ELECTION_COMPLETED = "Leader election has completed. Proceed with further requests";
+    public static final String FAIL_SERVER_INIT = "Fail/Crash Server request initiated on the %s port server end";
 
 }

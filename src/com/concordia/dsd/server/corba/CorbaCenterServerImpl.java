@@ -111,4 +111,9 @@ class CorbaCenterServerImpl extends CenterPOA {
     public String transferRecord(String managerId, String recordId, String remoteCenterServerName){
         return centerServerCenterImpl.transferRecord(managerId, recordId, remoteCenterServerName);
     }
+
+    @Override
+    public String crashProcess(String port, String location) {
+        return null;
+    }
 }

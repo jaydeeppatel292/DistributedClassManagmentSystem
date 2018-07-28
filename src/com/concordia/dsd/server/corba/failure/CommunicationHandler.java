@@ -16,5 +16,4 @@ public class CommunicationHandler {
                 receiver.getPort(), reqObj);
         request.start();
     }
-
 }

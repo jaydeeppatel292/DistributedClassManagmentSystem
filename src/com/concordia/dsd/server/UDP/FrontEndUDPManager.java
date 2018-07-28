@@ -1,16 +1,7 @@
 package com.concordia.dsd.server.UDP;
 
-import com.concordia.dsd.global.cmsenum.Location;
-import com.concordia.dsd.global.cmsenum.Status;
-import com.concordia.dsd.global.constants.CMSLogMessages;
-import com.concordia.dsd.model.ClassMap;
-import com.concordia.dsd.model.Record;
-import com.concordia.dsd.model.StudentRecord;
-import com.concordia.dsd.model.TeacherRecord;
 import com.concordia.dsd.server.FrontEndImpl;
-import com.concordia.dsd.server.ServerManager;
 import com.concordia.dsd.server.generics.FIFORequestQueueModel;
-import sun.rmi.runtime.Log;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -25,14 +16,15 @@ public class FrontEndUDPManager {
 
     /**
      * Implementation to send udp request
+     *
      * @return
      */
     public byte[] sendUDPRequestForSelection(FrontEndImpl.MasterServerInfo masterServerInfo, FIFORequestQueueModel fifoRequestQueueModel) {
         try {
-            if(fifoRequestQueueModel.isSyncRequest()){
+            if (fifoRequestQueueModel.isSyncRequest()) {
                 System.out.println("Sync request!!");
             }
-            UDPRequest udpRequest = new UDPRequest(masterServerInfo.getLocation(),masterServerInfo.getHostAddress(),masterServerInfo.getPort(),fifoRequestQueueModel);
+            UDPRequest udpRequest = new UDPRequest(masterServerInfo.getLocation(), masterServerInfo.getHostAddress(), masterServerInfo.getPort(), fifoRequestQueueModel);
             udpRequest.start();
             udpRequest.join();
             return udpRequest.getServerResponse();
@@ -48,14 +40,15 @@ public class FrontEndUDPManager {
 
     /**
      * Implementation to send udp request
+     *
      * @return
      */
     public String sendUDPRequest(FrontEndImpl.MasterServerInfo masterServerInfo, FIFORequestQueueModel fifoRequestQueueModel) {
         try {
-            if(fifoRequestQueueModel.isSyncRequest()){
+            if (fifoRequestQueueModel.isSyncRequest()) {
                 System.out.println("Sync request!!");
             }
-            UDPRequest udpRequest = new UDPRequest(masterServerInfo.getLocation(),masterServerInfo.getHostAddress(),masterServerInfo.getPort(),fifoRequestQueueModel);
+            UDPRequest udpRequest = new UDPRequest(masterServerInfo.getLocation(), masterServerInfo.getHostAddress(), masterServerInfo.getPort(), fifoRequestQueueModel);
             udpRequest.start();
             udpRequest.join();
             return udpRequest.getResponseFromUDP();
@@ -68,4 +61,5 @@ public class FrontEndUDPManager {
         }
         return null;
     }
+
 }

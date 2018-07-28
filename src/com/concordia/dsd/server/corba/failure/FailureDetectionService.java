@@ -12,9 +12,11 @@ public class FailureDetectionService extends Thread {
     private List<CenterServerInfo> servers;
 
     private CommunicationHandler communicationHandler;
+    private Location location;
 
     public FailureDetectionService(Location location) {
         servers = ServerManager.getInstance().getAllServerList(location);
+        this.location = location;
         communicationHandler = new CommunicationHandler();
     }
 
@@ -22,6 +24,8 @@ public class FailureDetectionService extends Thread {
     public void run() {
         try {
             while (true) {
+                Thread.sleep(5000);
+                servers = ServerManager.getInstance().getAllServerList(location);
                 for (CenterServerInfo centerServerInfo : servers) {
                     for (CenterServerInfo serverInfo : servers) {
                         if (centerServerInfo.getPort() != serverInfo.getPort()) {
@@ -34,6 +38,8 @@ public class FailureDetectionService extends Thread {
         } catch (SecurityException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }

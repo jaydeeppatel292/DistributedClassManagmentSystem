@@ -106,7 +106,7 @@ public class UDPRequest extends Thread {
                     break;
             }
         } catch (SocketTimeoutException e) {
-            System.out.println("Socket Timeout Exception");
+            System.out.println("Socket Timeout Exception " + e.getMessage());
             setResponseFromUDP(CMSConstants.SERVER_DOWN_MESSAGE);
             CenterServerInfo centerServerInfo = ServerManager.getInstance().getServerInfo(serverLocation,
                     serverUDPPort);

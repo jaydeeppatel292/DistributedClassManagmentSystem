@@ -5,7 +5,6 @@ import com.concordia.dsd.global.constants.CMSLogMessages;
 import com.concordia.dsd.model.Record;
 import com.concordia.dsd.model.StudentRecord;
 import com.concordia.dsd.model.TeacherRecord;
-import com.concordia.dsd.server.ServerManager;
 import com.concordia.dsd.server.generics.CenterServerImpl;
 import com.concordia.dsd.server.generics.FIFORequestQueueModel;
 import com.concordia.dsd.server.interfaces.UDPServerInterface;
@@ -156,8 +155,9 @@ public class UDPServer implements UDPServerInterface, Runnable {
                                         request.getPort()));
                                 break;
                             case FAIL_SERVER:
+                                logger.log(Level.INFO, String.format(CMSLogMessages.FAIL_SERVER_INIT, udpPort));
                                 try {
-                                    Thread.sleep(3000);
+                                    Thread.sleep(12000);
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }

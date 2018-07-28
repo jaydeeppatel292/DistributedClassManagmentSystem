@@ -217,8 +217,9 @@ public class UDPManager {
     private void notifyElectionCompleteToFrontend() {
         FrontEndUDPServer frontEndUDPServer = ServerManager.getInstance().getFrontEndServer().getFrontEndImpl().getUdpServer();
         InetAddress address = frontEndUDPServer.getInetAddress();
+        DatagramSocket socket = null;
         try {
-            DatagramSocket socket = new DatagramSocket();
+            socket = new DatagramSocket();
             byte[] data = String.valueOf(FrontEndNotify.BULLY_COMPLETED).getBytes();
             DatagramPacket packet = new DatagramPacket(data, data.length, address, frontEndUDPServer.getCenterServerPort());
             socket.send(packet);
@@ -230,6 +231,10 @@ public class UDPManager {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            if (socket != null) {
+                socket.close();
+            }
         }
 
     }
