@@ -80,7 +80,7 @@ public class SerializingUtil {
         ObjectInput in = null;
         try {
             in = new ObjectInputStream(bis);
-            return (FIFORequestQueueModel)in.readObject();
+            return in.readObject();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
