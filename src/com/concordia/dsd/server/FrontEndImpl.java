@@ -31,6 +31,10 @@ public class FrontEndImpl {
     private HashMap<Location, MasterServerInfo> masterServerInfoHashMap = new HashMap<>();
     private boolean isBullyRunning=false;
 
+    public ConcurrentLinkedQueue<FIFORequestQueueModel> getRequestQueue() {
+        return requestQueue;
+    }
+
     public boolean isBullyRunning() {
         return isBullyRunning;
     }

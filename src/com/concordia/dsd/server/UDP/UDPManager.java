@@ -62,7 +62,7 @@ public class UDPManager {
         UDPRequest[] requests = createUDPReqObj(processList, fifoRequestQueueModel);
         for (UDPRequest req : requests) {
             try {
-                req.join();
+                req.join(10000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -78,7 +78,7 @@ public class UDPManager {
     /**
      * Add teacher record in backup processes
      */
-    public String addTeacherRecord(List<ServerManager.CenterServerInfo> processList, FIFORequestQueueModel requestObj) {
+    /*public String addTeacherRecord(List<ServerManager.CenterServerInfo> processList, FIFORequestQueueModel requestObj) {
 
         UDPRequest[] requests = createUDPReqObj(processList, requestObj);
         for (UDPRequest req : requests) {
@@ -89,7 +89,7 @@ public class UDPManager {
             }
         }
         return "SUCCESS";
-    }
+    }*/
 
 
     /*public String transferRecordsFromProcess(List<ServerManager.CenterServerInfo> processList, FIFORequestQueueModel fifoRequestQueueModel){
@@ -133,7 +133,7 @@ public class UDPManager {
 
         for (UDPRequest request : requests) {
             try {
-                request.join();
+                request.join(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -166,7 +166,7 @@ public class UDPManager {
                 serverObject = new UDPRequest(Location.valueOf(remoteCenterServerName), centerInfo.getHostAddress(), centerInfo.getPort(), reqModel);
                 serverObject.start();
             }
-            serverObject.join();
+            serverObject.join(5000);
             serverLogger.log(Level.INFO, String.format(CMSLogMessages.TRANSFER_RECORD_SUCCESS, record.getRecordId(), managerId));
         } catch (IOException e) {
             e.printStackTrace();

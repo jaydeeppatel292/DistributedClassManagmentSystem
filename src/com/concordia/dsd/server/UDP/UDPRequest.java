@@ -53,8 +53,8 @@ public class UDPRequest extends Thread {
         DatagramSocket socket = null;
         try {
             socket = new DatagramSocket();
-            logger.log(Level.INFO, String.format(CMSLogMessages.RECORD_COUNT_SERVER_INIT, serverLocation.toString(),
-                    address, serverUDPPort));
+            //logger.log(Level.INFO, String.format(CMSLogMessages.RECORD_COUNT_SERVER_INIT, serverLocation.toString(),
+                    //address, serverUDPPort));
             byte[] data;
 
             data = SerializingUtil.getInstance().getSerializedFIFOObject(reqObj);

@@ -46,6 +46,7 @@ public class FIFORequestQueueModel implements Serializable {
         fifoRequestQueueModel.centerServerName = this.centerServerName;
         fifoRequestQueueModel.requestLocation = this.requestLocation;
         fifoRequestQueueModel.isSyncRequest = this.isSyncRequest;
+        fifoRequestQueueModel.needToUpdateMaster = this.needToUpdateMaster;
         return fifoRequestQueueModel;
     }
 

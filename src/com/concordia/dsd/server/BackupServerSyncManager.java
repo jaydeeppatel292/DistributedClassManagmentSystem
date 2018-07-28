@@ -2,6 +2,8 @@ package com.concordia.dsd.server;
 
 import com.concordia.dsd.server.generics.FIFORequestQueueModel;
 
+import java.util.Iterator;
+
 public class BackupServerSyncManager extends Thread {
 
 
@@ -30,9 +32,10 @@ public class BackupServerSyncManager extends Thread {
                     }
                 }
             }else{
-                /*for(FIFORequestQueueModel fifoRequestQueueModel: frontEnd.get){
-                    fifoRequestQueueModel.setNeedToUpdateMaster(true);
-                }*/
+                Iterator<FIFORequestQueueModel> itr =  frontEnd.getRequestQueue().iterator();
+                while(itr.hasNext()){
+                    itr.next().setNeedToUpdateMaster(true);
+                }
             }
         }
     }

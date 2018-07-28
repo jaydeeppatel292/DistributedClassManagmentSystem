@@ -61,7 +61,7 @@ public class UDPServer implements UDPServerInterface, Runnable {
                     buffer = new byte[1000];
                     request = new DatagramPacket(buffer, buffer.length);
                     socket.receive(request);
-                    System.out.println("UDP REQUEST received!! PORT::" + request.getPort());
+//                    System.out.println("UDP REQUEST received!! PORT::" + request.getPort());
 
                     FIFORequestQueueModel receivedObj = SerializingUtil.getInstance().getFIFOObjectFromSerialized(request.getData());
                     //messageType = MessageType.valueOf(new String(request.getData()));
@@ -69,7 +69,7 @@ public class UDPServer implements UDPServerInterface, Runnable {
                     byte[] responseData = null;
                     datagramSocket = new DatagramSocket();
                     if (receivedObj.isSyncRequest()) {
-                        System.out.println("inside insync");
+//                        System.out.println("inside insync");
                         receivedObj.setSyncRequest(false);
                         responseData = centerServer.sendBackUpProcessRequestFromController(receivedObj).getBytes();
                         datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
@@ -93,7 +93,7 @@ public class UDPServer implements UDPServerInterface, Runnable {
                                 break;
                             case GET_RECORD_COUNT:
                                 // Sending back record count by requested client UDPRequest
-                                System.out.println("inside switch in UDP server");
+//                                System.out.println("inside switch in UDP server");
                                 responseData = centerServer.getRecordCounts(receivedObj.getManagerId()).getBytes();
                                 datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
                                         request.getPort()));
