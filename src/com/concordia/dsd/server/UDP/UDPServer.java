@@ -77,6 +77,8 @@ public class UDPServer implements UDPServerInterface, Runnable {
                                 }else if(record instanceof TeacherRecord){
                                     TeacherRecord teacherRecord = (TeacherRecord)record;
                                     responseData= SerializingUtil.getInstance().getSerializedObject(teacherRecord);
+                                }else{
+                                    responseData = "Record Not Found".getBytes();
                                 }
                                 datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
                                         request.getPort()));
