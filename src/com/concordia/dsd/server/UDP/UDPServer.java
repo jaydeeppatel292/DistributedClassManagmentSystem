@@ -101,6 +101,12 @@ public class UDPServer implements UDPServerInterface, Runnable {
                             case COORDINATOR:
                                 logger.log(Level.INFO, String.format(CMSLogMessages.COORDINATOR_NOTIFY_MESSAGE, centerServer.getUdpPort(), request.getPort()));
                                 break;
+                                
+                            case PING_SERVER:
+                            	responseData = CMSConstants.SERVER_UP_MESSAGE.getBytes();
+                            	datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
+                                         request.getPort()));
+                            	break;
                         }
                     }
                 } catch (IOException e) {

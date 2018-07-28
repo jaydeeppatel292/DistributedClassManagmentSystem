@@ -66,6 +66,10 @@ public class FIFORequestQueueModel implements Serializable {
         this.managerId = managerId;
         this.requestLocation = requestLocation;
     }
+    
+    public FIFORequestQueueModel(RequestType requestType) {
+        this.requestType = requestType;
+    }
 
     public FIFORequestQueueModel(RequestType requestType, Record record, String managerId, Location requestLocation) {
         this.requestLocation = requestLocation;

@@ -19,6 +19,5 @@ public class CMSLogMessages {
     public static final String ELECTION_FAILURE_MESSAGE = "OK Message received by %s port";
     public static final String COORDINATOR_FOUND = "Coordinator Server found in %s port. Broadcast notify initiated";
     public static final String COORDINATOR_NOTIFY_MESSAGE = "Hi %s Server port, I'm the Coordinator at %s port";
-
-
+    public static final String PING_SERVER_SUCCESS = "Ping successfully";
 }
