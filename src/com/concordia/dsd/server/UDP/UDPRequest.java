@@ -82,6 +82,9 @@ public class UDPRequest extends Thread {
                 case TRANSFER_RECORD:
                     setResponseFromUDP(response.trim());
                     break;
+                case DELETE_RECORD:
+                    setResponseFromUDP(response.trim());
+                    break;
                 case ELECTION:
                     if (response.equals(CMSConstants.OK_MESSAGE)) {
                         logger.log(Level.INFO, String.format(CMSLogMessages.ELECTION_FAILURE_MESSAGE, serverUDPPort));

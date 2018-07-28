@@ -230,10 +230,11 @@ public class FrontEndImpl {
         getRecordRequest.setSyncRequest(false);
         getRecordRequest.setRequestType(RequestType.GET_RECORD);
         byte[] recordInByte = getUdpManager().sendUDPRequestForSelection(getMasterServerForLocation(getRecordRequest.getRequestLocation()), getRecordRequest);
-
         Object record = SerializingUtil.getInstance().getObjectFromSerialized(recordInByte);
-        FIFORequestQueueModel insertRequest = obj.createCopy();
-        FIFORequestQueueModel deleteRequest = obj.createCopy();
+        //FIFORequestQueueModel insertRequest = obj.createCopy();
+        //FIFORequestQueueModel deleteRequest = obj.createCopy();
+        FIFORequestQueueModel insertRequest = new FIFORequestQueueModel();
+        FIFORequestQueueModel deleteRequest = new FIFORequestQueueModel();
         insertRequest.setSyncRequest(true);
         deleteRequest.setSyncRequest(true);
         deleteRequest.setRequestType(RequestType.DELETE_RECORD);
@@ -248,7 +249,7 @@ public class FrontEndImpl {
         }else{
             return (String) record;
         }
-        insertRequest.setRequestLocation(Location.valueOf(insertRequest.getCenterServerName()));
+        insertRequest.setRequestLocation(Location.valueOf(remoteCenterServerName));
         System.out.println("RECORD RECEIVED::::"+insertRequest.toString());
         requestQueue.add(insertRequest);
         requestQueue.add(deleteRequest);
