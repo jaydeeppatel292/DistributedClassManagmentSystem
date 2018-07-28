@@ -22,26 +22,26 @@ public class FIFORequestQueueModel implements Serializable {
     private String managerId;
     private String centerServerName;
     private Location requestLocation;
-    private transient List<Integer> processIdList = new ArrayList<>();
+    private transient List<Integer> processIdList=new ArrayList<>();
     private boolean isSyncRequest = false;
-    
-    public FIFORequestQueueModel() {
 
-    }
-
-    public FIFORequestQueueModel createCopy() {
-        FIFORequestQueueModel fifoRequestQueueModel = new FIFORequestQueueModel();
+    public FIFORequestQueueModel createCopy(){
+        FIFORequestQueueModel fifoRequestQueueModel = new FIFORequestQueueModel(requestType,managerId,requestLocation);
         fifoRequestQueueModel.requestType = this.requestType;
         fifoRequestQueueModel.studentRecord = this.studentRecord;
         fifoRequestQueueModel.teacherRecord = this.teacherRecord;
-        fifoRequestQueueModel.recordId = this.recordId;
-        fifoRequestQueueModel.fieldName = this.fieldName;
-        fifoRequestQueueModel.newValue = this.newValue;
-        fifoRequestQueueModel.managerId = this.managerId;
-        fifoRequestQueueModel.centerServerName = this.centerServerName;
-        fifoRequestQueueModel.requestLocation = this.requestLocation;
-        fifoRequestQueueModel.isSyncRequest = this.isSyncRequest;
+        fifoRequestQueueModel.recordId= this.recordId;
+        fifoRequestQueueModel.fieldName= this.fieldName;
+        fifoRequestQueueModel.newValue= this.newValue;
+        fifoRequestQueueModel.managerId= this.managerId;
+        fifoRequestQueueModel.centerServerName= this.centerServerName;
+        fifoRequestQueueModel.requestLocation= this.requestLocation;
+        fifoRequestQueueModel.isSyncRequest= this.isSyncRequest;
         return fifoRequestQueueModel;
+    }
+
+    public void setRequestLocation(Location requestLocation) {
+        this.requestLocation = requestLocation;
     }
 
     public void setSyncRequest(boolean syncRequest) {
@@ -50,10 +50,6 @@ public class FIFORequestQueueModel implements Serializable {
 
     public boolean isSyncRequest() {
         return isSyncRequest;
-    }
-
-    public FIFORequestQueueModel(RequestType requestType) {
-        this.requestType = requestType;
     }
 
     public FIFORequestQueueModel(RequestType requestType, List<Integer> processIdList) {
@@ -65,10 +61,6 @@ public class FIFORequestQueueModel implements Serializable {
         this.requestType = requestType;
         this.managerId = managerId;
         this.requestLocation = requestLocation;
-    }
-    
-    public FIFORequestQueueModel(RequestType requestType) {
-        this.requestType = requestType;
     }
 
     public FIFORequestQueueModel(RequestType requestType, Record record, String managerId, Location requestLocation) {
@@ -163,7 +155,6 @@ public class FIFORequestQueueModel implements Serializable {
     public Location getRequestLocation() {
         return requestLocation;
     }
-
     public List<Integer> getProcessIdList() {
         return processIdList;
     }
@@ -174,6 +165,6 @@ public class FIFORequestQueueModel implements Serializable {
 
     @Override
     public String toString() {
-        return "MANAGERID: " + managerId + " REQUESTTYPE" + requestType + " LOCATION:: " + requestLocation.toString();
+        return "MANAGERID: "+ managerId+" REQUESTTYPE" + requestType + " LOCATION:: "+requestLocation.toString();
     }
 }

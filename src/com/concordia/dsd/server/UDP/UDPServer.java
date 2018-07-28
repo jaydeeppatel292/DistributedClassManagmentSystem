@@ -2,6 +2,9 @@ package com.concordia.dsd.server.UDP;
 
 import com.concordia.dsd.global.constants.CMSConstants;
 import com.concordia.dsd.global.constants.CMSLogMessages;
+import com.concordia.dsd.model.Record;
+import com.concordia.dsd.model.StudentRecord;
+import com.concordia.dsd.model.TeacherRecord;
 import com.concordia.dsd.server.generics.CenterServerImpl;
 import com.concordia.dsd.server.generics.FIFORequestQueueModel;
 import com.concordia.dsd.server.interfaces.UDPServerInterface;
@@ -49,12 +52,12 @@ public class UDPServer implements UDPServerInterface, Runnable {
                     buffer = new byte[1000];
                     request = new DatagramPacket(buffer, buffer.length);
                     socket.receive(request);
-                    System.out.println("UDP REQUEST received!! PORT::" + request.getPort());
+                    System.out.println("UDP REQUEST received!! PORT::"+request.getPort());
 
                     FIFORequestQueueModel receivedObj = SerializingUtil.getInstance().getFIFOObjectFromSerialized(request.getData());
                     //messageType = MessageType.valueOf(new String(request.getData()));
-                    System.out.println("RECEIVED OBJ:" + receivedObj.toString());
-                    byte[] responseData;
+                    System.out.println("RECEIVED OBJ:"+receivedObj.toString());
+                    byte[] responseData=null;
                     datagramSocket = new DatagramSocket();
                     if (receivedObj.isSyncRequest()) {
                         System.out.println("inside insync");
@@ -64,7 +67,20 @@ public class UDPServer implements UDPServerInterface, Runnable {
                                 request.getPort()));
                     } else {
                         switch (receivedObj.getRequestType()) {
-                            case GET_RECORD_COUNT:
+                            case GET_RECORD:
+                                // Sending back record count by requested client UDPRequest
+                                Record record = centerServer.getRecordByRecordId(receivedObj.getRecordId());
+                                if(record instanceof StudentRecord){
+                                    StudentRecord studentRecord = (StudentRecord)record;
+                                    responseData= SerializingUtil.getInstance().getSerializedObject(studentRecord);
+                                }else if(record instanceof TeacherRecord){
+                                    TeacherRecord teacherRecord = (TeacherRecord)record;
+                                    responseData= SerializingUtil.getInstance().getSerializedObject(teacherRecord);
+                                }
+                                datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
+                                        request.getPort()));
+                                break;
+                                case GET_RECORD_COUNT:
                                 // Sending back record count by requested client UDPRequest
                                 responseData = centerServer.getRecordMap().getRecordsCount().toString().getBytes();
                                 datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
@@ -92,21 +108,14 @@ public class UDPServer implements UDPServerInterface, Runnable {
                                     responseData = CMSConstants.OK_MESSAGE.getBytes();
                                     datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
                                             request.getPort()));
-                                    boolean isCoordinator = centerServer.getUdpManager().initElection(centerServer.getLocation(), receivedObj.getProcessIdList());
+                                    boolean isCoordinator = centerServer.getUdpManager().initElection(centerServer.getLocation(), centerServer.getUdpPort(), receivedObj.getProcessIdList());
                                     if (isCoordinator) {
                                         centerServer.getUdpManager().sendCoordinationMessage();
                                     }
                                 }
                                 break;
                             case COORDINATOR:
-                                logger.log(Level.INFO, String.format(CMSLogMessages.COORDINATOR_NOTIFY_MESSAGE, centerServer.getUdpPort(), request.getPort()));
                                 break;
-                                
-                            case PING_SERVER:
-                            	responseData = CMSConstants.SERVER_UP_MESSAGE.getBytes();
-                            	datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
-                                         request.getPort()));
-                            	break;
                         }
                     }
                 } catch (IOException e) {

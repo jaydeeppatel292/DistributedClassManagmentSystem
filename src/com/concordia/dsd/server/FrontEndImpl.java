@@ -3,6 +3,7 @@ package com.concordia.dsd.server;
 import com.concordia.dsd.global.cmsenum.Location;
 import com.concordia.dsd.global.cmsenum.Status;
 import com.concordia.dsd.global.enums.RequestType;
+import com.concordia.dsd.model.Record;
 import com.concordia.dsd.model.StudentRecord;
 import com.concordia.dsd.model.TeacherRecord;
 import com.concordia.dsd.server.RMI.Server;
@@ -10,6 +11,7 @@ import com.concordia.dsd.server.UDP.FrontEndUDPManager;
 import com.concordia.dsd.server.UDP.FrontEndUDPServer;
 import com.concordia.dsd.server.generics.FIFORequestQueueModel;
 import com.concordia.dsd.utils.LoggingUtil;
+import com.concordia.dsd.utils.SerializingUtil;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -17,7 +19,7 @@ import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Logger;
 
-public class FrontEndImpl{
+public class FrontEndImpl {
     private final String udpHostAddress;
     private int udpPort;
     private InetAddress ipAddress;
@@ -28,18 +30,21 @@ public class FrontEndImpl{
     private int myPort;
     private String masterHostAddress;
     private ConcurrentLinkedQueue<FIFORequestQueueModel> requestQueue;
-    private HashMap<Location,MasterServerInfo> masterServerInfoHashMap = new HashMap<>();
+    private HashMap<Location, MasterServerInfo> masterServerInfoHashMap = new HashMap<>();
 
-    public FIFORequestQueueModel getRequestFromQueue(){
+    public FIFORequestQueueModel getRequestFromQueue() {
         return requestQueue.peek();
     }
-    public FIFORequestQueueModel dequeueRequestFromQueue(){
+
+    public FIFORequestQueueModel dequeueRequestFromQueue() {
         return requestQueue.poll();
     }
-    public void setMasterServer(Location location,int port,String hostAddress){
-        masterServerInfoHashMap.put(location,new MasterServerInfo(port,location,hostAddress));
+
+    public void setMasterServer(Location location, int port, String hostAddress) {
+        masterServerInfoHashMap.put(location, new MasterServerInfo(port, location, hostAddress));
     }
-    public MasterServerInfo getMasterServerForLocation(Location location){
+
+    public MasterServerInfo getMasterServerForLocation(Location location) {
         return masterServerInfoHashMap.get(location);
     }
 
@@ -70,6 +75,7 @@ public class FrontEndImpl{
     /**
      * Initialize Constructor
      * Also Start Udp Server
+     *
      * @throws SecurityException
      * @throws IOException
      */
@@ -85,7 +91,7 @@ public class FrontEndImpl{
             e.printStackTrace();
         }
         udpManager = new FrontEndUDPManager(serverLogger);
-        udpServer = new FrontEndUDPServer(this,udpHostAddress,port);
+        udpServer = new FrontEndUDPServer(this, udpHostAddress, port);
 
         // Initialize UDP Server
         initCenterServerModel();
@@ -132,13 +138,15 @@ public class FrontEndImpl{
     }
 
 
-    public String sendBackupSyncRequest(FIFORequestQueueModel fifoRequestQueueModel){
-        fifoRequestQueueModel.setSyncRequest(true);
-        return getUdpManager().sendUDPRequest(getMasterServerForLocation(fifoRequestQueueModel.getRequestLocation()),fifoRequestQueueModel);
+    public String sendBackupSyncRequest(FIFORequestQueueModel fifoRequestQueueModel) {
+        FIFORequestQueueModel fifoRequest = fifoRequestQueueModel.createCopy();
+        fifoRequest.setSyncRequest(true);
+        return getUdpManager().sendUDPRequest(getMasterServerForLocation(fifoRequest.getRequestLocation()), fifoRequest);
     }
 
     /**
      * Implementation of Create Teacher Record
+     *
      * @param firstName
      * @param lastName
      * @param address
@@ -155,11 +163,12 @@ public class FrontEndImpl{
         TeacherRecord teacher = new TeacherRecord("", firstName, lastName, address, phone, specialization, location);
         FIFORequestQueueModel obj = new FIFORequestQueueModel(RequestType.CREATE_T_RECORD, teacher, managerId, Location.valueOf(requestedLocation));
         requestQueue.add(obj);
-        return getUdpManager().sendUDPRequest(getMasterServerForLocation(Location.valueOf(requestedLocation)),obj);
+        return getUdpManager().sendUDPRequest(getMasterServerForLocation(Location.valueOf(requestedLocation)), obj);
     }
 
     /**
      * Implementation of create Student Record
+     *
      * @param firstName
      * @param lastName
      * @param courseRegistered
@@ -172,26 +181,28 @@ public class FrontEndImpl{
                                 String statusDate, String managerId) {
         String requestedLocation = managerId.substring(0, 3);
         StudentRecord student = new StudentRecord("", firstName, lastName, status, courseRegistered, statusDate);
-        FIFORequestQueueModel obj = new FIFORequestQueueModel(RequestType.CREATE_S_RECORD, student, managerId,  Location.valueOf(requestedLocation));
+        FIFORequestQueueModel obj = new FIFORequestQueueModel(RequestType.CREATE_S_RECORD, student, managerId, Location.valueOf(requestedLocation));
         requestQueue.add(obj);
-        return getUdpManager().sendUDPRequest(getMasterServerForLocation(Location.valueOf(requestedLocation)),obj);
+        return getUdpManager().sendUDPRequest(getMasterServerForLocation(Location.valueOf(requestedLocation)), obj);
     }
 
     /**
      * Get Record Counts from all servers
+     *
      * @param managerId
      * @return
      */
     public String getRecordCounts(String managerId) {
         String requestedLocation = managerId.substring(0, 3);
-        FIFORequestQueueModel obj = new FIFORequestQueueModel(RequestType.GET_RECORD_COUNT, managerId,  Location.valueOf(requestedLocation));
+        FIFORequestQueueModel obj = new FIFORequestQueueModel(RequestType.GET_RECORD_COUNT, managerId, Location.valueOf(requestedLocation));
         requestQueue.add(obj);
-        return getUdpManager().sendUDPRequest(getMasterServerForLocation(Location.valueOf(requestedLocation)),obj);
+        return getUdpManager().sendUDPRequest(getMasterServerForLocation(Location.valueOf(requestedLocation)), obj);
 
     }
 
     /**
      * Edit Record
+     *
      * @param recordId
      * @param fieldName
      * @param newValue
@@ -200,13 +211,14 @@ public class FrontEndImpl{
      */
     public String editRecord(String recordId, String fieldName, String newValue, String managerId) {
         String requestedLocation = managerId.substring(0, 3);
-        FIFORequestQueueModel obj = new FIFORequestQueueModel(RequestType.UPDATE_RECORD, recordId, fieldName, newValue, managerId, "",  Location.valueOf(requestedLocation));
+        FIFORequestQueueModel obj = new FIFORequestQueueModel(RequestType.UPDATE_RECORD, recordId, fieldName, newValue, managerId, "", Location.valueOf(requestedLocation));
         requestQueue.add(obj);
-        return getUdpManager().sendUDPRequest(getMasterServerForLocation(Location.valueOf(requestedLocation)),obj);
+        return getUdpManager().sendUDPRequest(getMasterServerForLocation(Location.valueOf(requestedLocation)), obj);
     }
 
     /**
      * Transfer Record from one server to other server
+     *
      * @param managerId
      * @param recordId
      * @param remoteCenterServerName
@@ -214,24 +226,48 @@ public class FrontEndImpl{
      */
     public String transferRecord(String managerId, String recordId, String remoteCenterServerName) {
         String requestedLocation = managerId.substring(0, 3);
-        FIFORequestQueueModel obj = new FIFORequestQueueModel(RequestType.TRANSFER_RECORD, recordId,"" ,"", managerId, remoteCenterServerName,  Location.valueOf(requestedLocation));
-        requestQueue.add(obj);
+        FIFORequestQueueModel obj = new FIFORequestQueueModel(RequestType.TRANSFER_RECORD, recordId, "", "", managerId, remoteCenterServerName, Location.valueOf(requestedLocation));
 
-        return getUdpManager().sendUDPRequest(getMasterServerForLocation(Location.valueOf(requestedLocation)),obj);
+        FIFORequestQueueModel getRecordRequest = obj.createCopy();
+        getRecordRequest.setSyncRequest(false);
+        getRecordRequest.setRequestType(RequestType.GET_RECORD);
+        byte[] recordInByte = getUdpManager().sendUDPRequest(getMasterServerForLocation(getRecordRequest.getRequestLocation()), getRecordRequest).getBytes();
+
+        Object record = SerializingUtil.getInstance().getObjectFromSerialized(recordInByte);
+        FIFORequestQueueModel insertRequest = obj.createCopy();
+        FIFORequestQueueModel deleteRequest = obj.createCopy();
+        insertRequest.setSyncRequest(true);
+        deleteRequest.setSyncRequest(true);
+        if (record instanceof StudentRecord) {
+            insertRequest.setStudentRecord((StudentRecord) record);
+            insertRequest.setRequestType(RequestType.CREATE_S_RECORD);
+            deleteRequest.setStudentRecord((StudentRecord) record);
+        } else if (record instanceof TeacherRecord) {
+            insertRequest.setTeacherRecord((TeacherRecord) record);
+            insertRequest.setRequestType(RequestType.CREATE_T_RECORD);
+            deleteRequest.setTeacherRecord((TeacherRecord) record);
+        }
+        insertRequest.setRequestLocation(Location.valueOf(insertRequest.getCenterServerName()));
+        requestQueue.add(insertRequest);
+        requestQueue.add(deleteRequest);
+        return getUdpManager().sendUDPRequest(getMasterServerForLocation(Location.valueOf(requestedLocation)), obj);
     }
 
     public class MasterServerInfo {
         private int port;
         private Location location;
         private String hostAddress;
+
         public Location getLocation() {
             return location;
         }
+
         public MasterServerInfo(int port, Location location, String hostAddress) {
             this.port = port;
             this.location = location;
             this.hostAddress = hostAddress;
         }
+
         public int getPort() {
             return port;
         }
