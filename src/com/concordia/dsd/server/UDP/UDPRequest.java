@@ -111,4 +111,7 @@ public class UDPRequest extends Thread {
         }
     }
 
+    public byte[] getServerResponse() {
+        return serverResponse;
+    }
 }
