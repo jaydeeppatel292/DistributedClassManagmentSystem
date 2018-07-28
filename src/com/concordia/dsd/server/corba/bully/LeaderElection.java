@@ -27,5 +27,10 @@ public class LeaderElection extends Thread {
         UDPManager udpManager = ServerManager.getInstance().getCenterServer(location, processIdList.get(randomNumber)).getUdpManager();
 //        processIdList.remove(randomNumber);
         udpManager.initElection(location, processIdList);
+        notifyFrontend();
+    }
+
+    private void notifyFrontend() {
+        //TODO notify frontend server with bully started using udp datagram sockets
     }
 }
