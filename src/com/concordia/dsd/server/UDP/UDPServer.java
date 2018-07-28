@@ -78,7 +78,7 @@ public class UDPServer implements UDPServerInterface, Runnable {
                         receivedObj.setSyncRequest(false);
                         String response = centerServer.sendBackUpProcessRequestFromController(receivedObj);
                         objectOutputStream.writeObject(new String(response));
-
+                        objectOutputStream.close();
                     } else if(receivedObj!=null){
                         switch (receivedObj.getRequestType()) {
                             case GET_RECORD:

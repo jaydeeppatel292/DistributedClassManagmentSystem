@@ -21,9 +21,7 @@ public class FrontEndUDPManager {
      */
     public Object sendUDPRequestForSelection(FrontEndImpl.MasterServerInfo masterServerInfo, FIFORequestQueueModel fifoRequestQueueModel) {
         try {
-            if (fifoRequestQueueModel.isSyncRequest()) {
-                System.out.println("Sync request!!");
-            }
+
             UDPRequest udpRequest = new UDPRequest(masterServerInfo.getLocation(), masterServerInfo.getHostAddress(), masterServerInfo.getPort(), fifoRequestQueueModel);
             udpRequest.start();
             udpRequest.join();
@@ -45,9 +43,6 @@ public class FrontEndUDPManager {
      */
     public String sendUDPRequest(FrontEndImpl.MasterServerInfo masterServerInfo, FIFORequestQueueModel fifoRequestQueueModel) {
         try {
-            if (fifoRequestQueueModel.isSyncRequest()) {
-                System.out.println("Sync request!!");
-            }
             UDPRequest udpRequest = new UDPRequest(masterServerInfo.getLocation(), masterServerInfo.getHostAddress(), masterServerInfo.getPort(), fifoRequestQueueModel);
             udpRequest.start();
             udpRequest.join();

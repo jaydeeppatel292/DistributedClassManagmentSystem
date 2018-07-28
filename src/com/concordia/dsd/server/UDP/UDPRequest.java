@@ -83,7 +83,6 @@ public class UDPRequest extends Thread {
 
             switch (reqObj.getRequestType()) {
                 case GET_RECORD_COUNT:
-                case GET_RECORD:
                 case GET_RECORD_COUNT_SUBS:
                 case CREATE_S_RECORD:
                 case CREATE_T_RECORD:
@@ -91,7 +90,10 @@ public class UDPRequest extends Thread {
                 case TRANSFER_RECORD:
                 case PING_SERVER:
                 case FAIL_SERVER:
+                case DELETE_RECORD:
                     setResponseFromUDP(response.trim());
+                    break;
+                case GET_RECORD:
                     break;
                 case ELECTION:
                     if (response.equals(CMSConstants.OK_MESSAGE)) {
@@ -120,18 +122,15 @@ public class UDPRequest extends Thread {
                 }
             }
         } catch (SocketException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } finally {
+        }catch (Exception e){}
+        finally {
             if (socket != null) {
                 try {
                     socket.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
         }
