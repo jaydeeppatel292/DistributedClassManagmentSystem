@@ -11,6 +11,7 @@ import java.util.List;
 
 public class FIFORequestQueueModel implements Serializable {
 
+
     private RequestType requestType;
     private StudentRecord studentRecord;
     private TeacherRecord teacherRecord;
