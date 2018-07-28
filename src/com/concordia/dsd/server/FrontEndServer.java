@@ -110,4 +110,11 @@ public class FrontEndServer extends CenterPOA {
     public String transferRecord(String managerId, String recordId, String remoteCenterServerName){
         return frontEndImpl.transferRecord(managerId, recordId, remoteCenterServerName);
     }
+
+    @Override
+    public String crashProcess(String port, String location) {
+        return frontEndImpl.crashProcess(port, location);
+    }
+
+
 }

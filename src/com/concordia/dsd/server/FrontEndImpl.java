@@ -7,6 +7,7 @@ import com.concordia.dsd.model.StudentRecord;
 import com.concordia.dsd.model.TeacherRecord;
 import com.concordia.dsd.server.UDP.FrontEndUDPManager;
 import com.concordia.dsd.server.UDP.FrontEndUDPServer;
+import com.concordia.dsd.server.UDP.UDPRequest;
 import com.concordia.dsd.server.generics.FIFORequestQueueModel;
 import com.concordia.dsd.utils.LoggingUtil;
 import com.concordia.dsd.utils.SerializingUtil;
@@ -266,6 +267,14 @@ public class FrontEndImpl {
         requestQueue.add(insertRequest);
         requestQueue.add(deleteRequest);
         return getUdpManager().sendUDPRequest(getMasterServerForLocation(Location.valueOf(requestedLocation)), obj);
+    }
+
+    public String crashProcess(String port, String location){
+        FIFORequestQueueModel obj = new FIFORequestQueueModel(RequestType.FAIL_SERVER);
+        obj.setNewValue(port);
+
+        return getUdpManager().sendUDPRequest(getMasterServerForLocation(Location.valueOf(location)), obj);
+
     }
 
     public class MasterServerInfo {

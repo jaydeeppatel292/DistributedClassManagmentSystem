@@ -86,13 +86,17 @@ public class StartClient {
                             clientLogger.log(Level.INFO, transferStatus);
                             System.out.println(transferStatus);
                             break;
-
                         case "6":
                             selectionFlag = false;
                             break;
                         case "7":
                             selectionFlag = false;
                             managerLogInFlag = false;
+                            break;
+                        case "8":
+                            String portToCrash = getFieldInput("Port to crash", "");
+                            String serverLocation = getFieldInput("Server location to crash", "");
+                            String crashResult = ClientProvider.getInstace().getCenterobj().crashProcess(portToCrash, serverLocation);
                             break;
                     }
 
@@ -115,6 +119,7 @@ public class StartClient {
         System.out.println("5. Transfer a record");
         System.out.println("6. Log out");
         System.out.println("7. Exit");
+        System.out.println("8. Crash a process");
         System.out.println();
         System.out.println("Please make a selection");
         Scanner sc = new Scanner(System.in);

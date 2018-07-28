@@ -9,6 +9,7 @@ module CenterServerApp
     string getRecordCounts(in string managerId);
     string editRecord(in string recordId, in string fieldName, in string newValue, in string managerId);
     string transferRecord(in string managerID, in string recordID, in string remoteCenterServerName);
+    string crashProcess(in string port, in string location);
     oneway void shutdown();
     };
 };

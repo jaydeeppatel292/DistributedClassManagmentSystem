@@ -101,6 +101,9 @@ public class UDPRequest extends Thread {
                 case PING_SERVER:
                     setResponseFromUDP(response.trim());
                     break;
+                case FAIL_SERVER:
+                    setResponseFromUDP(response.trim());
+                    break;
             }
         } catch (SocketTimeoutException e) {
             System.out.println("Socket Timeout Exception");
