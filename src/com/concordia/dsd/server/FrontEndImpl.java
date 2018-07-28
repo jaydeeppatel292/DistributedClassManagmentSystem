@@ -271,9 +271,8 @@ public class FrontEndImpl {
 
     public String crashProcess(String port, String location){
         FIFORequestQueueModel obj = new FIFORequestQueueModel(RequestType.FAIL_SERVER);
-        obj.setNewValue(port);
-
-        return getUdpManager().sendUDPRequest(getMasterServerForLocation(Location.valueOf(location)), obj);
+        ServerManager.CenterServerInfo centerInfo = ServerManager.getInstance().getServerInfo(Location.valueOf(location), Integer.parseInt(port));
+        return getUdpManager().sendUDPRequest(new MasterServerInfo(Integer.parseInt(port), Location.valueOf(location), centerInfo.getHostAddress()), obj);
 
     }
 
