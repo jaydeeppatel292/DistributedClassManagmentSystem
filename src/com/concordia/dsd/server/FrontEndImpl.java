@@ -2,7 +2,6 @@ package com.concordia.dsd.server;
 
 import com.concordia.dsd.global.cmsenum.Location;
 import com.concordia.dsd.global.cmsenum.Status;
-import com.concordia.dsd.global.constants.CMSLogMessages;
 import com.concordia.dsd.global.enums.RequestType;
 import com.concordia.dsd.model.StudentRecord;
 import com.concordia.dsd.model.TeacherRecord;
@@ -16,7 +15,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FrontEndImpl {
@@ -231,10 +229,11 @@ public class FrontEndImpl {
         getRecordRequest.setSyncRequest(false);
         getRecordRequest.setRequestType(RequestType.GET_RECORD);
         byte[] recordInByte = getUdpManager().sendUDPRequestForSelection(getMasterServerForLocation(getRecordRequest.getRequestLocation()), getRecordRequest);
-
         Object record = SerializingUtil.getInstance().getObjectFromSerialized(recordInByte);
-        FIFORequestQueueModel insertRequest = obj.createCopy();
-        FIFORequestQueueModel deleteRequest = obj.createCopy();
+        //FIFORequestQueueModel insertRequest = obj.createCopy();
+        //FIFORequestQueueModel deleteRequest = obj.createCopy();
+        FIFORequestQueueModel insertRequest = new FIFORequestQueueModel();
+        FIFORequestQueueModel deleteRequest = new FIFORequestQueueModel();
         insertRequest.setSyncRequest(true);
         deleteRequest.setSyncRequest(true);
         deleteRequest.setRequestType(RequestType.DELETE_RECORD);

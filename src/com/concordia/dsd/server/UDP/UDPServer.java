@@ -127,7 +127,7 @@ public class UDPServer implements UDPServerInterface, Runnable {
                                 break;
                             case DELETE_RECORD:
                                 responseData = null;
-                                if (receivedObj.getTeacherRecord() == null) {
+                                if (receivedObj.getStudentRecord() != null) {
                                     responseData = centerServer.deleteRecord(receivedObj.getStudentRecord()).getBytes();
                                 } else if (receivedObj.getStudentRecord() == null) {
                                     responseData = centerServer.deleteRecord(receivedObj.getTeacherRecord()).getBytes();

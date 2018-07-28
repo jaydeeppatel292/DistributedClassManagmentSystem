@@ -56,6 +56,10 @@ public class FIFORequestQueueModel implements Serializable {
         this.requestType = requestType;
     }
 
+    public FIFORequestQueueModel(){
+
+    }
+
     public FIFORequestQueueModel(RequestType requestType, List<Integer> processIdList) {
         this.requestType = requestType;
         this.processIdList = processIdList;

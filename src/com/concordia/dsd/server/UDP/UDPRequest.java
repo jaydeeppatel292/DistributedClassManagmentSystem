@@ -98,7 +98,6 @@ public class UDPRequest extends Thread {
                     break;
                 case COORDINATOR:
                     break;
-
                 case PING_SERVER:
                     setResponseFromUDP(response.trim());
                     break;
