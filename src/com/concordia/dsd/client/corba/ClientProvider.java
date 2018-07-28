@@ -48,7 +48,7 @@ public class ClientProvider {
 
         for (int i = 0; i < hostPortArray.length; i++) {
             if (managerId.substring(0, 3).equalsIgnoreCase(hostPortArray[i][0])) {
-                createConnection(hostPortArray, managerId.substring(0, 3));
+                createConnection(hostPortArray, "FE");
                 return true;
             }
         }
@@ -63,8 +63,13 @@ public class ClientProvider {
      */
     public  void createConnection(String[][] hostPortArray, String serverLoc) {
         String[] hostPortInfo = new String[4];
-        for (int j = 0; j < 4; j++) {
-            hostPortInfo[j] = hostPortArray[1][j + 1];
+        for(int i=0;i<hostPortArray.length;i++){
+            if(hostPortArray[i][0].equals(serverLoc)) {
+                for (int j = 0; j < 4; j++) {
+                    hostPortInfo[j] = hostPortArray[i][j + 1];
+                }
+                break;
+            }
         }
         ORB orb = ORB.init(hostPortInfo, null);
         org.omg.CORBA.Object objRef = null;
