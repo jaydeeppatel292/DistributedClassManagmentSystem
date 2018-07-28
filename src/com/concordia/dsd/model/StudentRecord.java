@@ -14,7 +14,8 @@ public class StudentRecord extends Record implements Serializable{
 	private Status status;
 
 	private String statusDate;
-	public StudentRecord(){}
+	public StudentRecord(){
+	}
 	public StudentRecord(String recordId, String firstName, String lastName, Status status,
 						 String courseRegistered, String statusDate) {
 		super(recordId, firstName, lastName);
