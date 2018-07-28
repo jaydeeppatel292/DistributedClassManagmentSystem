@@ -194,6 +194,7 @@ public class UDPManager {
 
     public void sendCoordinationMessage() {
         serverLogger.log(Level.INFO, String.format(CMSLogMessages.COORDINATOR_FOUND, myPort));
+        //TODO notify frontend server with bully completed using udp datagram sockets
         ServerManager.getInstance().setNewMasterServer(serverLocation, myPort);
         for (Integer port : ServerManager.getInstance().getAllBackupServerPort(serverLocation)) {
             FIFORequestQueueModel model = new FIFORequestQueueModel(RequestType.COORDINATOR);
@@ -204,7 +205,6 @@ public class UDPManager {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
     }
 }
