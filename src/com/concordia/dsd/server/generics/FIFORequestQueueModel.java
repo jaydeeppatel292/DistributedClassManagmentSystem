@@ -7,6 +7,7 @@ import com.concordia.dsd.model.StudentRecord;
 import com.concordia.dsd.model.TeacherRecord;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FIFORequestQueueModel implements Serializable {
@@ -21,15 +22,11 @@ public class FIFORequestQueueModel implements Serializable {
     private String managerId;
     private String centerServerName;
     private Location requestLocation;
-    private List<Integer> processIdList;
+    private transient List<Integer> processIdList=new ArrayList<>();
     private boolean isSyncRequest = false;
 
-    public FIFORequestQueueModel() {
-
-    }
-
     public FIFORequestQueueModel createCopy(){
-        FIFORequestQueueModel fifoRequestQueueModel = new FIFORequestQueueModel();
+        FIFORequestQueueModel fifoRequestQueueModel = new FIFORequestQueueModel(requestType,managerId,requestLocation);
         fifoRequestQueueModel.requestType = this.requestType;
         fifoRequestQueueModel.studentRecord = this.studentRecord;
         fifoRequestQueueModel.teacherRecord = this.teacherRecord;

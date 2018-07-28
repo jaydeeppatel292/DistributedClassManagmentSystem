@@ -15,7 +15,7 @@ public class TeacherRecord extends Record implements Serializable {
 	private String specialization;
 
 	private Location location;
-
+	public TeacherRecord(){}
 	public TeacherRecord(String recordId, String firstName, String lastName, String address, String phone,
 			String specialization, Location location) {
 		super(recordId, firstName, lastName);

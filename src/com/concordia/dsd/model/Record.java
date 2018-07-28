@@ -2,8 +2,8 @@ package com.concordia.dsd.model;
 
 import java.io.Serializable;
 
-public class Record implements Serializable{
-	
+public class Record implements Serializable {
+
 	private String recordId;
 	
 	private String firstName;

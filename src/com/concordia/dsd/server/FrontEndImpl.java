@@ -216,6 +216,7 @@ public class FrontEndImpl{
         String requestedLocation = managerId.substring(0, 3);
         FIFORequestQueueModel obj = new FIFORequestQueueModel(RequestType.TRANSFER_RECORD, recordId,"" ,"", managerId, remoteCenterServerName,  Location.valueOf(requestedLocation));
         requestQueue.add(obj);
+
         return getUdpManager().sendUDPRequest(getMasterServerForLocation(Location.valueOf(requestedLocation)),obj);
     }
 
