@@ -1,12 +1,7 @@
 package com.concordia.dsd.server.UDP;
 
-import com.concordia.dsd.global.cmsenum.Location;
-import com.concordia.dsd.global.cmsenum.MessageType;
 import com.concordia.dsd.global.constants.CMSConstants;
 import com.concordia.dsd.global.constants.CMSLogMessages;
-import com.concordia.dsd.global.constants.ServerConfig;
-import com.concordia.dsd.server.ServerManager;
-import com.concordia.dsd.server.corba.bully.LeaderOperationInterface;
 import com.concordia.dsd.server.generics.CenterServerImpl;
 import com.concordia.dsd.server.generics.FIFORequestQueueModel;
 import com.concordia.dsd.server.interfaces.UDPServerInterface;
@@ -18,12 +13,11 @@ import java.net.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class UDPServer implements UDPServerInterface, LeaderOperationInterface, Runnable {
+public class UDPServer implements UDPServerInterface, Runnable {
 
     private DatagramSocket socket = null;
     private CenterServerImpl centerServer;
     private Logger logger = null;
-    private MessageType messageType;
     private int udpPort;
     private String udpHostAddress;
 
@@ -94,9 +88,10 @@ public class UDPServer implements UDPServerInterface, LeaderOperationInterface, 
                                     responseData = CMSConstants.OK_MESSAGE.getBytes();
                                     datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
                                             request.getPort()));
-                                    // init election as the current server could be leader
-                                    //TODO init election params configure
-//                                centerServer.getUdpManager().initElection();
+                                    boolean isCoordinator = centerServer.getUdpManager().initElection(centerServer.getLocation(), centerServer.getUdpPort(), receivedObj.getProcessIdList());
+                                    if (isCoordinator) {
+                                        centerServer.getUdpManager().sendCoordinationMessage();
+                                    }
                                 }
                                 break;
                             case COORDINATOR:
@@ -140,20 +135,5 @@ public class UDPServer implements UDPServerInterface, LeaderOperationInterface, 
             logger.log(Level.SEVERE, e.getMessage());
             return null;
         }
-    }
-
-    @Override
-    public void sendOkMessage() {
-
-    }
-
-    @Override
-    public void sendCoordinatorMessage() {
-
-    }
-
-    @Override
-    public void initiateElection() {
-
     }
 }

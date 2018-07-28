@@ -7,8 +7,9 @@ import com.concordia.dsd.model.StudentRecord;
 import com.concordia.dsd.model.TeacherRecord;
 
 import java.io.Serializable;
+import java.util.List;
 
-public class FIFORequestQueueModel implements Serializable{
+public class FIFORequestQueueModel implements Serializable {
 
     private RequestType requestType;
     private StudentRecord studentRecord;
@@ -19,7 +20,8 @@ public class FIFORequestQueueModel implements Serializable{
     private String managerId;
     private String centerServerName;
     private Location requestLocation;
-    private boolean isSyncRequest=false;
+    private List<Integer> processIdList;
+    private boolean isSyncRequest = false;
 
     public void setSyncRequest(boolean syncRequest) {
         isSyncRequest = syncRequest;
@@ -27,6 +29,11 @@ public class FIFORequestQueueModel implements Serializable{
 
     public boolean isSyncRequest() {
         return isSyncRequest;
+    }
+
+    public FIFORequestQueueModel(RequestType requestType, List<Integer> processIdList) {
+        this.requestType = requestType;
+        this.processIdList = processIdList;
     }
 
     public FIFORequestQueueModel(RequestType requestType, String managerId, Location requestLocation) {
@@ -37,7 +44,7 @@ public class FIFORequestQueueModel implements Serializable{
 
     public FIFORequestQueueModel(RequestType requestType, Record record, String managerId, Location requestLocation) {
         this.requestLocation = requestLocation;
-        if(requestType == RequestType.CREATE_S_RECORD)
+        if (requestType == RequestType.CREATE_S_RECORD)
             this.studentRecord = (StudentRecord) record;
         else
             this.teacherRecord = (TeacherRecord) record;
@@ -55,7 +62,7 @@ public class FIFORequestQueueModel implements Serializable{
         this.newValue = newValue;
         this.managerId = managerId;
         this.requestLocation = requestLocation;
-        if(this.requestType == RequestType.TRANSFER_RECORD){
+        if (this.requestType == RequestType.TRANSFER_RECORD) {
             this.centerServerName = centerServerName;
         }
     }
@@ -126,5 +133,13 @@ public class FIFORequestQueueModel implements Serializable{
 
     public Location getRequestLocation() {
         return requestLocation;
+    }
+
+    public List<Integer> getProcessIdList() {
+        return processIdList;
+    }
+
+    public void setProcessIdList(List<Integer> processIdList) {
+        this.processIdList = processIdList;
     }
 }

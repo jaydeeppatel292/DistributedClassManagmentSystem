@@ -1,15 +1,11 @@
 package com.concordia.dsd.server.UDP;
 
 import com.concordia.dsd.global.cmsenum.Location;
-import com.concordia.dsd.global.cmsenum.Status;
 import com.concordia.dsd.global.constants.CMSLogMessages;
 import com.concordia.dsd.global.enums.RequestType;
 import com.concordia.dsd.model.ClassMap;
 import com.concordia.dsd.model.Record;
-import com.concordia.dsd.model.StudentRecord;
-import com.concordia.dsd.model.TeacherRecord;
 import com.concordia.dsd.server.ServerManager;
-import com.concordia.dsd.server.generics.CenterServerImpl;
 import com.concordia.dsd.server.generics.FIFORequestQueueModel;
 
 import java.io.IOException;
@@ -31,14 +27,14 @@ public class UDPManager {
         this.myPort = myPort;
     }
 
-    public UDPRequest[] createUDPReqObj(List<ServerManager.CenterServerInfo> processList,FIFORequestQueueModel fifoRequestQueueModel){
+    public UDPRequest[] createUDPReqObj(List<ServerManager.CenterServerInfo> processList, FIFORequestQueueModel fifoRequestQueueModel) {
         UDPRequest[] requests;
         int counter = 0;
         requests = new UDPRequest[processList.size()];
-        for(ServerManager.CenterServerInfo centerServerInfo: processList){
-            if(centerServerInfo.getPort() != myPort){
+        for (ServerManager.CenterServerInfo centerServerInfo : processList) {
+            if (centerServerInfo.getPort() != myPort) {
                 try {
-                    requests[counter] = new UDPRequest(centerServerInfo.getLocation(),centerServerInfo.getHostAddress(),centerServerInfo.getPort(),fifoRequestQueueModel);
+                    requests[counter] = new UDPRequest(centerServerInfo.getLocation(), centerServerInfo.getHostAddress(), centerServerInfo.getPort(), fifoRequestQueueModel);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -51,13 +47,14 @@ public class UDPManager {
 
     /**
      * Add student record in backup processes
+     *
      * @param processList
      * @return
      */
-    public String sendBackUpProcessRequestFromController(List<ServerManager.CenterServerInfo> processList, FIFORequestQueueModel fifoRequestQueueModel){
+    public String sendBackUpProcessRequestFromController(List<ServerManager.CenterServerInfo> processList, FIFORequestQueueModel fifoRequestQueueModel) {
 
-        UDPRequest[] requests = createUDPReqObj(processList,fifoRequestQueueModel);
-        for(UDPRequest req : requests){
+        UDPRequest[] requests = createUDPReqObj(processList, fifoRequestQueueModel);
+        for (UDPRequest req : requests) {
             try {
                 req.join();
             } catch (InterruptedException e) {
@@ -68,17 +65,17 @@ public class UDPManager {
         return "SUCCESS";
     }
 
-    public String sendBackUpProcessRequests(FIFORequestQueueModel requestQueueModel){
-        return ServerManager.getInstance().getCenterServer(serverLocation ,ServerManager.getInstance().getMasterServerPort(serverLocation)).sendBackUpProcessRequestFromController(requestQueueModel);
+    public String sendBackUpProcessRequests(FIFORequestQueueModel requestQueueModel) {
+        return ServerManager.getInstance().getCenterServer(serverLocation, ServerManager.getInstance().getMasterServerPort(serverLocation)).sendBackUpProcessRequestFromController(requestQueueModel);
     }
 
     /**
      * Add teacher record in backup processes
      */
-    public String addTeacherRecord(List<ServerManager.CenterServerInfo> processList, FIFORequestQueueModel requestObj){
+    public String addTeacherRecord(List<ServerManager.CenterServerInfo> processList, FIFORequestQueueModel requestObj) {
 
-        UDPRequest[] requests = createUDPReqObj(processList,requestObj);
-        for(UDPRequest req : requests){
+        UDPRequest[] requests = createUDPReqObj(processList, requestObj);
+        for (UDPRequest req : requests) {
             try {
                 req.join();
             } catch (InterruptedException e) {
@@ -155,11 +152,11 @@ public class UDPManager {
             ServerManager.CenterServerInfo centerInfo = ServerManager.getInstance().getMasterServerInfo(Location.valueOf(remoteCenterServerName));
             UDPRequest serverObject = null;
             if (typeOfRec == 'S') {
-                FIFORequestQueueModel reqModel = new FIFORequestQueueModel(RequestType.CREATE_S_RECORD, record, managerId,Location.valueOf(remoteCenterServerName));
+                FIFORequestQueueModel reqModel = new FIFORequestQueueModel(RequestType.CREATE_S_RECORD, record, managerId, Location.valueOf(remoteCenterServerName));
                 serverObject = new UDPRequest(Location.valueOf(remoteCenterServerName), centerInfo.getHostAddress(), centerInfo.getPort(), reqModel);
                 serverObject.start();
             } else if (typeOfRec == 'T') {
-                FIFORequestQueueModel reqModel = new FIFORequestQueueModel(RequestType.CREATE_T_RECORD, record, managerId,Location.valueOf(remoteCenterServerName));
+                FIFORequestQueueModel reqModel = new FIFORequestQueueModel(RequestType.CREATE_T_RECORD, record, managerId, Location.valueOf(remoteCenterServerName));
                 serverObject = new UDPRequest(Location.valueOf(remoteCenterServerName), centerInfo.getHostAddress(), centerInfo.getPort(), reqModel);
                 serverObject.start();
             }
@@ -167,30 +164,34 @@ public class UDPManager {
             serverLogger.log(Level.INFO, String.format(CMSLogMessages.TRANSFER_RECORD_SUCCESS, record.getRecordId(), managerId));
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
-/*
-    public void initElection(List<Integer> processIdList) {
-        UDPRequest[] udpRequests = new UDPRequest[processIdList.size() - 1];
+
+
+    public boolean initElection(Location location, int initPort, List<Integer> processIdList) {
+        boolean messageSent = false;
         for (int i = 0; i < processIdList.size(); i++) {
-            try {
-                udpRequests[i] = new UDPRequest(ServerManager.getInstance().getCenterServer(serverLocation, processIdList.get(i)));
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (processIdList.get(i) != initPort && processIdList.get(i) > initPort) {
+                try {
+                    FIFORequestQueueModel model = new FIFORequestQueueModel(RequestType.ELECTION, processIdList);
+                    ServerManager.CenterServerInfo serverInfo = ServerManager.getInstance().getServerInfo(location, processIdList.get(i));
+                    if (serverInfo != null) {
+                        messageSent = true;
+                        UDPRequest udpRequest = new UDPRequest(serverInfo.getLocation(), serverInfo.getHostAddress(), serverInfo.getPort(), model);
+                        udpRequest.start();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
-
-        for (UDPRequest request : udpRequests) {
-            try {
-                request.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }*/
+        return messageSent;
+    }
 
 
+    public void sendCoordinationMessage() {
+
+    }
 }

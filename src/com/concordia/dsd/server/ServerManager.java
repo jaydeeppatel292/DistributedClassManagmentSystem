@@ -31,44 +31,45 @@ public class ServerManager {
         this.frontEndServer = frontEndServer;
     }
 
-    public void setNewMasterServer(Location location, int masterPort){
-        for(CenterServerInfo centerServerInfo : centerServerMap.get(location)){
-            if(centerServerInfo.getPort() == masterPort){
+    public void setNewMasterServer(Location location, int masterPort) {
+        for (CenterServerInfo centerServerInfo : centerServerMap.get(location)) {
+            if (centerServerInfo.getPort() == masterPort) {
                 centerServerInfo.setMaster(true);
-            }else {
+                frontEndServer.getFrontEndImpl().setMasterServer(location, masterPort, centerServerInfo.getHostAddress());
+            } else {
                 centerServerInfo.setMaster(false);
             }
         }
-
     }
 
-    public List<CenterServerInfo> getAllMasterServer(){
+    public List<CenterServerInfo> getAllMasterServer() {
         List<CenterServerInfo> masterServerList = new ArrayList<>();
         Iterator it = centerServerMap.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
-            for(CenterServerInfo centerServerInfo : centerServerMap.get((Location) pair.getKey())){
-                if(centerServerInfo.isMaster()){
+            Map.Entry pair = (Map.Entry) it.next();
+            for (CenterServerInfo centerServerInfo : centerServerMap.get((Location) pair.getKey())) {
+                if (centerServerInfo.isMaster()) {
                     masterServerList.add(centerServerInfo);
                 }
             }
         }
         return masterServerList;
     }
-    public List<CenterServerInfo> getAllBackupServerList(Location location){
+
+    public List<CenterServerInfo> getAllBackupServerList(Location location) {
         List<CenterServerInfo> backupServerList = new ArrayList<>();
-        for(CenterServerInfo centerServerInfo : centerServerMap.get(location)){
-            if(!centerServerInfo.isMaster()){
+        for (CenterServerInfo centerServerInfo : centerServerMap.get(location)) {
+            if (!centerServerInfo.isMaster()) {
                 backupServerList.add(centerServerInfo);
             }
         }
         return backupServerList;
     }
 
-    public List<Integer> getAllBackupServerPort(Location location){
+    public List<Integer> getAllBackupServerPort(Location location) {
         List<Integer> backupServerList = new ArrayList<>();
-        for(CenterServerInfo centerServerInfo : centerServerMap.get(location)){
-            if(!centerServerInfo.isMaster()){
+        for (CenterServerInfo centerServerInfo : centerServerMap.get(location)) {
+            if (!centerServerInfo.isMaster()) {
                 backupServerList.add(centerServerInfo.getPort());
             }
         }
@@ -77,7 +78,8 @@ public class ServerManager {
 
     /**
      * Add Created Server
-     *  @param location
+     *
+     * @param location
      * @param centerServer
      * @param hostAddress
      */
@@ -88,6 +90,15 @@ public class ServerManager {
         centerServerMap.get(location).add(new CenterServerInfo(port, centerServer, location, hostAddress));
     }
 
+    public CenterServerInfo getServerInfo(Location location, int port) {
+        for (CenterServerInfo serverInfo : centerServerMap.get(location)) {
+            if (serverInfo.getPort() == port) {
+                return serverInfo;
+            }
+        }
+        return null;
+    }
+
     /**
      * Get CenterServerInfo based on Location
      *
@@ -95,8 +106,8 @@ public class ServerManager {
      * @return
      */
     public CenterServerImpl getCenterServer(Location location, int port) {
-        for(CenterServerInfo centerServerInfo : centerServerMap.get(location)){
-            if(centerServerInfo.getPort() == port){
+        for (CenterServerInfo centerServerInfo : centerServerMap.get(location)) {
+            if (centerServerInfo.getPort() == port) {
                 return centerServerInfo.getCenterServerImpl();
             }
         }
@@ -104,8 +115,8 @@ public class ServerManager {
     }
 
     public CenterServerInfo getMasterServerInfo(Location location) {
-        for(CenterServerInfo centerServerInfo : centerServerMap.get(location)){
-            if(centerServerInfo.isMaster()){
+        for (CenterServerInfo centerServerInfo : centerServerMap.get(location)) {
+            if (centerServerInfo.isMaster()) {
                 return centerServerInfo;
             }
         }
@@ -114,8 +125,8 @@ public class ServerManager {
 
 
     public Integer getMasterServerPort(Location location) {
-        for(CenterServerInfo centerServerInfo : centerServerMap.get(location)){
-            if(centerServerInfo.isMaster()){
+        for (CenterServerInfo centerServerInfo : centerServerMap.get(location)) {
+            if (centerServerInfo.isMaster()) {
                 return centerServerInfo.getPort();
             }
         }
@@ -130,6 +141,7 @@ public class ServerManager {
         private Location location;
         private boolean isActive;
         private String hostAddress;
+
         public Location getLocation() {
             return location;
         }
