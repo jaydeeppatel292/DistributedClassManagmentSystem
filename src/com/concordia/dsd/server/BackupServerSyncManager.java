@@ -23,7 +23,7 @@ public class BackupServerSyncManager extends Thread {
             }
             FIFORequestQueueModel fifoRequestQueueModel =  frontEnd.getRequestFromQueue();
             if(fifoRequestQueueModel!=null){
-                String response = frontEnd.sendBackupSyncRequest(fifoRequestQueueModel);
+                String response = frontEnd.sendBackupSyncRequest(fifoRequestQueueModel.createCopy());
                 if(response!=null){
                     frontEnd.dequeueRequestFromQueue();
                 }

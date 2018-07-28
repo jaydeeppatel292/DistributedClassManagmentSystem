@@ -133,6 +133,7 @@ public class FrontEndImpl{
 
 
     public String sendBackupSyncRequest(FIFORequestQueueModel fifoRequestQueueModel){
+        fifoRequestQueueModel.setSyncRequest(true);
         return getUdpManager().sendUDPRequest(getMasterServerForLocation(fifoRequestQueueModel.getRequestLocation()),fifoRequestQueueModel);
     }
 

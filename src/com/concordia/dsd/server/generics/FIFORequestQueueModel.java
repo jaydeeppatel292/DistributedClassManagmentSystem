@@ -23,6 +23,25 @@ public class FIFORequestQueueModel implements Serializable {
     private List<Integer> processIdList;
     private boolean isSyncRequest = false;
 
+    public FIFORequestQueueModel() {
+
+    }
+
+    public FIFORequestQueueModel createCopy(){
+        FIFORequestQueueModel fifoRequestQueueModel = new FIFORequestQueueModel();
+        fifoRequestQueueModel.requestType = this.requestType;
+        fifoRequestQueueModel.studentRecord = this.studentRecord;
+        fifoRequestQueueModel.teacherRecord = this.teacherRecord;
+        fifoRequestQueueModel.recordId= this.recordId;
+        fifoRequestQueueModel.fieldName= this.fieldName;
+        fifoRequestQueueModel.newValue= this.newValue;
+        fifoRequestQueueModel.managerId= this.managerId;
+        fifoRequestQueueModel.centerServerName= this.centerServerName;
+        fifoRequestQueueModel.requestLocation= this.requestLocation;
+        fifoRequestQueueModel.isSyncRequest= this.isSyncRequest;
+        return fifoRequestQueueModel;
+    }
+
     public void setSyncRequest(boolean syncRequest) {
         isSyncRequest = syncRequest;
     }

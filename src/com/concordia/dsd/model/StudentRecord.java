@@ -4,16 +4,17 @@ package com.concordia.dsd.model;
 import com.concordia.dsd.exception.InvalidFieldException;
 import com.concordia.dsd.global.cmsenum.Status;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class StudentRecord extends Record {
+public class StudentRecord extends Record implements Serializable{
 
 	private String courseRegistered;
 
 	private Status status;
 
 	private String statusDate;
-
+	public StudentRecord(){}
 	public StudentRecord(String recordId, String firstName, String lastName, Status status,
 						 String courseRegistered, String statusDate) {
 		super(recordId, firstName, lastName);

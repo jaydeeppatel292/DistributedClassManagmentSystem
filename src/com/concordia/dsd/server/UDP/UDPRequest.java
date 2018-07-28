@@ -66,23 +66,22 @@ public class UDPRequest extends Thread {
                     setResponseFromUDP(response.trim());
                     break;
                 case CREATE_S_RECORD:
-                    logger.log(Level.INFO, String.format(CMSLogMessages.CREATED_STUDENT_RECORD_MSG,
-                            serverLocation.toString(), address, serverUDPPort, response.trim()));
+                    logger.log(Level.INFO, String.format(CMSLogMessages.CREATED_STUDENT_RECORD_MSG, response, reqObj.getRecordId()));
                     setResponseFromUDP(response.trim());
                     break;
                 case CREATE_T_RECORD:
                     logger.log(Level.INFO, String.format(CMSLogMessages.CREATED_TEACHER_RECORD_MSG,
-                            serverLocation.toString(), address, serverUDPPort, response.trim()));
+                            response, reqObj.getRecordId()));
                     setResponseFromUDP(response.trim());
                     break;
                 case UPDATE_RECORD:
                     logger.log(Level.INFO, String.format(CMSLogMessages.UPDATE_RECORD_MSG,
-                            serverLocation.toString(), address, serverUDPPort, response.trim()));
+                            response, reqObj.getRecordId()));
                     setResponseFromUDP(response.trim());
                     break;
                 case TRANSFER_RECORD:
                     logger.log(Level.INFO, String.format(CMSLogMessages.TRANSFER_RECORD_SUCCESS,
-                            serverLocation.toString(), address, serverUDPPort, response.trim()));
+                            response, reqObj.getRecordId()));
                     setResponseFromUDP(response.trim());
                     break;
                 case ELECTION:
