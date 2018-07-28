@@ -15,6 +15,7 @@ public class CMSLogMessages {
 	public static final String EDIT_RECORD_FAILED_MSG = "Edit record operation failed";
 	public static final String CREATE_RECORD_FAILED_MSG = "Create record operation failed";
     public static final String TRANSFER_RECORD_SUCCESS = "Record %s Transferred Successfully by %s";
+    public static final String ELECTION_FAILURE_MESSAGE = "OK Message received by %s port";
 
 
 }
