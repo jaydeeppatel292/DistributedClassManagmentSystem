@@ -5,6 +5,7 @@ import com.concordia.dsd.global.constants.CMSLogMessages;
 import com.concordia.dsd.model.Record;
 import com.concordia.dsd.model.StudentRecord;
 import com.concordia.dsd.model.TeacherRecord;
+import com.concordia.dsd.global.enums.RequestType;
 import com.concordia.dsd.server.generics.CenterServerImpl;
 import com.concordia.dsd.server.generics.FIFORequestQueueModel;
 import com.concordia.dsd.server.interfaces.UDPServerInterface;
@@ -80,8 +81,16 @@ public class UDPServer implements UDPServerInterface, Runnable {
                                 datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
                                         request.getPort()));
                                 break;
-                                case GET_RECORD_COUNT:
+                            case GET_RECORD_COUNT:
                                 // Sending back record count by requested client UDPRequest
+                                System.out.println("inside switch in UDP server");
+                                responseData = centerServer.getRecordCounts(receivedObj.getManagerId()).getBytes();
+                                datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
+                                        request.getPort()));
+                                break;
+                            case GET_RECORD_COUNT_SUBS:
+                                // Sending back record count by requested client UDPRequest
+                                System.out.println("inside switch in UDP server");
                                 responseData = centerServer.getRecordMap().getRecordsCount().toString().getBytes();
                                 datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
                                         request.getPort()));
@@ -92,6 +101,9 @@ public class UDPServer implements UDPServerInterface, Runnable {
                                         request.getPort()));
                                 break;
                             case UPDATE_RECORD:
+                                responseData = centerServer.editRecord(receivedObj.getRecordId(), receivedObj.getFieldName(), receivedObj.getNewValue(), receivedObj.getManagerId()).getBytes();
+                                datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
+                                        request.getPort()));
                                 break;
                             case CREATE_S_RECORD:
                                 responseData = centerServer.createSRecord(receivedObj.getStudentRecord().getFirstName(), receivedObj.getStudentRecord().getLastName(), receivedObj.getStudentRecord().getCourseRegistered(), receivedObj.getStudentRecord().getStatus(), receivedObj.getStudentRecord().getStatusDate(), receivedObj.getManagerId()).getBytes();
@@ -100,6 +112,17 @@ public class UDPServer implements UDPServerInterface, Runnable {
                                 break;
                             case CREATE_T_RECORD:
                                 responseData = centerServer.createTRecord(receivedObj.getTeacherRecord().getFirstName(), receivedObj.getTeacherRecord().getLastName(), receivedObj.getTeacherRecord().getAddress(), receivedObj.getTeacherRecord().getPhone(), receivedObj.getTeacherRecord().getSpecialization(), receivedObj.getTeacherRecord().getLocation(), receivedObj.getManagerId()).getBytes();
+                                datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
+                                        request.getPort()));
+                                break;
+                            case DELETE_RECORD:
+                                responseData=null;
+                                if(receivedObj.getTeacherRecord()==null) {
+                                    responseData = centerServer.deleteRecord(receivedObj.getStudentRecord()).getBytes();
+                                }
+                                else if(receivedObj.getStudentRecord()==null){
+                                    responseData = centerServer.deleteRecord(receivedObj.getTeacherRecord()).getBytes();
+                                }
                                 datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
                                         request.getPort()));
                                 break;

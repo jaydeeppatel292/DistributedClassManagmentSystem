@@ -257,4 +257,10 @@ public class CenterServerImpl<T> {
         return getRecordMap().lookupRecord(recordId);
 
     }
+
+    public String deleteRecord(Record record){
+        recordMap.deleteRecord(record);
+        return "SUCCESS";
+    }
+
 }

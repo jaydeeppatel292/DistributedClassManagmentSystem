@@ -67,6 +67,9 @@ public class UDPRequest extends Thread {
                 case GET_RECORD:
                     setResponseFromUDP(response.trim());
                     break;
+                case GET_RECORD_COUNT_SUBS:
+                    setResponseFromUDP(response.trim());
+                    break;
                 case CREATE_S_RECORD:
                     setResponseFromUDP(response.trim());
                     break;
@@ -108,7 +111,4 @@ public class UDPRequest extends Thread {
         }
     }
 
-    public byte[] getServerResponse() {
-        return serverResponse;
-    }
 }
