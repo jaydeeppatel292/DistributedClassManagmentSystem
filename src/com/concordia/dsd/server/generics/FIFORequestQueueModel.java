@@ -146,4 +146,9 @@ public class FIFORequestQueueModel implements Serializable{
     public Location getRequestLocation() {
         return requestLocation;
     }
+
+    @Override
+    public String toString() {
+        return "MANAGERID: "+ managerId+" REQUESTTYPE" + requestType + " LOCATION:: "+requestLocation.toString();
+    }
 }

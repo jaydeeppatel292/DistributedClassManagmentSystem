@@ -1,2 +1,28 @@
 Jul 08, 2018 8:04:03 PM com.concordia.dsd.client.webservice.StartClient main
 INFO: Created student record: Record ID = SR00001 by manager MTL0001
+Jul 27, 2018 8:19:09 PM com.concordia.dsd.client.corba.StartClient main
+INFO: Created student record: Record ID = SR00001 by manager MTL0001
+Jul 27, 2018 8:20:28 PM com.concordia.dsd.client.corba.StartClient main
+INFO: Created student record: Record ID = SR00003 by manager MTL0001
+Jul 27, 2018 8:20:50 PM com.concordia.dsd.client.corba.StartClient main
+INFO: Get Record Counts: 4
+Jul 27, 2018 8:32:00 PM com.concordia.dsd.client.corba.StartClient main
+INFO: Created student record: Record ID = SR00001 by manager MTL0001
+Jul 27, 2018 8:32:51 PM com.concordia.dsd.client.corba.StartClient main
+INFO: Get Record Counts: 1
+Jul 27, 2018 8:37:49 PM com.concordia.dsd.client.corba.StartClient main
+INFO: Created student record: Record ID = SR00001 by manager MTL0001
+Jul 27, 2018 8:40:11 PM com.concordia.dsd.client.corba.StartClient main
+INFO: Created student record: Record ID = SR00001 by manager MTL0001
+Jul 27, 2018 8:42:12 PM com.concordia.dsd.client.corba.StartClient main
+INFO: Created student record: Record ID = SR00001 by manager MTL0001
+Jul 27, 2018 8:52:41 PM com.concordia.dsd.client.corba.StartClient main
+INFO: Created student record: Record ID = SR00001 by manager MTL0001
+Jul 27, 2018 9:01:55 PM com.concordia.dsd.client.corba.StartClient main
+INFO: Created student record: Record ID = SR00001 by manager MTL0001
+Jul 27, 2018 9:08:37 PM com.concordia.dsd.client.corba.StartClient main
+INFO: Created student record: Record ID = SR00001 by manager MTL0001
+Jul 27, 2018 9:29:02 PM com.concordia.dsd.client.corba.StartClient main
+INFO: Created student record: Record ID = SR00001 by manager MTL0001
+Jul 27, 2018 9:32:28 PM com.concordia.dsd.client.corba.StartClient main
+INFO: Created student record: Record ID = SR00001 by manager MTL0001
