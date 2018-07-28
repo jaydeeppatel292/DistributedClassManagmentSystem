@@ -19,7 +19,7 @@ public class UDPRequest extends Thread {
     private String serverUDPHostAddress;
     private int serverUDPPort;
     private Location serverLocation;
-
+    private byte[] serverResponse;
     public UDPRequest(Location serverLocation, String serverUDPHostAddress, int serverUDPPort, FIFORequestQueueModel reqObj) throws SecurityException, IOException {
         this.serverLocation = serverLocation;
         this.serverUDPHostAddress = serverUDPHostAddress;
@@ -58,9 +58,16 @@ public class UDPRequest extends Thread {
             data = new byte[1000];
             DatagramPacket receivedPacket = new DatagramPacket(data, data.length);
             socket.receive(receivedPacket);
+            this.serverResponse = data;
             String response = new String(data);
             switch (reqObj.getRequestType()) {
                 case GET_RECORD_COUNT:
+                    setResponseFromUDP(response.trim());
+                    break;
+                case GET_RECORD:
+                    setResponseFromUDP(response.trim());
+                    break;
+                case GET_RECORD_COUNT_SUBS:
                     setResponseFromUDP(response.trim());
                     break;
                 case CREATE_S_RECORD:
@@ -104,4 +111,7 @@ public class UDPRequest extends Thread {
         }
     }
 
+    public byte[] getServerResponse() {
+        return serverResponse;
+    }
 }

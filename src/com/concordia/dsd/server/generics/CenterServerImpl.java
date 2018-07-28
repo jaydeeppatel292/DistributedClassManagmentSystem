@@ -41,6 +41,9 @@ public class CenterServerImpl<T> {
     private String udpHostAddress;
     private boolean isMaster;
 
+    private List<Integer> serverProcesses;
+
+
     /**
      * Initialize Constructor
      * Also Start Udp Server
@@ -250,4 +253,14 @@ public class CenterServerImpl<T> {
         }
         return  returnValue;
     }
+    public Record getRecordByRecordId(String recordId) {
+        return getRecordMap().lookupRecord(recordId);
+
+    }
+
+    public String deleteRecord(Record record){
+        recordMap.deleteRecord(record);
+        return "SUCCESS";
+    }
+
 }

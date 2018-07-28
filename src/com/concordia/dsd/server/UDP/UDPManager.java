@@ -9,6 +9,7 @@ import com.concordia.dsd.server.ServerManager;
 import com.concordia.dsd.server.generics.FIFORequestQueueModel;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -104,23 +105,23 @@ public class UDPManager {
     public String getRecordCounts(String managerId) {
         StringBuffer stringBuffer = new StringBuffer();
         String recordCount = null;
-        UDPRequest[] requests = new UDPRequest[Location.values().length - 1];
+        List<UDPRequest> requests = new ArrayList<>();
         int counter = 0;
         for (Location location : Location.values()) {
             if (location == serverLocation) {
                 recordCount = location.toString() + " " + recordMap.getRecordsCount();
                 stringBuffer.append(recordCount);
-            } else {
+            } else if (location != Location.FE) {
                 try {
                     ServerManager.CenterServerInfo centerInfo = ServerManager.getInstance().getMasterServerInfo(location);
-                    FIFORequestQueueModel reqObj = new FIFORequestQueueModel(RequestType.GET_RECORD_COUNT, managerId, location);
-                    requests[counter] = new UDPRequest(location, centerInfo.getHostAddress(), centerInfo.getPort(), reqObj);
+                    FIFORequestQueueModel reqObj = new FIFORequestQueueModel(RequestType.GET_RECORD_COUNT_SUBS, managerId, location);
+                    requests.add(new UDPRequest(location, centerInfo.getHostAddress(), centerInfo.getPort(), reqObj));
                 } catch (SecurityException e) {
                     serverLogger.log(Level.SEVERE, e.getMessage());
                 } catch (IOException e) {
                     serverLogger.log(Level.SEVERE, e.getMessage());
                 }
-                requests[counter].start();
+                requests.get(counter).start();
                 counter++;
             }
         }
@@ -171,7 +172,6 @@ public class UDPManager {
 
 
     public boolean initElection(Location location, List<Integer> processIdList) {
-        serverLogger.log(Level.INFO, String.format(CMSLogMessages.ELECTION_INIT, myPort));
         boolean messageSent = false;
         for (int i = 0; i < processIdList.size(); i++) {
             if (processIdList.get(i) != myPort && processIdList.get(i) > myPort) {

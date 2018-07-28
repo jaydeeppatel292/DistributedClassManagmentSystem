@@ -27,8 +27,30 @@ public class FrontEndUDPManager {
      * Implementation to send udp request
      * @return
      */
-    public String sendUDPRequest(FrontEndImpl.MasterServerInfo masterServerInfo, FIFORequestQueueModel fifoRequestQueueModel) {
+    public byte[] sendUDPRequestForSelection(FrontEndImpl.MasterServerInfo masterServerInfo, FIFORequestQueueModel fifoRequestQueueModel) {
+        try {
+            if(fifoRequestQueueModel.isSyncRequest()){
+                System.out.println("Sync request!!");
+            }
+            UDPRequest udpRequest = new UDPRequest(masterServerInfo.getLocation(),masterServerInfo.getHostAddress(),masterServerInfo.getPort(),fifoRequestQueueModel);
+            udpRequest.start();
+            udpRequest.join();
+            return udpRequest.getServerResponse();
+        } catch (SecurityException e) {
+            serverLogger.log(Level.SEVERE, e.getMessage());
+        } catch (IOException e) {
+            serverLogger.log(Level.SEVERE, e.getMessage());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
+    /**
+     * Implementation to send udp request
+     * @return
+     */
+    public String sendUDPRequest(FrontEndImpl.MasterServerInfo masterServerInfo, FIFORequestQueueModel fifoRequestQueueModel) {
         try {
             if(fifoRequestQueueModel.isSyncRequest()){
                 System.out.println("Sync request!!");
@@ -44,7 +66,6 @@ public class FrontEndUDPManager {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
         return null;
     }
 }
