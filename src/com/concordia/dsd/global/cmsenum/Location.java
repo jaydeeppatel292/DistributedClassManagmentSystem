@@ -1,5 +1,7 @@
 package com.concordia.dsd.global.cmsenum;
 
-public enum Location {
+import java.io.Serializable;
+
+public enum Location implements Serializable {
 	MTL, LVL, DDO,FE
 }

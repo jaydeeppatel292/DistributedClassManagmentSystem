@@ -4,9 +4,10 @@ package com.concordia.dsd.model;
 import com.concordia.dsd.exception.InvalidFieldException;
 import com.concordia.dsd.global.cmsenum.Status;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class StudentRecord extends Record {
+public class StudentRecord extends Record implements Serializable{
 
 	private String courseRegistered;
 

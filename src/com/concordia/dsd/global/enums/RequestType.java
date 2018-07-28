@@ -1,6 +1,8 @@
 package com.concordia.dsd.global.enums;
 
-public enum RequestType {
+import java.io.Serializable;
+
+public enum RequestType implements Serializable {
     CREATE_S_RECORD,
     CREATE_T_RECORD,
     GET_RECORD_COUNT,

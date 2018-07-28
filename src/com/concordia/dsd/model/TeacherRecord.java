@@ -4,7 +4,9 @@ package com.concordia.dsd.model;
 import com.concordia.dsd.exception.InvalidFieldException;
 import com.concordia.dsd.global.cmsenum.Location;
 
-public class TeacherRecord extends Record {
+import java.io.Serializable;
+
+public class TeacherRecord extends Record implements Serializable {
 	
 	private String address;
 
