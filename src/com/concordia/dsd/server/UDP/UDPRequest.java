@@ -11,8 +11,12 @@ import com.concordia.dsd.server.corba.bully.LeaderElection;
 import com.concordia.dsd.server.generics.FIFORequestQueueModel;
 import com.concordia.dsd.utils.LoggingUtil;
 import com.concordia.dsd.utils.SerializingUtil;
+import net.rudp.ReliableSocket;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.net.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,7 +28,11 @@ public class UDPRequest extends Thread {
     private String serverUDPHostAddress;
     private int serverUDPPort;
     private Location serverLocation;
-    private byte[] serverResponse;
+    private Object outPutObj;
+
+    public Object getOutPutObj() {
+        return outPutObj;
+    }
 
     public UDPRequest(Location serverLocation, String serverUDPHostAddress, int serverUDPPort,
                       FIFORequestQueueModel reqObj) throws SecurityException, IOException {
@@ -50,45 +58,39 @@ public class UDPRequest extends Thread {
     @Override
     public void run() {
         InetAddress address = getInetAddress(serverUDPHostAddress);
-        DatagramSocket socket = null;
+        ReliableSocket socket = null;
         try {
-            socket = new DatagramSocket();
-            //logger.log(Level.INFO, String.format(CMSLogMessages.RECORD_COUNT_SERVER_INIT, serverLocation.toString(),
-            //address, serverUDPPort));
-            byte[] data;
+            socket = new ReliableSocket(serverUDPHostAddress,serverUDPPort);
 
-            data = SerializingUtil.getInstance().getSerializedFIFOObject(reqObj);
-            DatagramPacket packet = new DatagramPacket(data, data.length, address, serverUDPPort);
-            socket.send(packet);
+            OutputStream outputStream = socket.getOutputStream();
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+            objectOutputStream.writeObject(reqObj);
+            objectOutputStream.close();
 
-            data = new byte[1000];
+
             if (reqObj.getRequestType().equals(RequestType.PING_SERVER)) {
                 socket.setSoTimeout(ServerConfig.PING_REQUEST_TIMEOUT);
             }
-            DatagramPacket receivedPacket = new DatagramPacket(data, data.length);
-            socket.receive(receivedPacket);
-            this.serverResponse = data;
-            String response = new String(data);
+
+            ObjectInputStream objectIn = new ObjectInputStream(socket.getInputStream());
+            Object object = objectIn.readObject();
+            objectIn.close();
+            String response = null;
+            if(object instanceof String) {
+                response = (String)object;
+            }
+            outPutObj = object;
+
             switch (reqObj.getRequestType()) {
                 case GET_RECORD_COUNT:
-                    setResponseFromUDP(response.trim());
-                    break;
                 case GET_RECORD:
-                    setResponseFromUDP(response.trim());
-                    break;
                 case GET_RECORD_COUNT_SUBS:
-                    setResponseFromUDP(response.trim());
-                    break;
                 case CREATE_S_RECORD:
-                    setResponseFromUDP(response.trim());
-                    break;
                 case CREATE_T_RECORD:
-                    setResponseFromUDP(response.trim());
-                    break;
                 case UPDATE_RECORD:
-                    setResponseFromUDP(response.trim());
-                    break;
                 case TRANSFER_RECORD:
+                case PING_SERVER:
+                case FAIL_SERVER:
                     setResponseFromUDP(response.trim());
                     break;
                 case ELECTION:
@@ -98,12 +100,7 @@ public class UDPRequest extends Thread {
                     break;
                 case COORDINATOR:
                     break;
-                case PING_SERVER:
-                    setResponseFromUDP(response.trim());
-                    break;
-                case FAIL_SERVER:
-                    setResponseFromUDP(response.trim());
-                    break;
+
             }
         } catch (SocketTimeoutException e) {
             System.out.println("Socket Timeout Exception " + e.getMessage());
@@ -127,9 +124,15 @@ public class UDPRequest extends Thread {
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         } finally {
             if (socket != null) {
-                socket.close();
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -143,7 +146,5 @@ public class UDPRequest extends Thread {
         }
     }
 
-    public byte[] getServerResponse() {
-        return serverResponse;
-    }
+
 }

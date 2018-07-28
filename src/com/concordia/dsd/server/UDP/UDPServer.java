@@ -10,15 +10,16 @@ import com.concordia.dsd.server.generics.FIFORequestQueueModel;
 import com.concordia.dsd.server.interfaces.UDPServerInterface;
 import com.concordia.dsd.utils.LoggingUtil;
 import com.concordia.dsd.utils.SerializingUtil;
+import net.rudp.ReliableServerSocket;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class UDPServer implements UDPServerInterface, Runnable {
 
-    private DatagramSocket socket = null;
+    private ReliableServerSocket serverSocket = null;
     private CenterServerImpl centerServer;
     private Logger logger = null;
     private int udpPort;
@@ -52,93 +53,100 @@ public class UDPServer implements UDPServerInterface, Runnable {
             }
         }*/
 
-        DatagramPacket request;
-        DatagramSocket datagramSocket = null;
         try {
             while (true) {
+                Socket clientSocket = null;
                 try {
-                    buffer = new byte[1000];
-                    request = new DatagramPacket(buffer, buffer.length);
-                    socket.receive(request);
-//                    System.out.println("UDP REQUEST received!! PORT::" + request.getPort());
+                    clientSocket = serverSocket.accept();
+                    ObjectInputStream objectIn = new ObjectInputStream(clientSocket.getInputStream());
+                    Object object = objectIn.readObject();
+                    FIFORequestQueueModel receivedObj=null;
+                    if(object instanceof FIFORequestQueueModel){
+                        receivedObj = (FIFORequestQueueModel) object;
+                    }
+                    objectIn.close();
 
-                    FIFORequestQueueModel receivedObj = SerializingUtil.getInstance().getFIFOObjectFromSerialized(request.getData());
+
                     //messageType = MessageType.valueOf(new String(request.getData()));
 //                    System.out.println("RECEIVED OBJ:" + receivedObj.toString());
-                    byte[] responseData = null;
-                    datagramSocket = new DatagramSocket();
-                    if (receivedObj.isSyncRequest()) {
+                    OutputStream outputStream = clientSocket.getOutputStream();
+                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+
+
+                    if (receivedObj!=null && receivedObj.isSyncRequest()) {
 //                        System.out.println("inside insync");
                         receivedObj.setSyncRequest(false);
-                        responseData = centerServer.sendBackUpProcessRequestFromController(receivedObj).getBytes();
-                        datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
-                                request.getPort()));
-                    } else {
+                        String response = centerServer.sendBackUpProcessRequestFromController(receivedObj);
+                        objectOutputStream.writeObject(new String(response));
+
+                    } else if(receivedObj!=null){
                         switch (receivedObj.getRequestType()) {
                             case GET_RECORD:
                                 // Sending back record count by requested client UDPRequest
                                 Record record = centerServer.getRecordByRecordId(receivedObj.getRecordId());
                                 if (record instanceof StudentRecord) {
                                     StudentRecord studentRecord = (StudentRecord) record;
-                                    responseData = SerializingUtil.getInstance().getSerializedObject(studentRecord);
+                                    objectOutputStream.writeObject(studentRecord);
                                 } else if (record instanceof TeacherRecord) {
                                     TeacherRecord teacherRecord = (TeacherRecord) record;
-                                    responseData = SerializingUtil.getInstance().getSerializedObject(teacherRecord);
+                                    objectOutputStream.writeObject(teacherRecord);
                                 } else {
-                                    responseData = "Record Not Found".getBytes();
+                                    objectOutputStream.writeObject(new String("Record Not Found"));
                                 }
-                                datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
-                                        request.getPort()));
+                                objectOutputStream.close();
                                 break;
                             case GET_RECORD_COUNT:
                                 // Sending back record count by requested client UDPRequest
 //                                System.out.println("inside switch in UDP server");
-                                responseData = centerServer.getRecordCounts(receivedObj.getManagerId()).getBytes();
-                                datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
-                                        request.getPort()));
+                                String response = centerServer.getRecordCounts(receivedObj.getManagerId());
+                                objectOutputStream.writeObject(new String(response));
+                                objectOutputStream.close();
                                 break;
                             case GET_RECORD_COUNT_SUBS:
                                 // Sending back record count by requested client UDPRequest
                                 System.out.println("inside switch in UDP server");
-                                responseData = centerServer.getRecordMap().getRecordsCount().toString().getBytes();
-                                datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
-                                        request.getPort()));
+                                response = centerServer.getRecordMap().getRecordsCount().toString();
+                                objectOutputStream.writeObject(new String(response));
+                                objectOutputStream.close();
+
                                 break;
                             case TRANSFER_RECORD:
-                                responseData = centerServer.transferRecord(receivedObj.getManagerId(), receivedObj.getRecordId(), receivedObj.getCenterServerName()).getBytes();
-                                datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
-                                        request.getPort()));
+                                response = centerServer.transferRecord(receivedObj.getManagerId(), receivedObj.getRecordId(), receivedObj.getCenterServerName());
+                                objectOutputStream.writeObject(new String(response));
+                                objectOutputStream.close();
+
                                 break;
                             case UPDATE_RECORD:
-                                responseData = centerServer.editRecord(receivedObj.getRecordId(), receivedObj.getFieldName(), receivedObj.getNewValue(), receivedObj.getManagerId()).getBytes();
-                                datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
-                                        request.getPort()));
+                                response = centerServer.editRecord(receivedObj.getRecordId(), receivedObj.getFieldName(), receivedObj.getNewValue(), receivedObj.getManagerId());
+                                objectOutputStream.writeObject(new String(response));
+                                objectOutputStream.close();
                                 break;
                             case CREATE_S_RECORD:
-                                responseData = centerServer.createSRecord(receivedObj.getStudentRecord().getFirstName(), receivedObj.getStudentRecord().getLastName(), receivedObj.getStudentRecord().getCourseRegistered(), receivedObj.getStudentRecord().getStatus(), receivedObj.getStudentRecord().getStatusDate(), receivedObj.getManagerId()).getBytes();
-                                datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
-                                        request.getPort()));
+                                response = centerServer.createSRecord(receivedObj.getStudentRecord().getFirstName(), receivedObj.getStudentRecord().getLastName(), receivedObj.getStudentRecord().getCourseRegistered(), receivedObj.getStudentRecord().getStatus(), receivedObj.getStudentRecord().getStatusDate(), receivedObj.getManagerId());
+                                objectOutputStream.writeObject(new String(response));
+                                objectOutputStream.close();
                                 break;
                             case CREATE_T_RECORD:
-                                responseData = centerServer.createTRecord(receivedObj.getTeacherRecord().getFirstName(), receivedObj.getTeacherRecord().getLastName(), receivedObj.getTeacherRecord().getAddress(), receivedObj.getTeacherRecord().getPhone(), receivedObj.getTeacherRecord().getSpecialization(), receivedObj.getTeacherRecord().getLocation(), receivedObj.getManagerId()).getBytes();
-                                datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
-                                        request.getPort()));
+                                response = centerServer.createTRecord(receivedObj.getTeacherRecord().getFirstName(), receivedObj.getTeacherRecord().getLastName(), receivedObj.getTeacherRecord().getAddress(), receivedObj.getTeacherRecord().getPhone(), receivedObj.getTeacherRecord().getSpecialization(), receivedObj.getTeacherRecord().getLocation(), receivedObj.getManagerId());
+                                objectOutputStream.writeObject(new String(response));
+                                objectOutputStream.close();
                                 break;
                             case DELETE_RECORD:
-                                responseData = null;
+                                response = null;
                                 if (receivedObj.getStudentRecord() != null) {
-                                    responseData = centerServer.deleteRecord(receivedObj.getStudentRecord()).getBytes();
+                                    response = centerServer.deleteRecord(receivedObj.getStudentRecord());
                                 } else if (receivedObj.getStudentRecord() == null) {
-                                    responseData = centerServer.deleteRecord(receivedObj.getTeacherRecord()).getBytes();
+                                    response = centerServer.deleteRecord(receivedObj.getTeacherRecord());
                                 }
-                                datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
-                                        request.getPort()));
+                                objectOutputStream.writeObject(new String(response));
+                                objectOutputStream.close();
                                 break;
                             case ELECTION:
-                                if (request.getPort() < centerServer.getUdpPort()) {
-                                    responseData = CMSConstants.OK_MESSAGE.getBytes();
-                                    datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
-                                            request.getPort()));
+                                if (clientSocket.getPort() < centerServer.getUdpPort()) {
+                                    response = CMSConstants.OK_MESSAGE;
+                                    objectOutputStream.writeObject(new String(response));
+                                    objectOutputStream.close();
+
                                     boolean isCoordinator = centerServer.getUdpManager().initElection(centerServer.getLocation(), receivedObj.getProcessIdList());
                                     if (isCoordinator) {
                                         centerServer.getUdpManager().sendCoordinationMessage();
@@ -146,13 +154,14 @@ public class UDPServer implements UDPServerInterface, Runnable {
                                 }
                                 break;
                             case COORDINATOR:
-                                logger.log(Level.INFO, String.format(CMSLogMessages.COORDINATOR_NOTIFY_MESSAGE, centerServer.getUdpPort(), request.getPort()));
+                                logger.log(Level.INFO, String.format(CMSLogMessages.COORDINATOR_NOTIFY_MESSAGE, centerServer.getUdpPort(), clientSocket.getPort()));
                                 break;
 
                             case PING_SERVER:
-                                responseData = CMSConstants.SERVER_UP_MESSAGE.getBytes();
-                                datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
-                                        request.getPort()));
+                                response = CMSConstants.SERVER_UP_MESSAGE;
+                                objectOutputStream.writeObject(new String(response));
+                                objectOutputStream.close();
+
                                 break;
                             case FAIL_SERVER:
                                 logger.log(Level.INFO, String.format(CMSLogMessages.FAIL_SERVER_INIT, udpPort));
@@ -166,15 +175,21 @@ public class UDPServer implements UDPServerInterface, Runnable {
                     }
                 } catch (IOException e) {
                     logger.log(Level.SEVERE, e.getMessage());
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
                 } finally {
-                    if (datagramSocket != null) {
-                        datagramSocket.close();
+                    if (clientSocket != null) {
+                        try {
+                            clientSocket.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
         } finally {
-            if (socket != null) {
-                socket.close();
+            if (serverSocket != null) {
+                serverSocket.close();
             }
         }
     }
@@ -182,9 +197,11 @@ public class UDPServer implements UDPServerInterface, Runnable {
     @Override
     public void initializeServerSocket() {
         try {
-            socket = new DatagramSocket(getCenterServerPort());
+            serverSocket = new ReliableServerSocket(getCenterServerPort());
         } catch (SocketException e) {
             logger.log(Level.SEVERE, e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

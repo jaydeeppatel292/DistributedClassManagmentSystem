@@ -242,8 +242,7 @@ public class FrontEndImpl {
         FIFORequestQueueModel getRecordRequest = obj.createCopy();
         getRecordRequest.setSyncRequest(false);
         getRecordRequest.setRequestType(RequestType.GET_RECORD);
-        byte[] recordInByte = getUdpManager().sendUDPRequestForSelection(getMasterServerForLocation(getRecordRequest.getRequestLocation()), getRecordRequest);
-        Object record = SerializingUtil.getInstance().getObjectFromSerialized(recordInByte);
+        Object record  = getUdpManager().sendUDPRequestForSelection(getMasterServerForLocation(getRecordRequest.getRequestLocation()), getRecordRequest);
         //FIFORequestQueueModel insertRequest = obj.createCopy();
         //FIFORequestQueueModel deleteRequest = obj.createCopy();
         FIFORequestQueueModel insertRequest = new FIFORequestQueueModel();

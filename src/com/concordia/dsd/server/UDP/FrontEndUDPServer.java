@@ -5,17 +5,22 @@ import com.concordia.dsd.global.constants.CMSLogMessages;
 import com.concordia.dsd.global.enums.FrontEndNotify;
 import com.concordia.dsd.server.FrontEndImpl;
 import com.concordia.dsd.server.generics.CenterServerImpl;
+import com.concordia.dsd.server.generics.FIFORequestQueueModel;
 import com.concordia.dsd.server.interfaces.UDPServerInterface;
 import com.concordia.dsd.utils.LoggingUtil;
+import net.rudp.ReliableServerSocket;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.net.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FrontEndUDPServer implements UDPServerInterface, Runnable {
 
-    private DatagramSocket socket = null;
+    private ReliableServerSocket serverSocket = null;
     private FrontEndImpl frontEndImpl;
     private Logger logger = null;
     private int udpPort;
@@ -40,16 +45,20 @@ public class FrontEndUDPServer implements UDPServerInterface, Runnable {
     @Override
     public void run() {
         logger.log(Level.INFO, String.format(CMSLogMessages.UDP_SERVER_INIT, "FE"));
-        byte[] buffer;
-        DatagramPacket request;
-        DatagramSocket datagramSocket = null;
         try {
             while (true) {
+                Socket clientSocket = null;
                 try {
-                    buffer = new byte[1000];
-                    request = new DatagramPacket(buffer, buffer.length);
-                    socket.receive(request);
-                    String requestType = new String(request.getData());
+
+                    clientSocket = serverSocket.accept();
+                    ObjectInputStream objectIn = new ObjectInputStream(clientSocket.getInputStream());
+                    Object object = objectIn.readObject();
+                    objectIn.close();
+
+                    String requestType=null;
+                    if(object instanceof String ){
+                        requestType = (String) object;
+                    }
                     if (requestType.equals(String.valueOf(FrontEndNotify.BULLY_STARTED))) {
                         logger.log(Level.INFO, CMSLogMessages.LEADER_ELECTION_STARTED);
                         frontEndImpl.setBullyRunning(true);
@@ -58,21 +67,27 @@ public class FrontEndUDPServer implements UDPServerInterface, Runnable {
                         frontEndImpl.setBullyRunning(false);
                     }
 
-                    byte[] responseData = null;
-                    datagramSocket = new DatagramSocket();
-                    datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
-                            request.getPort()));
+                    OutputStream outputStream = clientSocket.getOutputStream();
+                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+                    objectOutputStream.writeObject(new String("Success"));
+                    objectOutputStream.close();
                 } catch (IOException e) {
                     logger.log(Level.SEVERE, e.getMessage());
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
                 } finally {
-                    if (datagramSocket != null) {
-                        datagramSocket.close();
+                    if (clientSocket != null) {
+                        try {
+                            clientSocket.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
         } finally {
-            if (socket != null) {
-                socket.close();
+            if (serverSocket != null) {
+                serverSocket.close();
             }
         }
     }
@@ -80,9 +95,11 @@ public class FrontEndUDPServer implements UDPServerInterface, Runnable {
     @Override
     public void initializeServerSocket() {
         try {
-            socket = new DatagramSocket(getCenterServerPort());
+            serverSocket = new ReliableServerSocket(getCenterServerPort());
         } catch (SocketException e) {
             logger.log(Level.SEVERE, e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

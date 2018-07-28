@@ -19,7 +19,7 @@ public class FrontEndUDPManager {
      *
      * @return
      */
-    public byte[] sendUDPRequestForSelection(FrontEndImpl.MasterServerInfo masterServerInfo, FIFORequestQueueModel fifoRequestQueueModel) {
+    public Object sendUDPRequestForSelection(FrontEndImpl.MasterServerInfo masterServerInfo, FIFORequestQueueModel fifoRequestQueueModel) {
         try {
             if (fifoRequestQueueModel.isSyncRequest()) {
                 System.out.println("Sync request!!");
@@ -27,7 +27,7 @@ public class FrontEndUDPManager {
             UDPRequest udpRequest = new UDPRequest(masterServerInfo.getLocation(), masterServerInfo.getHostAddress(), masterServerInfo.getPort(), fifoRequestQueueModel);
             udpRequest.start();
             udpRequest.join();
-            return udpRequest.getServerResponse();
+            return udpRequest.getOutPutObj();
         } catch (SecurityException e) {
             serverLogger.log(Level.SEVERE, e.getMessage());
         } catch (IOException e) {
