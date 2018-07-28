@@ -29,6 +29,15 @@ public class FrontEndImpl {
     private String masterHostAddress;
     private ConcurrentLinkedQueue<FIFORequestQueueModel> requestQueue;
     private HashMap<Location, MasterServerInfo> masterServerInfoHashMap = new HashMap<>();
+    private boolean isBullyRunning=false;
+
+    public boolean isBullyRunning() {
+        return isBullyRunning;
+    }
+
+    public void setBullyRunning(boolean bullyRunning) {
+        isBullyRunning = bullyRunning;
+    }
 
     public FIFORequestQueueModel getRequestFromQueue() {
         return requestQueue.peek();

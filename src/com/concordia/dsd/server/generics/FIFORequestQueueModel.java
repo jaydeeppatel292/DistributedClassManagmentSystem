@@ -24,6 +24,15 @@ public class FIFORequestQueueModel implements Serializable {
     private Location requestLocation;
     private transient List<Integer> processIdList = new ArrayList<>();
     private boolean isSyncRequest = false;
+    private boolean needToUpdateMaster = false;
+
+    public boolean isNeedToUpdateMaster() {
+        return needToUpdateMaster;
+    }
+
+    public void setNeedToUpdateMaster(boolean needToUpdateMaster) {
+        this.needToUpdateMaster = needToUpdateMaster;
+    }
 
     public FIFORequestQueueModel createCopy() {
         FIFORequestQueueModel fifoRequestQueueModel = new FIFORequestQueueModel(requestType, managerId, requestLocation);

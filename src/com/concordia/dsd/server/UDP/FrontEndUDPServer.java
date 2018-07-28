@@ -52,8 +52,10 @@ public class FrontEndUDPServer implements UDPServerInterface, Runnable {
                     String requestType = new String(request.getData());
                     if (requestType.equals(String.valueOf(FrontEndNotify.BULLY_STARTED))) {
                         logger.log(Level.INFO, CMSLogMessages.LEADER_ELECTION_STARTED);
+                        frontEndImpl.setBullyRunning(true);
                     } else {
                         logger.log(Level.INFO, CMSLogMessages.LEADER_ELECTION_COMPLETED);
+                        frontEndImpl.setBullyRunning(false);
                     }
 
                     byte[] responseData = null;

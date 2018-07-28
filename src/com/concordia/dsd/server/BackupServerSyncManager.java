@@ -21,12 +21,18 @@ public class BackupServerSyncManager extends Thread {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            FIFORequestQueueModel fifoRequestQueueModel =  frontEnd.getRequestFromQueue();
-            if(fifoRequestQueueModel!=null){
-                String response = frontEnd.sendBackupSyncRequest(fifoRequestQueueModel);
-                if(response!=null){
-                    frontEnd.dequeueRequestFromQueue();
+            if(!frontEnd.isBullyRunning()) {
+                FIFORequestQueueModel fifoRequestQueueModel = frontEnd.getRequestFromQueue();
+                if (fifoRequestQueueModel != null) {
+                    String response = frontEnd.sendBackupSyncRequest(fifoRequestQueueModel);
+                    if (response != null) {
+                        frontEnd.dequeueRequestFromQueue();
+                    }
                 }
+            }else{
+                /*for(FIFORequestQueueModel fifoRequestQueueModel: frontEnd.get){
+                    fifoRequestQueueModel.setNeedToUpdateMaster(true);
+                }*/
             }
         }
     }
