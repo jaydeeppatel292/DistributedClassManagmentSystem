@@ -45,13 +45,13 @@ public class UDPServer implements UDPServerInterface, Runnable {
     public void run() {
         logger.log(Level.INFO, String.format(CMSLogMessages.UDP_SERVER_INIT, centerServer.getLocation().toString()));
         byte[] buffer;
-        if (udpPort == ServerManager.getInstance().getMasterServerPort(centerServer.getLocation())) {
+        /*if (udpPort == ServerManager.getInstance().getMasterServerPort(centerServer.getLocation())) {
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
 
         DatagramPacket request;
         DatagramSocket datagramSocket = null;
@@ -154,6 +154,13 @@ public class UDPServer implements UDPServerInterface, Runnable {
                                 responseData = CMSConstants.SERVER_UP_MESSAGE.getBytes();
                                 datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
                                         request.getPort()));
+                                break;
+                            case FAIL_SERVER:
+                                try {
+                                    Thread.sleep(3000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                                 break;
                         }
                     }

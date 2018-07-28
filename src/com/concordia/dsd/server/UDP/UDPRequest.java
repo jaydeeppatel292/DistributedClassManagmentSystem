@@ -54,7 +54,7 @@ public class UDPRequest extends Thread {
         try {
             socket = new DatagramSocket();
             //logger.log(Level.INFO, String.format(CMSLogMessages.RECORD_COUNT_SERVER_INIT, serverLocation.toString(),
-                    //address, serverUDPPort));
+            //address, serverUDPPort));
             byte[] data;
 
             data = SerializingUtil.getInstance().getSerializedFIFOObject(reqObj);
@@ -107,15 +107,17 @@ public class UDPRequest extends Thread {
             setResponseFromUDP(CMSConstants.SERVER_DOWN_MESSAGE);
             CenterServerInfo centerServerInfo = ServerManager.getInstance().getServerInfo(serverLocation,
                     serverUDPPort);
-            if (centerServerInfo.isMaster()) {
-                logger.log(Level.INFO,
-                        String.format(CMSLogMessages.MASTER_FAILURE_MESSAGE, serverUDPPort, serverLocation));
-                new LeaderElection(serverLocation, ServerManager.getInstance().getAllBackupServerPort(serverLocation))
-                        .start();
-            } else {
-                logger.log(Level.INFO,
-                        String.format(CMSLogMessages.REPLICA_FAILURE_MESSAGE, serverLocation, serverUDPPort));
-                ServerManager.getInstance().removeReplicaServer(serverLocation, serverUDPPort);
+            if (centerServerInfo != null) {
+                if (centerServerInfo.isMaster()) {
+                    logger.log(Level.INFO,
+                            String.format(CMSLogMessages.MASTER_FAILURE_MESSAGE, serverUDPPort, serverLocation));
+                    new LeaderElection(serverLocation, ServerManager.getInstance().getAllBackupServerPort(serverLocation))
+                            .start();
+                } else {
+                    logger.log(Level.INFO,
+                            String.format(CMSLogMessages.REPLICA_FAILURE_MESSAGE, serverLocation, serverUDPPort, serverLocation));
+                    ServerManager.getInstance().removeReplicaServer(serverLocation, serverUDPPort);
+                }
             }
         } catch (SocketException e) {
             e.printStackTrace();

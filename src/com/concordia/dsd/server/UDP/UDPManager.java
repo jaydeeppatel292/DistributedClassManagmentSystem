@@ -178,6 +178,7 @@ public class UDPManager {
 
     public boolean initElection(Location location, List<Integer> processIdList) {
         boolean messageSent = false;
+        serverLogger.log(Level.INFO, String.format(CMSLogMessages.ELECTION_INIT, myPort));
         for (int i = 0; i < processIdList.size(); i++) {
             if (processIdList.get(i) != myPort && processIdList.get(i) > myPort) {
                 try {

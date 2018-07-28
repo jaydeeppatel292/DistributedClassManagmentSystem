@@ -14,5 +14,6 @@ public enum RequestType implements Serializable {
     SYNC_BACKUP_SERVER,
     GET_RECORD_COUNT_SUBS,
     DELETE_RECORD,
-    PING_SERVER
+    PING_SERVER,
+    FAIL_SERVER
 }
