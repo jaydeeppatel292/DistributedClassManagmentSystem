@@ -28,18 +28,18 @@ public class FIFORequestQueueModel implements Serializable {
 
     }
 
-    public FIFORequestQueueModel createCopy(){
+    public FIFORequestQueueModel createCopy() {
         FIFORequestQueueModel fifoRequestQueueModel = new FIFORequestQueueModel();
         fifoRequestQueueModel.requestType = this.requestType;
         fifoRequestQueueModel.studentRecord = this.studentRecord;
         fifoRequestQueueModel.teacherRecord = this.teacherRecord;
-        fifoRequestQueueModel.recordId= this.recordId;
-        fifoRequestQueueModel.fieldName= this.fieldName;
-        fifoRequestQueueModel.newValue= this.newValue;
-        fifoRequestQueueModel.managerId= this.managerId;
-        fifoRequestQueueModel.centerServerName= this.centerServerName;
-        fifoRequestQueueModel.requestLocation= this.requestLocation;
-        fifoRequestQueueModel.isSyncRequest= this.isSyncRequest;
+        fifoRequestQueueModel.recordId = this.recordId;
+        fifoRequestQueueModel.fieldName = this.fieldName;
+        fifoRequestQueueModel.newValue = this.newValue;
+        fifoRequestQueueModel.managerId = this.managerId;
+        fifoRequestQueueModel.centerServerName = this.centerServerName;
+        fifoRequestQueueModel.requestLocation = this.requestLocation;
+        fifoRequestQueueModel.isSyncRequest = this.isSyncRequest;
         return fifoRequestQueueModel;
     }
 
@@ -49,6 +49,10 @@ public class FIFORequestQueueModel implements Serializable {
 
     public boolean isSyncRequest() {
         return isSyncRequest;
+    }
+
+    public FIFORequestQueueModel(RequestType requestType) {
+        this.requestType = requestType;
     }
 
     public FIFORequestQueueModel(RequestType requestType, List<Integer> processIdList) {
@@ -154,6 +158,7 @@ public class FIFORequestQueueModel implements Serializable {
     public Location getRequestLocation() {
         return requestLocation;
     }
+
     public List<Integer> getProcessIdList() {
         return processIdList;
     }
@@ -164,6 +169,6 @@ public class FIFORequestQueueModel implements Serializable {
 
     @Override
     public String toString() {
-        return "MANAGERID: "+ managerId+" REQUESTTYPE" + requestType + " LOCATION:: "+requestLocation.toString();
+        return "MANAGERID: " + managerId + " REQUESTTYPE" + requestType + " LOCATION:: " + requestLocation.toString();
     }
 }

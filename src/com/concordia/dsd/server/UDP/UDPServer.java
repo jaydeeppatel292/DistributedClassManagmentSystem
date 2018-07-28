@@ -49,11 +49,11 @@ public class UDPServer implements UDPServerInterface, Runnable {
                     buffer = new byte[1000];
                     request = new DatagramPacket(buffer, buffer.length);
                     socket.receive(request);
-                    System.out.println("UDP REQUEST received!! PORT::"+request.getPort());
+                    System.out.println("UDP REQUEST received!! PORT::" + request.getPort());
 
                     FIFORequestQueueModel receivedObj = SerializingUtil.getInstance().getFIFOObjectFromSerialized(request.getData());
                     //messageType = MessageType.valueOf(new String(request.getData()));
-                    System.out.println("RECEIVED OBJ:"+receivedObj.toString());
+                    System.out.println("RECEIVED OBJ:" + receivedObj.toString());
                     byte[] responseData;
                     datagramSocket = new DatagramSocket();
                     if (receivedObj.isSyncRequest()) {
@@ -92,13 +92,14 @@ public class UDPServer implements UDPServerInterface, Runnable {
                                     responseData = CMSConstants.OK_MESSAGE.getBytes();
                                     datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
                                             request.getPort()));
-                                    boolean isCoordinator = centerServer.getUdpManager().initElection(centerServer.getLocation(), centerServer.getUdpPort(), receivedObj.getProcessIdList());
+                                    boolean isCoordinator = centerServer.getUdpManager().initElection(centerServer.getLocation(), receivedObj.getProcessIdList());
                                     if (isCoordinator) {
                                         centerServer.getUdpManager().sendCoordinationMessage();
                                     }
                                 }
                                 break;
                             case COORDINATOR:
+                                logger.log(Level.INFO, String.format(CMSLogMessages.COORDINATOR_NOTIFY_MESSAGE, centerServer.getUdpPort(), request.getPort()));
                                 break;
                         }
                     }

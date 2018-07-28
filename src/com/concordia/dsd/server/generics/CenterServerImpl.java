@@ -41,9 +41,6 @@ public class CenterServerImpl<T> {
     private String udpHostAddress;
     private boolean isMaster;
 
-    private List<Integer> serverProcesses;
-
-
     /**
      * Initialize Constructor
      * Also Start Udp Server

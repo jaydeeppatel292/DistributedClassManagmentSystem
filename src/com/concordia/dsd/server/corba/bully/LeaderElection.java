@@ -26,6 +26,6 @@ public class LeaderElection extends Thread {
         int randomNumber = new Random().nextInt(processIdList.size());
         UDPManager udpManager = ServerManager.getInstance().getCenterServer(location, processIdList.get(randomNumber)).getUdpManager();
 //        processIdList.remove(randomNumber);
-        udpManager.initElection(location, processIdList.get(randomNumber), processIdList);
+        udpManager.initElection(location, processIdList);
     }
 }

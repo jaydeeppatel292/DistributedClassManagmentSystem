@@ -170,10 +170,11 @@ public class UDPManager {
     }
 
 
-    public boolean initElection(Location location, int initPort, List<Integer> processIdList) {
+    public boolean initElection(Location location, List<Integer> processIdList) {
+        serverLogger.log(Level.INFO, String.format(CMSLogMessages.ELECTION_INIT, myPort));
         boolean messageSent = false;
         for (int i = 0; i < processIdList.size(); i++) {
-            if (processIdList.get(i) != initPort && processIdList.get(i) > initPort) {
+            if (processIdList.get(i) != myPort && processIdList.get(i) > myPort) {
                 try {
                     FIFORequestQueueModel model = new FIFORequestQueueModel(RequestType.ELECTION, processIdList);
                     ServerManager.CenterServerInfo serverInfo = ServerManager.getInstance().getServerInfo(location, processIdList.get(i));
@@ -192,6 +193,18 @@ public class UDPManager {
 
 
     public void sendCoordinationMessage() {
+        serverLogger.log(Level.INFO, String.format(CMSLogMessages.COORDINATOR_FOUND, myPort));
+        ServerManager.getInstance().setNewMasterServer(serverLocation, myPort);
+        for (Integer port : ServerManager.getInstance().getAllBackupServerPort(serverLocation)) {
+            FIFORequestQueueModel model = new FIFORequestQueueModel(RequestType.COORDINATOR);
+            ServerManager.CenterServerInfo serverInfo = ServerManager.getInstance().getServerInfo(serverLocation, port);
+            try {
+                UDPRequest udpRequest = new UDPRequest(serverInfo.getLocation(), serverInfo.getHostAddress(), serverInfo.getPort(), model);
+                udpRequest.start();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
+        }
     }
 }
