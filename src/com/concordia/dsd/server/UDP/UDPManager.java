@@ -2,6 +2,7 @@ package com.concordia.dsd.server.UDP;
 
 import com.concordia.dsd.global.cmsenum.Location;
 import com.concordia.dsd.global.constants.CMSLogMessages;
+import com.concordia.dsd.global.enums.FrontEndNotify;
 import com.concordia.dsd.global.enums.RequestType;
 import com.concordia.dsd.model.ClassMap;
 import com.concordia.dsd.model.Record;
@@ -9,6 +10,10 @@ import com.concordia.dsd.server.ServerManager;
 import com.concordia.dsd.server.generics.FIFORequestQueueModel;
 
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -194,7 +199,7 @@ public class UDPManager {
 
     public void sendCoordinationMessage() {
         serverLogger.log(Level.INFO, String.format(CMSLogMessages.COORDINATOR_FOUND, myPort));
-        //TODO notify frontend server with bully completed using udp datagram sockets
+        notifyElectionCompleteToFrontend();
         ServerManager.getInstance().setNewMasterServer(serverLocation, myPort);
         for (Integer port : ServerManager.getInstance().getAllBackupServerPort(serverLocation)) {
             FIFORequestQueueModel model = new FIFORequestQueueModel(RequestType.COORDINATOR);
@@ -206,5 +211,25 @@ public class UDPManager {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void notifyElectionCompleteToFrontend() {
+        FrontEndUDPServer frontEndUDPServer = ServerManager.getInstance().getFrontEndServer().getFrontEndImpl().getUdpServer();
+        InetAddress address = frontEndUDPServer.getInetAddress();
+        try {
+            DatagramSocket socket = new DatagramSocket();
+            byte[] data = String.valueOf(FrontEndNotify.BULLY_COMPLETED).getBytes();
+            DatagramPacket packet = new DatagramPacket(data, data.length, address, frontEndUDPServer.getCenterServerPort());
+            socket.send(packet);
+
+            data = new byte[1000];
+            DatagramPacket receivedPacket = new DatagramPacket(data, data.length);
+            socket.receive(receivedPacket);
+        } catch (SocketException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

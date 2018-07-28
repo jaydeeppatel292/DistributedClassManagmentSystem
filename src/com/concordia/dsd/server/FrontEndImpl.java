@@ -2,11 +2,10 @@ package com.concordia.dsd.server;
 
 import com.concordia.dsd.global.cmsenum.Location;
 import com.concordia.dsd.global.cmsenum.Status;
+import com.concordia.dsd.global.constants.CMSLogMessages;
 import com.concordia.dsd.global.enums.RequestType;
-import com.concordia.dsd.model.Record;
 import com.concordia.dsd.model.StudentRecord;
 import com.concordia.dsd.model.TeacherRecord;
-import com.concordia.dsd.server.RMI.Server;
 import com.concordia.dsd.server.UDP.FrontEndUDPManager;
 import com.concordia.dsd.server.UDP.FrontEndUDPServer;
 import com.concordia.dsd.server.generics.FIFORequestQueueModel;
@@ -17,6 +16,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FrontEndImpl {
@@ -41,6 +41,7 @@ public class FrontEndImpl {
     }
 
     public void setMasterServer(Location location, int port, String hostAddress) {
+//        serverLogger.log(Level.INFO, String.format(CMSLogMessages.MASTER_SERVER_INIT, String.valueOf(port), String.valueOf(location)));
         masterServerInfoHashMap.put(location, new MasterServerInfo(port, location, hostAddress));
     }
 
@@ -245,11 +246,11 @@ public class FrontEndImpl {
             insertRequest.setTeacherRecord((TeacherRecord) record);
             insertRequest.setRequestType(RequestType.CREATE_T_RECORD);
             deleteRequest.setTeacherRecord((TeacherRecord) record);
-        }else{
+        } else {
             return (String) record;
         }
         insertRequest.setRequestLocation(Location.valueOf(insertRequest.getCenterServerName()));
-        System.out.println("RECORD RECEIVED::::"+insertRequest.toString());
+//        System.out.println("RECORD RECEIVED::::"+insertRequest.toString());
         requestQueue.add(insertRequest);
         requestQueue.add(deleteRequest);
         return getUdpManager().sendUDPRequest(getMasterServerForLocation(Location.valueOf(requestedLocation)), obj);

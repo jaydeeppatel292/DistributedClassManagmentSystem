@@ -5,6 +5,7 @@ import com.concordia.dsd.global.constants.CMSLogMessages;
 import com.concordia.dsd.model.Record;
 import com.concordia.dsd.model.StudentRecord;
 import com.concordia.dsd.model.TeacherRecord;
+import com.concordia.dsd.server.ServerManager;
 import com.concordia.dsd.server.generics.CenterServerImpl;
 import com.concordia.dsd.server.generics.FIFORequestQueueModel;
 import com.concordia.dsd.server.interfaces.UDPServerInterface;
@@ -44,6 +45,14 @@ public class UDPServer implements UDPServerInterface, Runnable {
     public void run() {
         logger.log(Level.INFO, String.format(CMSLogMessages.UDP_SERVER_INIT, centerServer.getLocation().toString()));
         byte[] buffer;
+        if (udpPort == ServerManager.getInstance().getMasterServerPort(centerServer.getLocation())) {
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
         DatagramPacket request;
         DatagramSocket datagramSocket = null;
         try {
@@ -56,7 +65,7 @@ public class UDPServer implements UDPServerInterface, Runnable {
 
                     FIFORequestQueueModel receivedObj = SerializingUtil.getInstance().getFIFOObjectFromSerialized(request.getData());
                     //messageType = MessageType.valueOf(new String(request.getData()));
-                    System.out.println("RECEIVED OBJ:" + receivedObj.toString());
+//                    System.out.println("RECEIVED OBJ:" + receivedObj.toString());
                     byte[] responseData = null;
                     datagramSocket = new DatagramSocket();
                     if (receivedObj.isSyncRequest()) {
@@ -144,7 +153,7 @@ public class UDPServer implements UDPServerInterface, Runnable {
                             case PING_SERVER:
                                 responseData = CMSConstants.SERVER_UP_MESSAGE.getBytes();
                                 datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
-                                         request.getPort()));
+                                        request.getPort()));
                                 break;
                         }
                     }

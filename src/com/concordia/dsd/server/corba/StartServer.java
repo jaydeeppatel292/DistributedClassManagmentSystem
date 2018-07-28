@@ -5,6 +5,7 @@ import CenterServerApp.CenterHelper;
 import com.concordia.dsd.global.cmsenum.Location;
 import com.concordia.dsd.server.FrontEndServer;
 import com.concordia.dsd.server.ServerManager;
+import com.concordia.dsd.server.corba.failure.FailureDetectionService;
 import com.concordia.dsd.server.generics.CenterServerImpl;
 import com.concordia.dsd.utils.ConfigManager;
 import org.omg.CORBA.ORB;
@@ -25,31 +26,36 @@ public class StartServer {
         hostPortArray = ConfigManager.getInstance().getHostPortArray();
 
         for (int i = 0; i < hostPortArray.length; i++) {
-            if(hostPortArray[i][0].equals("FE")) {
+            if (hostPortArray[i][0].equals("FE")) {
                 String[] hostPortInfo = new String[4];
                 for (int j = 0; j < 4; j++) {
                     hostPortInfo[j] = hostPortArray[i][j + 1];
                 }
                 orb = ORB.init(hostPortInfo, null);
-                createServerBinding(hostPortArray[i][0], hostPortArray[i][4],Integer.parseInt(hostPortArray[i][2]), i);
-            }
-            else{
-                startUDPServer(hostPortArray[i][0],hostPortArray[i][4], Integer.parseInt(hostPortArray[i][2]));
+                createServerBinding(hostPortArray[i][0], hostPortArray[i][4], Integer.parseInt(hostPortArray[i][2]), i);
+            } else {
+                startUDPServer(hostPortArray[i][0], hostPortArray[i][4], Integer.parseInt(hostPortArray[i][2]));
 
-                if(ServerManager.getInstance().getMasterServerInfo(Location.valueOf(hostPortArray[i][0])) == null || ServerManager.getInstance().getMasterServerInfo(Location.valueOf(hostPortArray[i][0])).getPort()<Integer.parseInt(hostPortArray[i][2])){
-                    ServerManager.getInstance().setNewMasterServer(Location.valueOf(hostPortArray[i][0]),Integer.parseInt(hostPortArray[i][2]));
-                    ServerManager.getInstance().getFrontEndServer().getFrontEndImpl().setMasterServer(Location.valueOf(hostPortArray[i][0]),Integer.parseInt(hostPortArray[i][2]),hostPortArray[i][4]);
+                if (ServerManager.getInstance().getMasterServerInfo(Location.valueOf(hostPortArray[i][0])) == null || ServerManager.getInstance().getMasterServerInfo(Location.valueOf(hostPortArray[i][0])).getPort() < Integer.parseInt(hostPortArray[i][2])) {
+                    ServerManager.getInstance().setNewMasterServer(Location.valueOf(hostPortArray[i][0]), Integer.parseInt(hostPortArray[i][2]));
+                    ServerManager.getInstance().getFrontEndServer().getFrontEndImpl().setMasterServer(Location.valueOf(hostPortArray[i][0]), Integer.parseInt(hostPortArray[i][2]), hostPortArray[i][4]);
                 }
             }
         }
+        FailureDetectionService mtlService = new FailureDetectionService(Location.MTL);
+        FailureDetectionService ddoService = new FailureDetectionService(Location.DDO);
+        FailureDetectionService lvlService = new FailureDetectionService(Location.LVL);
+        mtlService.start();
+        lvlService.start();
+        ddoService.start();
         orb.run();
         // wait for invocations from clients
     }
 
-    private static void startUDPServer(String centerName,String udpHostAddress,int port) {
+    private static void startUDPServer(String centerName, String udpHostAddress, int port) {
         try {
-            CenterServerImpl centerServer = new CenterServerImpl(Location.valueOf(centerName),udpHostAddress,port);
-            ServerManager.getInstance().addServer(Location.valueOf(centerName),port,centerServer, udpHostAddress);
+            CenterServerImpl centerServer = new CenterServerImpl(Location.valueOf(centerName), udpHostAddress, port);
+            ServerManager.getInstance().addServer(Location.valueOf(centerName), port, centerServer, udpHostAddress);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -57,10 +63,11 @@ public class StartServer {
 
     /**
      * Create server
+     *
      * @param centerName
      * @param serverNumber
      */
-    public static void createServerBinding(String centerName,String hostAddress,int port, int serverNumber) {
+    public static void createServerBinding(String centerName, String hostAddress, int port, int serverNumber) {
         try {
             // create and initialize the ORB //// get reference to rootpoa &amp; activate the POAManager
 
@@ -68,7 +75,7 @@ public class StartServer {
             rootpoa.the_POAManager().activate();
 
             // create servant and register it with the ORB
-            FrontEndServer centerServer = new FrontEndServer(hostAddress,port);
+            FrontEndServer centerServer = new FrontEndServer(hostAddress, port);
             centerServer.setORB(orb);
             ServerManager.getInstance().setFrontEndServer(centerServer);
 
