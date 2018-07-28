@@ -10,6 +10,7 @@ import com.concordia.dsd.model.TeacherRecord;
 import com.concordia.dsd.server.FrontEndImpl;
 import com.concordia.dsd.server.ServerManager;
 import com.concordia.dsd.server.generics.FIFORequestQueueModel;
+import sun.rmi.runtime.Log;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -29,7 +30,9 @@ public class FrontEndUDPManager {
     public String sendUDPRequest(FrontEndImpl.MasterServerInfo masterServerInfo, FIFORequestQueueModel fifoRequestQueueModel) {
 
         try {
-
+            if(fifoRequestQueueModel.isSyncRequest()){
+                System.out.println("Sync request!!");
+            }
             UDPRequest udpRequest = new UDPRequest(masterServerInfo.getLocation(),masterServerInfo.getHostAddress(),masterServerInfo.getPort(),fifoRequestQueueModel);
             udpRequest.start();
             udpRequest.join();

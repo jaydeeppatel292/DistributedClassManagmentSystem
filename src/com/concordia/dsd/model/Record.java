@@ -1,13 +1,15 @@
 package com.concordia.dsd.model;
 
-public class Record {
+import java.io.Serializable;
+
+public class Record implements Serializable{
 	
 	private String recordId;
 	
 	private String firstName;
  
 	private String lastName;
-	
+	public Record(){}
 	public Record(String recordId, String firstName, String lastName) {
 		super();
 		this.recordId = recordId;
