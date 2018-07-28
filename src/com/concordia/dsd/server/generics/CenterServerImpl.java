@@ -150,7 +150,12 @@ public class CenterServerImpl<T> {
     }
 
     public String sendBackUpProcessRequestFromController(FIFORequestQueueModel requestObj){
-        return getUdpManager().sendBackUpProcessRequestFromController(ServerManager.getInstance().getAllBackupServerList(location),requestObj);
+        if(!requestObj.isNeedToUpdateMaster()) {
+            return getUdpManager().sendBackUpProcessRequestFromController(ServerManager.getInstance().getAllBackupServerList(location), requestObj);
+        }
+        else{
+            return getUdpManager().sendBackUpProcessRequestFromController(ServerManager.getInstance().getAllServerList(location), requestObj);
+        }
     }
 
     /**
