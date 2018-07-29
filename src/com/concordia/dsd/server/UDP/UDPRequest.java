@@ -5,6 +5,9 @@ import com.concordia.dsd.global.constants.CMSConstants;
 import com.concordia.dsd.global.constants.CMSLogMessages;
 import com.concordia.dsd.global.constants.ServerConfig;
 import com.concordia.dsd.global.enums.RequestType;
+import com.concordia.dsd.model.Record;
+import com.concordia.dsd.model.StudentRecord;
+import com.concordia.dsd.model.TeacherRecord;
 import com.concordia.dsd.server.ServerManager;
 import com.concordia.dsd.server.ServerManager.CenterServerInfo;
 import com.concordia.dsd.server.corba.bully.LeaderElection;
@@ -101,6 +104,7 @@ public class UDPRequest extends Thread {
                     }
                     break;
                 case COORDINATOR:
+                    setResponseFromUDP(response.trim());
                     break;
 
             }

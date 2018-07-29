@@ -13,7 +13,8 @@ public class SerializingUtil {
 
     private SerializingUtil() {
     }
-    public byte[] getSerializedObject(Object reqObj){
+
+    public byte[] getSerializedObject(Object reqObj) {
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutput out = null;
@@ -33,7 +34,8 @@ public class SerializingUtil {
         }
         return null;
     }
-    public byte[] getSerializedFIFOObject(FIFORequestQueueModel reqObj){
+
+    public byte[] getSerializedFIFOObject(FIFORequestQueueModel reqObj) {
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutput out = null;
@@ -54,16 +56,18 @@ public class SerializingUtil {
         return null;
     }
 
-    public FIFORequestQueueModel getFIFOObjectFromSerialized(byte[] serializedObj){
+    public Object getFIFOObjectFromSerialized(byte[] serializedObj) {
         ByteArrayInputStream bis = new ByteArrayInputStream(serializedObj);
         ObjectInput in = null;
         try {
             in = new ObjectInputStream(bis);
-            return (FIFORequestQueueModel)in.readObject();
+            Object object = in.readObject();
+            return object;
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+        } catch (Exception e) {
         } finally {
             try {
                 if (in != null) {
@@ -75,7 +79,8 @@ public class SerializingUtil {
         }
         return null;
     }
-    public Object getObjectFromSerialized(byte[] serializedObj){
+
+    public Object getObjectFromSerialized(byte[] serializedObj) {
         ByteArrayInputStream bis = new ByteArrayInputStream(serializedObj);
         ObjectInput in = null;
         try {

@@ -68,7 +68,7 @@ public class UDPManager {
             }
         }
 
-        return "SUCCESS";
+        return new String("SUCCESS");
     }
 
     public String sendBackUpProcessRequests(FIFORequestQueueModel requestQueueModel) {
@@ -177,7 +177,7 @@ public class UDPManager {
 
 
     public boolean initElection(Location location, List<Integer> processIdList) {
-        boolean messageSent = false;
+        boolean messageNotSent = true;
         serverLogger.log(Level.INFO, String.format(CMSLogMessages.ELECTION_INIT, myPort));
         for (int i = 0; i < processIdList.size(); i++) {
             if (processIdList.get(i) != myPort && processIdList.get(i) > myPort) {
@@ -185,7 +185,8 @@ public class UDPManager {
                     FIFORequestQueueModel model = new FIFORequestQueueModel(RequestType.ELECTION, processIdList);
                     ServerManager.CenterServerInfo serverInfo = ServerManager.getInstance().getServerInfo(location, processIdList.get(i));
                     if (serverInfo != null) {
-                        messageSent = true;
+                        messageNotSent = false;
+                        System.out.println("fdsfdfdf" + serverInfo.getLocation() +" " + serverInfo.getHostAddress() +" "  +serverInfo.getPort());
                         UDPRequest udpRequest = new UDPRequest(serverInfo.getLocation(), serverInfo.getHostAddress(), serverInfo.getPort(), model);
                         udpRequest.start();
                     }
@@ -194,7 +195,7 @@ public class UDPManager {
                 }
             }
         }
-        return messageSent;
+        return messageNotSent;
     }
 
 

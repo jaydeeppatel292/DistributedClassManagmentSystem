@@ -143,18 +143,23 @@ public class UDPServer implements UDPServerInterface, Runnable {
                                 break;
                             case ELECTION:
                                 if (clientSocket.getPort() < centerServer.getUdpPort()) {
+                                    System.out.println("inside 52 election requ");
                                     response = CMSConstants.OK_MESSAGE;
                                     objectOutputStream.writeObject(new String(response));
                                     objectOutputStream.close();
 
                                     boolean isCoordinator = centerServer.getUdpManager().initElection(centerServer.getLocation(), receivedObj.getProcessIdList());
                                     if (isCoordinator) {
+                                        System.out.println("cr=oordinator true");
                                         centerServer.getUdpManager().sendCoordinationMessage();
                                     }
                                 }
                                 break;
                             case COORDINATOR:
                                 logger.log(Level.INFO, String.format(CMSLogMessages.COORDINATOR_NOTIFY_MESSAGE, centerServer.getUdpPort(), clientSocket.getPort()));
+                                response = CMSConstants.OK_MESSAGE;
+                                objectOutputStream.writeObject(new String(response));
+                                objectOutputStream.close();
                                 break;
 
                             case PING_SERVER:
@@ -166,7 +171,7 @@ public class UDPServer implements UDPServerInterface, Runnable {
                             case FAIL_SERVER:
                                 logger.log(Level.INFO, String.format(CMSLogMessages.FAIL_SERVER_INIT, udpPort));
                                 try {
-                                    Thread.sleep(12000);
+                                    Thread.sleep(16000);
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }

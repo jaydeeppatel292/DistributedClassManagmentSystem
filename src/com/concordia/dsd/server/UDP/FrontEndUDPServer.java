@@ -25,6 +25,7 @@ public class FrontEndUDPServer implements UDPServerInterface, Runnable {
     private Logger logger = null;
     private int udpPort;
     private String udpHostAddress;
+    private static final String RESPONSE_OK = new String("SUCCESS");
 
     /**
      * Constructor UDPServer
@@ -59,7 +60,7 @@ public class FrontEndUDPServer implements UDPServerInterface, Runnable {
                     if(object instanceof String ){
                         requestType = (String) object;
                     }
-                    if (requestType.equals(String.valueOf(FrontEndNotify.BULLY_STARTED))) {
+                    if (requestType.trim().equals(FrontEndNotify.BULLY_STARTED.toString())) {
                         logger.log(Level.INFO, CMSLogMessages.LEADER_ELECTION_STARTED);
                         frontEndImpl.setBullyRunning(true);
                     } else {
@@ -69,7 +70,7 @@ public class FrontEndUDPServer implements UDPServerInterface, Runnable {
 
                     OutputStream outputStream = clientSocket.getOutputStream();
                     ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
-                    objectOutputStream.writeObject(new String("Success"));
+                    objectOutputStream.writeObject(new String(RESPONSE_OK));
                     objectOutputStream.close();
                 } catch (IOException e) {
                     logger.log(Level.SEVERE, e.getMessage());

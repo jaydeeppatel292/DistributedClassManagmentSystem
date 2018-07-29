@@ -265,7 +265,7 @@ public class CenterServerImpl<T> {
 
     public String deleteRecord(Record record){
         recordMap.deleteRecord(record);
-        return "SUCCESS";
+        return new String ("SUCCESS");
     }
 
 }

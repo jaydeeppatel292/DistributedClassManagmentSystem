@@ -97,6 +97,7 @@ public class StartClient {
                             String portToCrash = getFieldInput("Port to crash", "");
                             String serverLocation = getFieldInput("Server location to crash", "");
                             String crashResult = ClientProvider.getInstace().getCenterobj().crashProcess(portToCrash, serverLocation);
+                            System.out.println("CRASH: "+crashResult);
                             break;
                     }
 
