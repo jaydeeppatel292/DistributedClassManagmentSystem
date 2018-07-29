@@ -4,7 +4,6 @@ import com.concordia.dsd.global.cmsenum.Location;
 import com.concordia.dsd.global.constants.CMSLogMessages;
 import com.concordia.dsd.global.enums.FrontEndNotify;
 import com.concordia.dsd.server.FrontEndImpl;
-import com.concordia.dsd.server.generics.CenterServerImpl;
 import com.concordia.dsd.server.interfaces.UDPServerInterface;
 import com.concordia.dsd.utils.LoggingUtil;
 
@@ -20,6 +19,7 @@ public class FrontEndUDPServer implements UDPServerInterface, Runnable {
     private Logger logger = null;
     private int udpPort;
     private String udpHostAddress;
+    private static final String RESPONSE_OK = new String("SUCCESS");
 
     /**
      * Constructor UDPServer
@@ -49,8 +49,9 @@ public class FrontEndUDPServer implements UDPServerInterface, Runnable {
                     buffer = new byte[1000];
                     request = new DatagramPacket(buffer, buffer.length);
                     socket.receive(request);
-                    String requestType = new String(request.getData());
-                    if (requestType.equals(String.valueOf(FrontEndNotify.BULLY_STARTED))) {
+                    String requestType = new String(buffer);
+
+                    if (requestType.trim().equals(FrontEndNotify.BULLY_STARTED.toString())) {
                         logger.log(Level.INFO, CMSLogMessages.LEADER_ELECTION_STARTED);
                         frontEndImpl.setBullyRunning(true);
                     } else {
@@ -58,7 +59,7 @@ public class FrontEndUDPServer implements UDPServerInterface, Runnable {
                         frontEndImpl.setBullyRunning(false);
                     }
 
-                    byte[] responseData = null;
+                    byte[] responseData = RESPONSE_OK.getBytes();
                     datagramSocket = new DatagramSocket();
                     datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
                             request.getPort()));

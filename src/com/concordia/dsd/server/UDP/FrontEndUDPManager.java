@@ -27,6 +27,8 @@ public class FrontEndUDPManager {
             UDPRequest udpRequest = new UDPRequest(masterServerInfo.getLocation(), masterServerInfo.getHostAddress(), masterServerInfo.getPort(), fifoRequestQueueModel);
             udpRequest.start();
             udpRequest.join();
+            System.out.println("RECEIVED selection ---------------");
+
             return udpRequest.getServerResponse();
         } catch (SecurityException e) {
             serverLogger.log(Level.SEVERE, e.getMessage());

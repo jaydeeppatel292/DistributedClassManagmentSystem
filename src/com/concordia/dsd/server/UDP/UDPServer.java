@@ -61,19 +61,23 @@ public class UDPServer implements UDPServerInterface, Runnable {
                     request = new DatagramPacket(buffer, buffer.length);
                     socket.receive(request);
 //                    System.out.println("UDP REQUEST received!! PORT::" + request.getPort());
+                    Object responseObj = SerializingUtil.getInstance().getFIFOObjectFromSerialized(request.getData());
 
-                    FIFORequestQueueModel receivedObj = SerializingUtil.getInstance().getFIFOObjectFromSerialized(request.getData());
+                    FIFORequestQueueModel receivedObj=null ;
+                    if(responseObj instanceof FIFORequestQueueModel){
+                        receivedObj =(FIFORequestQueueModel)responseObj;
+                    }
                     //messageType = MessageType.valueOf(new String(request.getData()));
 //                    System.out.println("RECEIVED OBJ:" + receivedObj.toString());
                     byte[] responseData = null;
                     datagramSocket = new DatagramSocket();
-                    if (receivedObj.isSyncRequest()) {
+                    if (responseObj!=null && receivedObj.isSyncRequest()) {
 //                        System.out.println("inside insync");
                         receivedObj.setSyncRequest(false);
                         responseData = centerServer.sendBackUpProcessRequestFromController(receivedObj).getBytes();
                         datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
                                 request.getPort()));
-                    } else {
+                    } else if(responseObj!=null){
                         switch (receivedObj.getRequestType()) {
                             case GET_RECORD:
                                 // Sending back record count by requested client UDPRequest
@@ -136,17 +140,22 @@ public class UDPServer implements UDPServerInterface, Runnable {
                                 break;
                             case ELECTION:
                                 if (request.getPort() < centerServer.getUdpPort()) {
+                                    System.out.println("inside 52 election requ");
                                     responseData = CMSConstants.OK_MESSAGE.getBytes();
                                     datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
                                             request.getPort()));
                                     boolean isCoordinator = centerServer.getUdpManager().initElection(centerServer.getLocation(), receivedObj.getProcessIdList());
                                     if (isCoordinator) {
+                                        System.out.println("cr=oordinator true");
                                         centerServer.getUdpManager().sendCoordinationMessage();
                                     }
                                 }
                                 break;
                             case COORDINATOR:
                                 logger.log(Level.INFO, String.format(CMSLogMessages.COORDINATOR_NOTIFY_MESSAGE, centerServer.getUdpPort(), request.getPort()));
+                                responseData = CMSConstants.OK_MESSAGE.getBytes();
+                                datagramSocket.send(new DatagramPacket(responseData, responseData.length, request.getAddress(),
+                                        request.getPort()));
                                 break;
 
                             case PING_SERVER:
@@ -157,7 +166,7 @@ public class UDPServer implements UDPServerInterface, Runnable {
                             case FAIL_SERVER:
                                 logger.log(Level.INFO, String.format(CMSLogMessages.FAIL_SERVER_INIT, udpPort));
                                 try {
-                                    Thread.sleep(12000);
+                                    Thread.sleep(16000);
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }

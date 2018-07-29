@@ -31,10 +31,13 @@ public class LeaderElection extends Thread {
 
     private void initElection() {
         int randomNumber = new Random().nextInt(processIdList.size());
-        UDPManager udpManager = ServerManager.getInstance().getCenterServer(location, processIdList.get(randomNumber)).getUdpManager();
+        //TODO remove 1 and fix it with random number case
+        UDPManager udpManager = ServerManager.getInstance().getCenterServer(location, processIdList.get(1)).getUdpManager();
 //        processIdList.remove(randomNumber);
-        udpManager.initElection(location, processIdList);
         notifyFrontend();
+        if(udpManager.initElection(location, processIdList)) {
+            udpManager.sendCoordinationMessage();
+        }
     }
 
     private void notifyFrontend() {

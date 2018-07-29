@@ -5,6 +5,9 @@ import com.concordia.dsd.global.constants.CMSConstants;
 import com.concordia.dsd.global.constants.CMSLogMessages;
 import com.concordia.dsd.global.constants.ServerConfig;
 import com.concordia.dsd.global.enums.RequestType;
+import com.concordia.dsd.model.Record;
+import com.concordia.dsd.model.StudentRecord;
+import com.concordia.dsd.model.TeacherRecord;
 import com.concordia.dsd.server.ServerManager;
 import com.concordia.dsd.server.ServerManager.CenterServerInfo;
 import com.concordia.dsd.server.corba.bully.LeaderElection;
@@ -67,14 +70,15 @@ public class UDPRequest extends Thread {
             }
             DatagramPacket receivedPacket = new DatagramPacket(data, data.length);
             socket.receive(receivedPacket);
-            this.serverResponse = data;
-            String response = new String(data);
+            this.serverResponse = receivedPacket.getData();
+            String response="";
+            response = new String(data);
             switch (reqObj.getRequestType()) {
                 case GET_RECORD_COUNT:
                     setResponseFromUDP(response.trim());
                     break;
                 case GET_RECORD:
-                    setResponseFromUDP(response.trim());
+//                    setResponseFromUDP(response.trim());
                     break;
                 case GET_RECORD_COUNT_SUBS:
                     setResponseFromUDP(response.trim());
@@ -97,6 +101,7 @@ public class UDPRequest extends Thread {
                     }
                     break;
                 case COORDINATOR:
+                    setResponseFromUDP(response.trim());
                     break;
                 case PING_SERVER:
                     setResponseFromUDP(response.trim());
@@ -104,6 +109,10 @@ public class UDPRequest extends Thread {
                 case FAIL_SERVER:
                     setResponseFromUDP(response.trim());
                     break;
+                case DELETE_RECORD:
+                    setResponseFromUDP(response.trim());
+                    break;
+
             }
         } catch (SocketTimeoutException e) {
             System.out.println("Socket Timeout Exception " + e.getMessage());

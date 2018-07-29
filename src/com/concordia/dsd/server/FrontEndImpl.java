@@ -262,7 +262,10 @@ public class FrontEndImpl {
         } else {
             return (String) record;
         }
-        insertRequest.setRequestLocation(Location.valueOf(insertRequest.getCenterServerName()));
+        insertRequest.setRequestLocation(Location.valueOf(remoteCenterServerName));
+        deleteRequest.setRequestLocation(Location.valueOf(requestedLocation));
+        deleteRequest.setManagerId(managerId);
+        insertRequest.setManagerId(managerId);
 //        System.out.println("RECORD RECEIVED::::"+insertRequest.toString());
         requestQueue.add(insertRequest);
         requestQueue.add(deleteRequest);
