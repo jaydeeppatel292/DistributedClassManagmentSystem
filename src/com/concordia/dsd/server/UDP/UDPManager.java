@@ -6,10 +6,15 @@ import com.concordia.dsd.global.enums.FrontEndNotify;
 import com.concordia.dsd.global.enums.RequestType;
 import com.concordia.dsd.model.ClassMap;
 import com.concordia.dsd.model.Record;
+import com.concordia.dsd.server.FrontEndImpl;
 import com.concordia.dsd.server.ServerManager;
 import com.concordia.dsd.server.generics.FIFORequestQueueModel;
+import net.rudp.ReliableSocket;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -217,26 +222,30 @@ public class UDPManager {
 
     private void notifyElectionCompleteToFrontend() {
         FrontEndUDPServer frontEndUDPServer = ServerManager.getInstance().getFrontEndServer().getFrontEndImpl().getUdpServer();
-        InetAddress address = frontEndUDPServer.getInetAddress();
-        DatagramSocket socket = null;
+        ReliableSocket socket = null;
         try {
-            socket = new DatagramSocket();
-            byte[] data = String.valueOf(FrontEndNotify.BULLY_COMPLETED).getBytes();
-            DatagramPacket packet = new DatagramPacket(data, data.length, address, frontEndUDPServer.getCenterServerPort());
-            socket.send(packet);
+            socket = new ReliableSocket(frontEndUDPServer.getInetAddress().getHostAddress(),frontEndUDPServer.getCenterServerPort());
+            OutputStream outputStream = socket.getOutputStream();
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+            objectOutputStream.writeObject(new String(String.valueOf(FrontEndNotify.BULLY_COMPLETED)));
+            objectOutputStream.close();
 
-            data = new byte[1000];
-            DatagramPacket receivedPacket = new DatagramPacket(data, data.length);
-            socket.receive(receivedPacket);
+            ObjectInputStream objectIn = new ObjectInputStream(socket.getInputStream());
+            Object object = objectIn.readObject();
+            objectIn.close();
         } catch (SocketException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         } finally {
             if (socket != null) {
-                socket.close();
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                }
             }
         }
-
     }
 }

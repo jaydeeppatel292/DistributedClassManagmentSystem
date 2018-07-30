@@ -21,6 +21,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.*;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,7 +34,6 @@ public class UDPRequest extends Thread {
     private int serverUDPPort;
     private Location serverLocation;
     private Object outPutObj;
-
     public Object getOutPutObj() {
         return outPutObj;
     }
@@ -58,22 +59,45 @@ public class UDPRequest extends Thread {
         this.responseFromUDP = responseFromUDP;
     }
 
+    TimerTask task = new TimerTask(){
+        public void run(){
+            System.out.println("Socket Not responding");
+            setResponseFromUDP(CMSConstants.SERVER_DOWN_MESSAGE);
+            CenterServerInfo centerServerInfo = ServerManager.getInstance().getServerInfo(serverLocation,
+                    serverUDPPort);
+            if (centerServerInfo != null) {
+                if (centerServerInfo.isMaster()) {
+                    logger.log(Level.INFO,
+                            String.format(CMSLogMessages.MASTER_FAILURE_MESSAGE, serverUDPPort, serverLocation));
+                    new LeaderElection(serverLocation, ServerManager.getInstance().getAllBackupServerPort(serverLocation))
+                            .start();
+                } else {
+                    logger.log(Level.INFO,
+                            String.format(CMSLogMessages.REPLICA_FAILURE_MESSAGE, serverLocation, serverUDPPort, serverLocation));
+                    ServerManager.getInstance().removeReplicaServer(serverLocation, serverUDPPort);
+                }
+            }
+        }
+    };
+
     @Override
     public void run() {
         InetAddress address = getInetAddress(serverUDPHostAddress);
         ReliableSocket socket = null;
         try {
+
+
+            Timer timer = new Timer();
+            timer.schedule( task, ServerConfig.PING_REQUEST_TIMEOUT);
+
             socket = new ReliableSocket(serverUDPHostAddress,serverUDPPort);
 
+            timer.cancel();
+            timer.purge();
             OutputStream outputStream = socket.getOutputStream();
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
             objectOutputStream.writeObject(reqObj);
             objectOutputStream.close();
-
-
-            if (reqObj.getRequestType().equals(RequestType.PING_SERVER)) {
-                socket.setSoTimeout(ServerConfig.PING_REQUEST_TIMEOUT);
-            }
 
             ObjectInputStream objectIn = new ObjectInputStream(socket.getInputStream());
             Object object = objectIn.readObject();
@@ -126,10 +150,19 @@ public class UDPRequest extends Thread {
                 }
             }
         } catch (SocketException e) {
+            System.out.println("1SOCKET EXCEPTION dfdfdfdfd---------------");
+            e.printStackTrace();
         } catch (IOException e) {
+            System.out.println("2SOCKET EXCEPTION dfdfdfdfd---------------");
+            e.printStackTrace();
             // TODO Auto-generated catch block
         } catch (ClassNotFoundException e) {
-        }catch (Exception e){}
+            System.out.println("3SOCKET EXCEPTION dfdfdfdfd---------------");
+            e.printStackTrace();
+        }catch (Exception e){
+            System.out.println("4SOCKET EXCEPTION dfdfdfdfd---------------");
+            e.printStackTrace();
+        }
         finally {
             if (socket != null) {
                 try {

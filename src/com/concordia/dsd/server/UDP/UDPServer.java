@@ -54,6 +54,7 @@ public class UDPServer implements UDPServerInterface, Runnable {
         }*/
 
         try {
+            outer:
             while (true) {
                 Socket clientSocket = null;
                 try {
@@ -170,12 +171,11 @@ public class UDPServer implements UDPServerInterface, Runnable {
                                 break;
                             case FAIL_SERVER:
                                 logger.log(Level.INFO, String.format(CMSLogMessages.FAIL_SERVER_INIT, udpPort));
-                                try {
-                                    Thread.sleep(16000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                                break;
+                                response = CMSConstants.OK_MESSAGE;
+                                objectOutputStream.writeObject(new String(response));
+                                objectOutputStream.close();
+                                serverSocket.close();
+                                break outer;
                         }
                     }
                 } catch (IOException e) {

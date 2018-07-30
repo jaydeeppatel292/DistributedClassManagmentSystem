@@ -5,8 +5,12 @@ import com.concordia.dsd.global.enums.FrontEndNotify;
 import com.concordia.dsd.server.ServerManager;
 import com.concordia.dsd.server.UDP.FrontEndUDPServer;
 import com.concordia.dsd.server.UDP.UDPManager;
+import net.rudp.ReliableSocket;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -43,23 +47,30 @@ public class LeaderElection extends Thread {
     private void notifyFrontend() {
         FrontEndUDPServer frontEndUDPServer = ServerManager.getInstance().getFrontEndServer().getFrontEndImpl().getUdpServer();
         InetAddress address = frontEndUDPServer.getInetAddress();
-        DatagramSocket socket = null;
-        try {
-            socket = new DatagramSocket();
-            byte[] data = String.valueOf(FrontEndNotify.BULLY_STARTED).getBytes();
-            DatagramPacket packet = new DatagramPacket(data, data.length, address, frontEndUDPServer.getCenterServerPort());
-            socket.send(packet);
+        ReliableSocket socket = null;
 
-            data = new byte[1000];
-            DatagramPacket receivedPacket = new DatagramPacket(data, data.length);
-            socket.receive(receivedPacket);
+        try {
+            socket = new ReliableSocket(frontEndUDPServer.getInetAddress().getHostAddress(),frontEndUDPServer.getCenterServerPort());
+            OutputStream outputStream = socket.getOutputStream();
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+            objectOutputStream.writeObject(new String(String.valueOf(FrontEndNotify.BULLY_STARTED)));
+            objectOutputStream.close();
+
+            ObjectInputStream objectIn = new ObjectInputStream(socket.getInputStream());
+            Object object = objectIn.readObject();
+            objectIn.close();
         } catch (SocketException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         } finally {
             if (socket != null) {
-                socket.close();
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                }
             }
         }
 
