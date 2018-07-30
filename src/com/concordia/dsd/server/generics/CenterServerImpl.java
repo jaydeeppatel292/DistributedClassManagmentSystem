@@ -150,12 +150,26 @@ public class CenterServerImpl<T> {
     }
 
     public String sendBackUpProcessRequestFromController(FIFORequestQueueModel requestObj){
-        if(!requestObj.isNeedToUpdateMaster()) {
-            return getUdpManager().sendBackUpProcessRequestFromController(ServerManager.getInstance().getAllBackupServerList(location), requestObj);
+        if(requestObj.isNeedToUpdateMaster()) {
+            String response="";
+            if((requestObj.getStudentRecord().getRecordId()!=null && !requestObj.getStudentRecord().getRecordId().trim().isEmpty() )|| (requestObj.getTeacherRecord().getRecordId()!=null && !requestObj.getTeacherRecord().getRecordId().trim().isEmpty())){
+                if(requestObj.getRequestType() == RequestType.CREATE_S_RECORD) {
+                    recordMap.addRecord(Character.toString(requestObj.getStudentRecord().getLastName().charAt(0)),requestObj.getStudentRecord());
+                }else{
+                    recordMap.addRecord(Character.toString(requestObj.getTeacherRecord().getLastName().charAt(0)),requestObj.getTeacherRecord());
+                }
+            }else{
+                if(requestObj.getRequestType() == RequestType.CREATE_S_RECORD) {
+                    response= createSRecord(requestObj.getStudentRecord().getFirstName(), requestObj.getStudentRecord().getLastName(), requestObj.getStudentRecord().getCourseRegistered(), requestObj.getStudentRecord().getStatus(), requestObj.getStudentRecord().getStatusDate(), requestObj.getManagerId());
+                }else{
+                    response = createTRecord(requestObj.getTeacherRecord().getFirstName(), requestObj.getTeacherRecord().getLastName(), requestObj.getTeacherRecord().getAddress(), requestObj.getTeacherRecord().getPhone(), requestObj.getTeacherRecord().getSpecialization(), requestObj.getTeacherRecord().getLocation(), requestObj.getManagerId());
+                }
+            }
+
+            System.out.println("GOING TO UPDATE ALL SERVER LIST!!!!");
         }
-        else{
-            return getUdpManager().sendBackUpProcessRequestFromController(ServerManager.getInstance().getAllServerList(location), requestObj);
-        }
+        return getUdpManager().sendBackUpProcessRequestFromController(ServerManager.getInstance().getAllBackupServerList(location), requestObj);
+
     }
 
     /**

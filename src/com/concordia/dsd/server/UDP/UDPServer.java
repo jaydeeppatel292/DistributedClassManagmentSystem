@@ -123,12 +123,22 @@ public class UDPServer implements UDPServerInterface, Runnable {
                                 objectOutputStream.close();
                                 break;
                             case CREATE_S_RECORD:
-                                response = centerServer.createSRecord(receivedObj.getStudentRecord().getFirstName(), receivedObj.getStudentRecord().getLastName(), receivedObj.getStudentRecord().getCourseRegistered(), receivedObj.getStudentRecord().getStatus(), receivedObj.getStudentRecord().getStatusDate(), receivedObj.getManagerId());
+                                if(receivedObj.getStudentRecord().getRecordId()!=null && !receivedObj.getStudentRecord().getRecordId().trim().isEmpty()) {
+                                    centerServer.getRecordMap().addRecord(Character.toString(receivedObj.getStudentRecord().getLastName().charAt(0)),receivedObj.getStudentRecord());
+                                    response = receivedObj.getStudentRecord().getRecordId();
+                                }else {
+                                    response = centerServer.createSRecord(receivedObj.getStudentRecord().getFirstName(), receivedObj.getStudentRecord().getLastName(), receivedObj.getStudentRecord().getCourseRegistered(), receivedObj.getStudentRecord().getStatus(), receivedObj.getStudentRecord().getStatusDate(), receivedObj.getManagerId());
+                                }
                                 objectOutputStream.writeObject(new String(response));
                                 objectOutputStream.close();
                                 break;
                             case CREATE_T_RECORD:
-                                response = centerServer.createTRecord(receivedObj.getTeacherRecord().getFirstName(), receivedObj.getTeacherRecord().getLastName(), receivedObj.getTeacherRecord().getAddress(), receivedObj.getTeacherRecord().getPhone(), receivedObj.getTeacherRecord().getSpecialization(), receivedObj.getTeacherRecord().getLocation(), receivedObj.getManagerId());
+                                if(receivedObj.getTeacherRecord().getRecordId()!=null && !receivedObj.getTeacherRecord().getRecordId().trim().isEmpty()) {
+                                    centerServer.getRecordMap().addRecord(Character.toString(receivedObj.getTeacherRecord().getLastName().charAt(0)),receivedObj.getTeacherRecord());
+                                    response = receivedObj.getStudentRecord().getRecordId();
+                                }else {
+                                    response = centerServer.createTRecord(receivedObj.getTeacherRecord().getFirstName(), receivedObj.getTeacherRecord().getLastName(), receivedObj.getTeacherRecord().getAddress(), receivedObj.getTeacherRecord().getPhone(), receivedObj.getTeacherRecord().getSpecialization(), receivedObj.getTeacherRecord().getLocation(), receivedObj.getManagerId());
+                                }
                                 objectOutputStream.writeObject(new String(response));
                                 objectOutputStream.close();
                                 break;
@@ -175,6 +185,7 @@ public class UDPServer implements UDPServerInterface, Runnable {
                                 objectOutputStream.writeObject(new String(response));
                                 objectOutputStream.close();
                                 serverSocket.close();
+                                centerServer.getUdpManager().notifyFrontEnd();
                                 break outer;
                         }
                     }
@@ -182,7 +193,8 @@ public class UDPServer implements UDPServerInterface, Runnable {
                     logger.log(Level.SEVERE, e.getMessage());
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
-                } finally {
+                } catch (Exception e){}
+                finally {
                     if (clientSocket != null) {
                         try {
                             clientSocket.close();

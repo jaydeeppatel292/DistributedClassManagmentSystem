@@ -248,4 +248,35 @@ public class UDPManager {
             }
         }
     }
+
+    public void notifyFrontEnd(){
+        FrontEndUDPServer frontEndUDPServer = ServerManager.getInstance().getFrontEndServer().getFrontEndImpl().getUdpServer();
+        InetAddress address = frontEndUDPServer.getInetAddress();
+        ReliableSocket socket = null;
+
+        try {
+            socket = new ReliableSocket(frontEndUDPServer.getInetAddress().getHostAddress(),frontEndUDPServer.getCenterServerPort());
+            OutputStream outputStream = socket.getOutputStream();
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+            objectOutputStream.writeObject(new String(String.valueOf(FrontEndNotify.BULLY_STARTED)));
+            objectOutputStream.close();
+
+            ObjectInputStream objectIn = new ObjectInputStream(socket.getInputStream());
+            Object object = objectIn.readObject();
+            objectIn.close();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            if (socket != null) {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                }
+            }
+        }
+    }
 }

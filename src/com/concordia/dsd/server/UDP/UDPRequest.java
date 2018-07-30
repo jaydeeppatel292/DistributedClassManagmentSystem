@@ -59,24 +59,27 @@ public class UDPRequest extends Thread {
         this.responseFromUDP = responseFromUDP;
     }
 
+    public void invokeServerDown(){
+        setResponseFromUDP(CMSConstants.SERVER_DOWN_MESSAGE);
+        CenterServerInfo centerServerInfo = ServerManager.getInstance().getServerInfo(serverLocation,
+                serverUDPPort);
+        if (centerServerInfo != null) {
+            if (centerServerInfo.isMaster()) {
+                logger.log(Level.INFO,
+                        String.format(CMSLogMessages.MASTER_FAILURE_MESSAGE, serverUDPPort, serverLocation));
+                new LeaderElection(serverLocation, ServerManager.getInstance().getAllBackupServerPort(serverLocation))
+                        .start();
+            } else {
+                logger.log(Level.INFO,
+                        String.format(CMSLogMessages.REPLICA_FAILURE_MESSAGE, serverLocation, serverUDPPort, serverLocation));
+                ServerManager.getInstance().removeReplicaServer(serverLocation, serverUDPPort);
+            }
+        }
+    }
+
     TimerTask task = new TimerTask(){
         public void run(){
-            System.out.println("Socket Not responding");
-            setResponseFromUDP(CMSConstants.SERVER_DOWN_MESSAGE);
-            CenterServerInfo centerServerInfo = ServerManager.getInstance().getServerInfo(serverLocation,
-                    serverUDPPort);
-            if (centerServerInfo != null) {
-                if (centerServerInfo.isMaster()) {
-                    logger.log(Level.INFO,
-                            String.format(CMSLogMessages.MASTER_FAILURE_MESSAGE, serverUDPPort, serverLocation));
-                    new LeaderElection(serverLocation, ServerManager.getInstance().getAllBackupServerPort(serverLocation))
-                            .start();
-                } else {
-                    logger.log(Level.INFO,
-                            String.format(CMSLogMessages.REPLICA_FAILURE_MESSAGE, serverLocation, serverUDPPort, serverLocation));
-                    ServerManager.getInstance().removeReplicaServer(serverLocation, serverUDPPort);
-                }
-            }
+            invokeServerDown();
         }
     };
 
@@ -133,34 +136,15 @@ public class UDPRequest extends Thread {
 
             }
         } catch (SocketTimeoutException e) {
-            System.out.println("Socket Timeout Exception " + e.getMessage());
-            setResponseFromUDP(CMSConstants.SERVER_DOWN_MESSAGE);
-            CenterServerInfo centerServerInfo = ServerManager.getInstance().getServerInfo(serverLocation,
-                    serverUDPPort);
-            if (centerServerInfo != null) {
-                if (centerServerInfo.isMaster()) {
-                    logger.log(Level.INFO,
-                            String.format(CMSLogMessages.MASTER_FAILURE_MESSAGE, serverUDPPort, serverLocation));
-                    new LeaderElection(serverLocation, ServerManager.getInstance().getAllBackupServerPort(serverLocation))
-                            .start();
-                } else {
-                    logger.log(Level.INFO,
-                            String.format(CMSLogMessages.REPLICA_FAILURE_MESSAGE, serverLocation, serverUDPPort, serverLocation));
-                    ServerManager.getInstance().removeReplicaServer(serverLocation, serverUDPPort);
-                }
-            }
+            invokeServerDown();
         } catch (SocketException e) {
-            System.out.println("1SOCKET EXCEPTION dfdfdfdfd---------------");
             e.printStackTrace();
         } catch (IOException e) {
-            System.out.println("2SOCKET EXCEPTION dfdfdfdfd---------------");
             e.printStackTrace();
             // TODO Auto-generated catch block
         } catch (ClassNotFoundException e) {
-            System.out.println("3SOCKET EXCEPTION dfdfdfdfd---------------");
             e.printStackTrace();
         }catch (Exception e){
-            System.out.println("4SOCKET EXCEPTION dfdfdfdfd---------------");
             e.printStackTrace();
         }
         finally {
